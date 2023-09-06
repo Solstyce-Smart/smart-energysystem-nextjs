@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '../entity/Users';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserParams } from './types/types';
+import { CreateUserParams, UpdateUserParams } from './types/types';
 
 @Injectable()
 export class UsersService {
@@ -15,5 +15,31 @@ export class UsersService {
   }
   getAllUsers() {
     return this.userRepository.find();
+  }
+  getOneUser(userId: number) {
+    return this.userRepository.findOne({
+      select: ['userId', 'username', 'role', 'ewonIds', 'password'],
+      where: { userId },
+    });
+  }
+  async updateUser(userId: number, updateUserDetails: UpdateUserParams) {
+    const result = await this.userRepository.update(
+      { userId },
+      { ...updateUserDetails },
+    );
+
+    console.log(result);
+
+    if (result.affected === 0) {
+      return null;
+    }
+
+    const updatedUser = await this.userRepository.findOne({
+      select: ['userId', 'username', 'role', 'ewonIds', 'password'],
+      where: { userId },
+    });
+    console.log(updatedUser);
+
+    return updatedUser;
   }
 }
