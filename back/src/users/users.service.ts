@@ -38,8 +38,10 @@ export class UsersService {
       select: ['userId', 'username', 'role', 'ewonIds', 'password'],
       where: { userId },
     });
-    console.log(updatedUser);
 
     return updatedUser;
+  }
+  deleteUser(userId: number) {
+    return this.userRepository.delete({ userId });
   }
 }

@@ -181,4 +181,30 @@ describe('UsersService', () => {
 
     expect(result).toEqual(updatedUser);
   });
+  it('should delete a user by ID and return a success message', async () => {
+    const userIdToDelete = 1;
+
+    const deleteUserSpy = jest
+      .spyOn(service, 'deleteUser')
+      .mockResolvedValue({ raw: [], affected: 1 });
+
+    const result = await controller.deleteUserById(userIdToDelete);
+
+    expect(deleteUserSpy).toHaveBeenCalledWith(userIdToDelete);
+
+    expect(result).toEqual({ message: 'User deleted successfully' });
+  });
+  it('should return an error message if the user is not found', async () => {
+    const userIdToDelete = 999;
+
+    const deleteUserSpy = jest
+      .spyOn(service, 'deleteUser')
+      .mockResolvedValue({ raw: [], affected: 0 });
+
+    const result = await controller.deleteUserById(userIdToDelete);
+
+    expect(deleteUserSpy).toHaveBeenCalledWith(userIdToDelete);
+
+    expect(result.message).toEqual('User not found');
+  });
 });

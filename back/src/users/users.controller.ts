@@ -7,6 +7,7 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
@@ -37,5 +38,15 @@ export class UsersController {
       updateUserDto,
     );
     return updatedUser;
+  }
+  @Delete(':userId')
+  async deleteUserById(@Param('userId', ParseIntPipe) userId: number) {
+    const result = await this.usersService.deleteUser(userId);
+
+    if (result.affected === 0) {
+      return new NotFoundException('User not found');
+    }
+
+    return { message: 'User deleted successfully' };
   }
 }
