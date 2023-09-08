@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { TagsLive } from './TagsLive';
 
 @Entity('installation')
@@ -41,6 +47,6 @@ export class Installation {
     alarmHint: string;
   }[];
 
-  @OneToMany(() => TagsLive, (tagsLive) => tagsLive.installation)
-  tagsLive: TagsLive[];
+  @OneToOne(() => TagsLive)
+  tagsLive: TagsLive;
 }

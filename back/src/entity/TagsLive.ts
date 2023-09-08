@@ -29,8 +29,4 @@ export class TagsLive {
 
   @Column()
   ewonTagId: number;
-
-  @ManyToOne(() => Installation, (installation) => installation.tagsLive)
-  @JoinColumn({ name: 'installationId' })
-  installation: Installation;
 }
