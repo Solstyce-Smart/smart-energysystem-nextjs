@@ -42,4 +42,17 @@ export class InstallationsController {
   getAllInstallations(@Param('userId', ParseIntPipe) userId: number) {
     return this.installationsService.getAllInstallations(userId);
   }
+
+  @Put(':id')
+  updateInstallationById(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) installationId: number,
+    @Body() createInstallationsDto: CreateInstallationsDto,
+  ) {
+    return this.installationsService.updateInstallationById(
+      userId,
+      installationId,
+      createInstallationsDto,
+    );
+  }
 }

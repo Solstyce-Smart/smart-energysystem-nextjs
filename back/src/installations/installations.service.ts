@@ -71,4 +71,34 @@ export class InstallationsService {
 
     return user.ewonIds;
   }
+
+  async updateInstallationById(
+    userId: number,
+    installationId: number,
+    installationDetails: CreateInstallationParams,
+  ) {
+    const user = await this.entityManager.findOne(User, {
+      where: { userId: userId },
+      relations: ['ewonIds'],
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const installation = user.ewonIds.find(
+      (ewonId) => ewonId.id === installationId,
+    );
+
+    if (!installation) {
+      return null;
+    }
+
+    const updatedInstallation = await this.installationRepository.save({
+      ...installation,
+      ...installationDetails,
+    });
+
+    return updatedInstallation;
+  }
 }
