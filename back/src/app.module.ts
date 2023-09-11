@@ -6,6 +6,7 @@ import { Installation } from './entity/Installations';
 import { TagsLive } from './entity/TagsLive';
 import { User } from './entity/Users';
 import { UsersModule } from './users/users.module';
+import { InstallationsModule } from './installations/installations.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
     }),
     UsersModule,
+    InstallationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

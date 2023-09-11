@@ -20,6 +20,7 @@ export class UsersService {
     return this.userRepository.findOne({
       select: ['userId', 'username', 'role', 'ewonIds', 'password'],
       where: { userId },
+      relations: ['ewonIds'],
     });
   }
   async updateUser(userId: number, updateUserDetails: UpdateUserParams) {
@@ -27,8 +28,6 @@ export class UsersService {
       { userId },
       { ...updateUserDetails },
     );
-
-    console.log(result);
 
     if (result.affected === 0) {
       return null;

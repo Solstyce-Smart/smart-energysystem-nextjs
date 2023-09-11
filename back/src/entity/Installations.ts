@@ -4,8 +4,10 @@ import {
   Column,
   OneToMany,
   OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { TagsLive } from './TagsLive';
+import { User } from './Users';
 
 @Entity('installation')
 export class Installation {
@@ -27,26 +29,22 @@ export class Installation {
   @Column()
   abo: number;
 
-  @Column({ type: 'timestamp' })
-  lastSynchroDate: Date;
+  @Column()
+  lastSynchroDate: string;
 
   @Column('json', { nullable: true })
-  address: {
+  address?: {
     address: string;
     postalCode: number;
     latitude: string;
     longitude: string;
   }[];
 
-  @Column('json', { nullable: true })
-  tagHistory: {
-    lastSynchroDate: Date;
-    dateReq: Date;
-    value: number;
-    quality: string;
-    alarmHint: string;
-  }[];
-
   @OneToOne(() => TagsLive)
   tagsLive: TagsLive;
+
+  @ManyToOne(() => User, (user) => user.ewonIds, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
 }

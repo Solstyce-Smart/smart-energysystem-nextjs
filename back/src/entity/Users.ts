@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Installation } from './Installations';
 
 @Entity()
 export class User {
@@ -14,6 +15,6 @@ export class User {
   @Column({ default: 0 })
   role: number;
 
-  @Column('simple-array', { nullable: true })
-  ewonIds: string[];
+  @OneToMany(() => Installation, (installation) => installation.user)
+  ewonIds: Installation[];
 }
