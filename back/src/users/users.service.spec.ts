@@ -91,14 +91,14 @@ describe('UsersService', () => {
         username: 'User 1',
         password: 'fakePassword',
         role: 1,
-        ewonIds: ['1', '2'],
+        ewonIds: [],
       },
       {
         userId: 2,
         username: 'User 2',
         password: 'fakePassword',
         role: 3,
-        ewonIds: ['4', '5'],
+        ewonIds: [],
       },
     ];
 
@@ -121,7 +121,7 @@ describe('UsersService', () => {
       username: 'Lilian',
       password: 'test',
       role: 1,
-      ewonIds: ['dfsfsdfsdf', '4ds58d485ds4d84sd8s4'],
+      ewonIds: [],
     };
 
     const findOneSpy = jest
@@ -133,6 +133,7 @@ describe('UsersService', () => {
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { userId: userIdToGet },
       select: ['userId', 'username', 'role', 'ewonIds', 'password'],
+      relations: ['ewonIds'],
     });
 
     expect(result).toEqual(userToReturn);
@@ -150,6 +151,7 @@ describe('UsersService', () => {
     expect(findOneSpy).toHaveBeenCalledWith({
       where: { userId: userIdToGet },
       select: ['userId', 'username', 'role', 'ewonIds', 'password'],
+      relations: ['ewonIds'],
     });
 
     expect(result).toBeNull();
@@ -160,7 +162,7 @@ describe('UsersService', () => {
       username: 'John',
       password: 'testito',
       role: 3,
-      ewonIds: ['1', '2'],
+      ewonIds: [],
     };
 
     const updatedUser: User | null = {
