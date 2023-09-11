@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InstallationsService } from './installations.service';
 import { Installation } from '../entity/Installations';
-import { Repository, EntityManager, DeleteResult } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { InstallationsController } from './installations.controller';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../entity/Users';
@@ -204,18 +204,9 @@ describe('InstallationsService', () => {
 
       expect(result).toBeNull();
     });
-
     it('should return the installation if found', async () => {
       const userId = 1;
       const installationId = 1;
-
-      const userMock: User = {
-        userId: userId,
-        username: 'Bobidou',
-        password: 'FakePassword',
-        role: 12,
-        ewonIds: [],
-      };
 
       const installation: Installation = {
         id: installationId,
@@ -226,20 +217,33 @@ describe('InstallationsService', () => {
         abo: 2,
         lastSynchroDate: '1234567890',
         tagsLive: tagsLiveMock,
-        user: userMock,
+        user: null,
       };
 
-      const user: User = {
-        userId: userId,
-        username: 'TestUser',
-        password: 'test',
-        role: 1,
-        ewonIds: [installation],
-      };
-
-      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+      jest
+        .spyOn(entityManager, 'findOne')
+        .mockImplementation(async (entity: any, options: any) => {
+          if (entity === User && options?.where?.userId === userId) {
+            return {
+              userId,
+              username: 'TestUser',
+              password: 'test',
+              role: 1,
+              ewonIds: [installation],
+            };
+          }
+          if (
+            entity === Installation &&
+            options?.where?.id === installationId
+          ) {
+            return installation;
+          }
+          return null;
+        });
 
       const result = await service.getInstallationById(userId, installationId);
+
+      console.log(result);
 
       expect(result).toEqual(installation);
     });

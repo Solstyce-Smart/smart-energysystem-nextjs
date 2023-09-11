@@ -51,7 +51,7 @@ export class InstallationsService {
       return null;
     }
 
-    const installation = user.ewonIds.find(
+    const installation = await user.ewonIds.find(
       (ewonId) => ewonId.id === installationId,
     );
 
@@ -59,7 +59,15 @@ export class InstallationsService {
       return null;
     }
 
-    return installation;
+    const installationWithTagsLive = await this.entityManager.findOne(
+      Installation,
+      {
+        where: { id: installationId },
+        relations: ['tagsLive'],
+      },
+    );
+
+    return installationWithTagsLive;
   }
 
   async getAllInstallations(userId: number) {

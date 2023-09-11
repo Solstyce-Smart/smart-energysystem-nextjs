@@ -5,6 +5,7 @@ import {
   OneToMany,
   OneToOne,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { TagsLive } from './TagsLive';
 import { User } from './Users';
@@ -41,6 +42,7 @@ export class Installation {
   }[];
 
   @OneToOne(() => TagsLive)
+  @JoinColumn()
   tagsLive: TagsLive;
 
   @ManyToOne(() => User, (user) => user.ewonIds, {

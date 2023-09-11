@@ -32,6 +32,5 @@ export class TagsLive {
   ewonTagId: number;
 
   @OneToOne(() => Installation)
-  @JoinColumn()
   installation: Installation;
 }
