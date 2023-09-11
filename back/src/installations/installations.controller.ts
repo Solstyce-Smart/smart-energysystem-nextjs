@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { InstallationsService } from './installations.service';
 import { CreateInstallationsDto } from './dto/CreateInstallation.dto';
+import { UpdateInstallationDto } from './dto/UpdateInstallation.dto';
 
 @Controller(':userId/installations')
 export class InstallationsController {
@@ -47,12 +48,12 @@ export class InstallationsController {
   updateInstallationById(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('id', ParseIntPipe) installationId: number,
-    @Body() createInstallationsDto: CreateInstallationsDto,
+    @Body() updateInstallationDto: UpdateInstallationDto,
   ) {
     return this.installationsService.updateInstallationById(
       userId,
       installationId,
-      createInstallationsDto,
+      updateInstallationDto,
     );
   }
 

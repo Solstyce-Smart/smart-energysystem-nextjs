@@ -3,7 +3,10 @@ import { NotFoundException } from '@nestjs/common/exceptions';
 import { Installation } from '../entity/Installations';
 import { Repository, EntityManager } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { CreateInstallationParams } from './types/types';
+import {
+  CreateInstallationParams,
+  UpdateInstallationParams,
+} from './types/types';
 import { User } from '../entity/Users';
 
 @Injectable()
@@ -75,7 +78,7 @@ export class InstallationsService {
   async updateInstallationById(
     userId: number,
     installationId: number,
-    installationDetails: CreateInstallationParams,
+    installationDetails: UpdateInstallationParams,
   ) {
     const user = await this.entityManager.findOne(User, {
       where: { userId: userId },

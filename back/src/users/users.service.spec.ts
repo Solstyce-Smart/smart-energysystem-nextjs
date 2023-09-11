@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
+import * as bcrypt from 'bcrypt';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -38,8 +39,10 @@ describe('UsersService', () => {
       username: 'toto',
       password: 'toto',
     };
-
+    const hashedPassword = await bcrypt.hash(userToCreate.password, 10);
     const userCreated = new User();
+    userCreated.username = userToCreate.username;
+    userCreated.password = hashedPassword;
 
     const createSpy = jest
       .spyOn(userRepository, 'create')
@@ -51,11 +54,20 @@ describe('UsersService', () => {
 
     const result = await service.createUser(userToCreate);
 
-    expect(createSpy).toHaveBeenCalledWith(userToCreate);
+    expect(createSpy).toHaveBeenCalledWith({
+      username: userToCreate.username,
+      password: expect.any(String),
+    });
 
     expect(saveSpy).toHaveBeenCalled();
 
-    expect(result).toEqual(userCreated);
+    expect(result.username).toEqual(userCreated.username);
+
+    expect(result.password).toEqual(hashedPassword);
+
+    expect(bcrypt.compareSync(userToCreate.password, result.password)).toBe(
+      true,
+    );
   });
   //Method POST
   it('should create a roled user', async () => {
@@ -65,7 +77,10 @@ describe('UsersService', () => {
       role: 3,
     };
 
+    const hashedPassword = await bcrypt.hash(userToCreate.password, 10);
     const userCreated = new User();
+    userCreated.username = userToCreate.username;
+    userCreated.password = hashedPassword;
 
     const createSpy = jest
       .spyOn(userRepository, 'create')
@@ -77,11 +92,19 @@ describe('UsersService', () => {
 
     const result = await service.createUser(userToCreate);
 
-    expect(createSpy).toHaveBeenCalledWith(userToCreate);
+    expect(createSpy).toHaveBeenCalledWith({
+      username: userToCreate.username,
+      password: expect.any(String),
+      role: userToCreate.role,
+    });
 
     expect(saveSpy).toHaveBeenCalled();
 
     expect(result).toEqual(userCreated);
+
+    expect(bcrypt.compareSync(userToCreate.password, result.password)).toBe(
+      true,
+    );
   });
   //Method GET
   it('should get all the users', async () => {
