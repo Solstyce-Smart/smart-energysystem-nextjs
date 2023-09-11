@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InstallationsService } from './installations.service';
 import { Installation } from '../entity/Installations';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, DeleteResult } from 'typeorm';
 import { InstallationsController } from './installations.controller';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../entity/Users';
@@ -520,6 +520,151 @@ describe('InstallationsService', () => {
       );
 
       expect(result).toEqual(updatedInstallation);
+    });
+  });
+  describe('deleteInstallationById', () => {
+    it('should return the deleted installation if user and installation are found', async () => {
+      const userId = 1;
+      const installationId = 1;
+      const tagsLiveMock = {
+        id: 1,
+        lastSynchroDate: '255d15d1f5fd8d',
+        dateReq: '255d15d1f5fd8d',
+        value: 1,
+        quality: 'fdsfsdfsdfsdf',
+        alarmHint: 'fdsfsdfsdfsdf',
+        ewonTagId: 1,
+      };
+
+      const userMock: User = {
+        userId: userId,
+        username: 'Bobidou',
+        password: 'FakePassword',
+        role: 12,
+        ewonIds: [],
+      };
+
+      const installation: Installation = {
+        id: installationId,
+        ewonId: 'testEwonId',
+        name: 'Test Installation',
+        nbIRVE: 4,
+        battery: true,
+        abo: 2,
+        lastSynchroDate: '1234567890',
+        tagsLive: tagsLiveMock,
+        user: userMock,
+      };
+
+      const user: User = {
+        userId: userId,
+        username: 'TestUser',
+        password: 'test',
+        role: 1,
+        ewonIds: [installation],
+      };
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+      jest
+        .spyOn(installationRepository, 'delete')
+        .mockResolvedValue({ raw: [], affected: 1 });
+
+      const result = await service.deleteInstallationById(
+        userId,
+        installationId,
+      );
+
+      expect(result).toEqual(installation);
+    });
+
+    it('should return null if user is not found', async () => {
+      const userId = 1;
+      const installationId = 1;
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
+
+      const result = await service.deleteInstallationById(
+        userId,
+        installationId,
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if installation is not found', async () => {
+      const userId = 1;
+      const installationId = 1;
+
+      const user: User = {
+        userId: userId,
+        username: 'TestUser',
+        password: 'test',
+        role: 1,
+        ewonIds: [],
+      };
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+
+      const result = await service.deleteInstallationById(
+        userId,
+        installationId,
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if the installation delete operation fails', async () => {
+      const userId = 1;
+      const installationId = 99999;
+      const tagsLiveMock = {
+        id: 1,
+        lastSynchroDate: '255d15d1f5fd8d',
+        dateReq: '255d15d1f5fd8d',
+        value: 1,
+        quality: 'fdsfsdfsdfsdf',
+        alarmHint: 'fdsfsdfsdfsdf',
+        ewonTagId: 1,
+      };
+
+      const userMock: User = {
+        userId: userId,
+        username: 'Bobidou',
+        password: 'FakePassword',
+        role: 12,
+        ewonIds: [],
+      };
+
+      const installation: Installation = {
+        id: 1,
+        ewonId: 'testEwonId',
+        name: 'Test Installation',
+        nbIRVE: 4,
+        battery: true,
+        abo: 2,
+        lastSynchroDate: '1234567890',
+        tagsLive: tagsLiveMock,
+        user: userMock,
+      };
+
+      const user: User = {
+        userId: userId,
+        username: 'TestUser',
+        password: 'test',
+        role: 1,
+        ewonIds: [installation],
+      };
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+      jest
+        .spyOn(installationRepository, 'delete')
+        .mockRejectedValue(new Error('Deletion failed'));
+
+      const result = await service.deleteInstallationById(
+        userId,
+        installationId,
+      );
+
+      expect(result).toBeNull();
     });
   });
 });

@@ -101,4 +101,27 @@ export class InstallationsService {
 
     return updatedInstallation;
   }
+
+  async deleteInstallationById(userId: number, installationId: number) {
+    const user = await this.entityManager.findOne(User, {
+      where: { userId: userId },
+      relations: ['ewonIds'],
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const installation = user.ewonIds.find(
+      (ewonId) => ewonId.id === installationId,
+    );
+
+    if (!installation) {
+      return null;
+    }
+
+    await this.installationRepository.delete(installationId);
+
+    return installation;
+  }
 }

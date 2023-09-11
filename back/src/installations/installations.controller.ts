@@ -55,4 +55,15 @@ export class InstallationsController {
       createInstallationsDto,
     );
   }
+
+  @Delete(':id')
+  deleteInstallationById(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) installationId: number,
+  ) {
+    return this.installationsService.deleteInstallationById(
+      userId,
+      installationId,
+    );
+  }
 }
