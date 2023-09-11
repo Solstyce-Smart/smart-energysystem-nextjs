@@ -26,4 +26,15 @@ export class InstallationsController {
       createInstallationsDto,
     );
   }
+
+  @Get(':id')
+  getInstallationById(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('id', ParseIntPipe) installationId: number,
+  ) {
+    return this.installationsService.getInstallationById(
+      userId,
+      installationId,
+    );
+  }
 }

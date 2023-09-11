@@ -170,32 +170,93 @@ describe('InstallationsService', () => {
         ewonTagId: 1,
       };
 
-      const installationMock: Installation = {
-        id: 26,
-        ewonId: 'hakunamatutu',
-        name: 'centrale',
-        nbIRVE: 4,
-        battery: true,
-        abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
-        address: [
-          {
-            address: '3 rue des machins',
-            latitude: 'fdsfsfdsfsf',
-            longitude: 'fdsfsdfsdfsdf',
-            postalCode: 215882,
-          },
-        ],
-        tagsLive: tagsLiveMock,
-        user: userMock,
-      };
-
       const result = await service.createInstallation(
         userId,
         installationDetails,
       );
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('getInstallationById', () => {
+    it('should return null if user is not found', async () => {
+      const userId = 1;
+      const installationId = 1;
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
+
+      const result = await service.getInstallationById(userId, installationId);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if installation is not found', async () => {
+      const userId = 1;
+      const installationId = 1;
+
+      const user: User = {
+        userId: userId,
+        username: 'TestUser',
+        password: 'test',
+        role: 1,
+        ewonIds: [],
+      };
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+
+      const result = await service.getInstallationById(userId, installationId);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return the installation if found', async () => {
+      const userId = 1;
+      const installationId = 1;
+
+      const tagsLiveMock = {
+        id: 1,
+        lastSynchroDate: '255d15d1f5fd8d',
+        dateReq: '255d15d1f5fd8d',
+        value: 1,
+        quality: 'fdsfsdfsdfsdf',
+        alarmHint: 'fdsfsdfsdfsdf',
+        ewonTagId: 1,
+      };
+
+      const userMock: User = {
+        userId: userId,
+        username: 'Bobidou',
+        password: 'FakePassword',
+        role: 12,
+        ewonIds: [],
+      };
+
+      const installation: Installation = {
+        id: installationId,
+        ewonId: 'testEwonId',
+        name: 'Test Installation',
+        nbIRVE: 4,
+        battery: true,
+        abo: 2,
+        lastSynchroDate: '1234567890',
+        tagsLive: tagsLiveMock,
+        user: userMock,
+      };
+
+      const user: User = {
+        userId: userId,
+        username: 'TestUser',
+        password: 'test',
+        role: 1,
+        ewonIds: [installation],
+      };
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+
+      const result = await service.getInstallationById(userId, installationId);
+
+      expect(result).toEqual(installation);
     });
   });
 });
