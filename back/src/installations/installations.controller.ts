@@ -37,4 +37,9 @@ export class InstallationsController {
       installationId,
     );
   }
+
+  @Get()
+  getAllInstallations(@Param('userId', ParseIntPipe) userId: number) {
+    return this.installationsService.getAllInstallations(userId);
+  }
 }

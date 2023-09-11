@@ -259,4 +259,79 @@ describe('InstallationsService', () => {
       expect(result).toEqual(installation);
     });
   });
+
+  describe('getAllInstallations', () => {
+    it('should return null if user is not found', async () => {
+      const userId = 1;
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
+
+      const result = await service.getAllInstallations(userId);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return user installations if user is found', async () => {
+      const userId = 1;
+
+      const tagsLiveMock = {
+        id: 1,
+        lastSynchroDate: '255d15d1f5fd8d',
+        dateReq: '255d15d1f5fd8d',
+        value: 1,
+        quality: 'fdsfsdfsdfsdf',
+        alarmHint: 'fdsfsdfsdfsdf',
+        ewonTagId: 1,
+      };
+
+      const userMock: User = {
+        userId: userId,
+        username: 'Bobidou',
+        password: 'FakePassword',
+        role: 12,
+        ewonIds: [],
+      };
+
+      const installations: Installation[] = [
+        {
+          id: 1,
+          ewonId: 'testEwonId1',
+          name: 'Installation 1',
+          nbIRVE: 4,
+          battery: true,
+          abo: 2,
+          lastSynchroDate: '1234567890',
+          tagsLive: tagsLiveMock,
+          user: userMock,
+        },
+        {
+          id: 2,
+          ewonId: 'testEwonId2',
+          name: 'Installation 2',
+          nbIRVE: 3,
+          battery: false,
+          abo: 1,
+          lastSynchroDate: '9876543210',
+          tagsLive: tagsLiveMock,
+          user: userMock,
+        },
+      ];
+
+      const user: User = {
+        userId: userId,
+        username: 'TestUser',
+        password: 'test',
+        role: 1,
+        ewonIds: installations,
+      };
+
+      // Act
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
+
+      const result = await service.getAllInstallations(userId);
+
+      // Assert
+      expect(result).toEqual(installations);
+    });
+  });
 });

@@ -58,4 +58,17 @@ export class InstallationsService {
 
     return installation;
   }
+
+  async getAllInstallations(userId: number) {
+    const user = await this.entityManager.findOne(User, {
+      where: { userId: userId },
+      relations: ['ewonIds'],
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return user.ewonIds;
+  }
 }
