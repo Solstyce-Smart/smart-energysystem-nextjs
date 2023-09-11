@@ -23,7 +23,7 @@ describe('InstallationsService', () => {
         },
         {
           provide: getRepositoryToken(User),
-          useClass: Repository, // Utilisez un objet mock pour UserRepository
+          useClass: Repository,
         },
         {
           provide: getEntityManagerToken(),

@@ -12,11 +12,11 @@ export class TagsLive {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'timestamp' })
-  lastSynchroDate: Date;
+  @Column()
+  lastSynchroDate: string;
 
-  @Column({ type: 'timestamp' })
-  dateReq: Date;
+  @Column()
+  dateReq: string;
 
   @Column()
   value: number;

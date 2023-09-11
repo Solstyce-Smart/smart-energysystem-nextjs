@@ -24,7 +24,6 @@ export class InstallationsService {
       relations: ['ewonIds'],
     });
     if (!user) {
-      console.log('User not found');
       return null;
     }
 
