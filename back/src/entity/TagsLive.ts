@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { Installation } from './Installations';
 
@@ -29,4 +30,8 @@ export class TagsLive {
 
   @Column()
   ewonTagId: number;
+
+  @OneToOne(() => Installation)
+  @JoinColumn()
+  installation: Installation;
 }

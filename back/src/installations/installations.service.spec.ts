@@ -43,6 +43,40 @@ describe('InstallationsService', () => {
     userRepository = module.get<Repository<User>>(getRepositoryToken(User)); // Injectez UserRepository
   });
 
+  const tagsLiveMock = {
+    id: 1,
+    lastSynchroDate: '255d15d1f5fd8d',
+    dateReq: '255d15d1f5fd8d',
+    value: 1,
+    quality: 'fdsfsdfsdfsdf',
+    alarmHint: 'fdsfsdfsdfsdf',
+    ewonTagId: 1,
+    installation: null,
+  };
+
+  const installationMock: Installation = {
+    id: 26,
+    ewonId: 'hakunamatutu',
+    name: 'centrale',
+    nbIRVE: 4,
+    battery: true,
+    abo: 2,
+    lastSynchroDate: '255d15d1f5fd8d',
+    address: [
+      {
+        address: '3 rue des machins',
+        latitude: 'fdsfsfdsfsf',
+        longitude: 'fdsfsdfsdfsdf',
+        postalCode: 215882,
+      },
+    ],
+    tagsLive: tagsLiveMock,
+    user: null,
+  };
+
+  tagsLiveMock.installation = installationMock;
+  installationMock.tagsLive = tagsLiveMock;
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -58,37 +92,8 @@ describe('InstallationsService', () => {
         role: 12,
         ewonIds: [],
       };
+
       const installationDetails: CreateInstallationParams = {
-        id: 26,
-        ewonId: 'hakunamatutu',
-        name: 'centrale',
-        nbIRVE: 4,
-        battery: true,
-        abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
-        address: [
-          {
-            address: '3 rue des machins',
-            latitude: 'fdsfsfdsfsf',
-            longitude: 'fdsfsdfsdfsdf',
-            postalCode: 215882,
-          },
-        ],
-        tagsLive: 'fdsfsdfsdfsdf',
-        user: userMock,
-      };
-
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
-
-      const installationMock: Installation = {
         id: 26,
         ewonId: 'hakunamatutu',
         name: 'centrale',
@@ -156,18 +161,8 @@ describe('InstallationsService', () => {
             postalCode: 215882,
           },
         ],
-        tagsLive: 'fdsfsdfsdfsdf',
+        tagsLive: tagsLiveMock,
         user: userMock,
-      };
-
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
       };
 
       const result = await service.createInstallation(
@@ -213,16 +208,6 @@ describe('InstallationsService', () => {
     it('should return the installation if found', async () => {
       const userId = 1;
       const installationId = 1;
-
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
 
       const userMock: User = {
         userId: userId,
@@ -273,17 +258,6 @@ describe('InstallationsService', () => {
 
     it('should return user installations if user is found', async () => {
       const userId = 1;
-
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
-
       const userMock: User = {
         userId: userId,
         username: 'Bobidou',
@@ -336,15 +310,6 @@ describe('InstallationsService', () => {
     it('should return null if user is not found', async () => {
       const userId = 1;
       const installationId = 1;
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
 
       const userMock: User = {
         userId: userId,
@@ -387,15 +352,6 @@ describe('InstallationsService', () => {
     it('should return null if installation is not found', async () => {
       const userId = 1;
       const installationId = 1;
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
 
       const userMock: User = {
         userId: userId,
@@ -446,15 +402,6 @@ describe('InstallationsService', () => {
     it('should return the updated installation if user and installation are found', async () => {
       const userId = 1;
       const installationId = 1;
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
 
       const userMock: User = {
         userId: userId,
@@ -526,15 +473,6 @@ describe('InstallationsService', () => {
     it('should return the deleted installation if user and installation are found', async () => {
       const userId = 1;
       const installationId = 1;
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
 
       const userMock: User = {
         userId: userId,
@@ -616,15 +554,6 @@ describe('InstallationsService', () => {
     it('should return null if the installation delete operation fails', async () => {
       const userId = 1;
       const installationId = 99999;
-      const tagsLiveMock = {
-        id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-      };
 
       const userMock: User = {
         userId: userId,

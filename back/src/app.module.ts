@@ -7,6 +7,7 @@ import { TagsLive } from './entity/TagsLive';
 import { User } from './entity/Users';
 import { UsersModule } from './users/users.module';
 import { InstallationsModule } from './installations/installations.module';
+import { TagsLiveModule } from './tags-live/tags-live.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { InstallationsModule } from './installations/installations.module';
     }),
     UsersModule,
     InstallationsModule,
+    TagsLiveModule,
   ],
   controllers: [AppController],
   providers: [AppService],
