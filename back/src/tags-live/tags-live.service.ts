@@ -5,7 +5,7 @@ import { Repository, EntityManager } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/Users';
 import { TagsLive } from '../entity/TagsLive';
-import { CreateTagLiveParams } from './types/types';
+import { CreateTagLiveParams, UpdateTagLiveParams } from './types/types';
 
 @Injectable()
 export class TagsLiveService {
@@ -67,8 +67,49 @@ export class TagsLiveService {
     await this.userRepository.save(user);
     await this.installationRepository.save(installation);
     await this.tagsLiveRepository.save(newTagLive);
-    console.log(userId, installationId, CreateTagLiveParams);
 
     return newTagLive;
+  }
+
+  async updateTagLive(
+    userId: number,
+    installationId: number,
+    tagLiveId: number,
+    UpdateTagLiveParams: UpdateTagLiveParams,
+  ) {
+    const user = await this.entityManager.findOne(User, {
+      where: { userId: userId },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const installation = await this.entityManager.findOne(Installation, {
+      where: { id: installationId },
+      relations: ['tagsLive'],
+    });
+
+    if (!installation) {
+      return null;
+    }
+
+    const tagLive = await this.entityManager.findOne(TagsLive, {
+      where: { id: tagLiveId },
+    });
+
+    if (!tagLive) {
+      return null;
+    }
+
+    const updatedTagLive = this.tagsLiveRepository.create(UpdateTagLiveParams);
+
+    installation.tagsLive = updatedTagLive;
+
+    await this.userRepository.save(user);
+    await this.installationRepository.save(installation);
+    await this.tagsLiveRepository.save(updatedTagLive);
+
+    return updatedTagLive;
   }
 }

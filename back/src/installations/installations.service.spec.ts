@@ -243,8 +243,6 @@ describe('InstallationsService', () => {
 
       const result = await service.getInstallationById(userId, installationId);
 
-      console.log(result);
-
       expect(result).toEqual(installation);
     });
   });
