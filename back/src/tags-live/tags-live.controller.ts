@@ -51,4 +51,13 @@ export class TagsLiveController {
       updateTagLiveDto,
     );
   }
+
+  @Delete(':tagId')
+  deleteTagLive(
+    @Param('userId') userId: number,
+    @Param('id') installationId: number,
+    @Param('tagId') tagId: number,
+  ) {
+    return this.tagsLiveService.deleteTagLive(userId, installationId, tagId);
+  }
 }

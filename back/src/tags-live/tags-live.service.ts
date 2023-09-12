@@ -42,7 +42,7 @@ export class TagsLiveService {
   async createTagLive(
     userId: number,
     installationId: number,
-    CreateTagLiveParams: CreateTagLiveParams,
+    createTagLiveParams: CreateTagLiveParams,
   ) {
     const user = await this.entityManager.findOne(User, {
       where: { userId: userId },
@@ -60,13 +60,21 @@ export class TagsLiveService {
     if (!installation) {
       return null;
     }
-    const newTagLive = this.tagsLiveRepository.create(CreateTagLiveParams);
+
+    const newTagLive = this.tagsLiveRepository.create({
+      lastSynchroDate: createTagLiveParams.lastSynchroDate,
+      dateReq: createTagLiveParams.dateReq,
+      value: createTagLiveParams.value,
+      quality: createTagLiveParams.quality,
+      alarmHint: createTagLiveParams.alarmHint,
+      ewonTagId: createTagLiveParams.ewonTagId,
+    });
 
     installation.tagsLive = newTagLive;
 
     await this.userRepository.save(user);
-    await this.installationRepository.save(installation);
     await this.tagsLiveRepository.save(newTagLive);
+    await this.installationRepository.save(installation);
 
     return newTagLive;
   }
@@ -111,5 +119,44 @@ export class TagsLiveService {
     await this.tagsLiveRepository.save(updatedTagLive);
 
     return updatedTagLive;
+  }
+
+  async deleteTagLive(
+    userId: number,
+    installationId: number,
+    tagLiveId: number,
+  ) {
+    const user = await this.entityManager.findOne(User, {
+      where: { userId: userId },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const installation = await this.entityManager.findOne(Installation, {
+      where: { id: installationId },
+      relations: ['tagsLive'],
+    });
+
+    if (!installation) {
+      return null;
+    }
+
+    const tagLive = await this.entityManager.findOne(TagsLive, {
+      where: { id: tagLiveId },
+    });
+
+    if (!tagLive) {
+      return null;
+    }
+
+    installation.tagsLive = null;
+
+    await this.userRepository.save(user);
+    await this.installationRepository.save(installation);
+    await this.tagsLiveRepository.delete(tagLiveId);
+
+    return null;
   }
 }

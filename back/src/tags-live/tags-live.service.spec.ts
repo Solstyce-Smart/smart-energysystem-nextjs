@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TagsLiveService } from './tags-live.service';
 import { TagsLiveController } from './tags-live.controller';
-import { EntityManager, Repository } from 'typeorm';
+import { DeleteResult, EntityManager, Repository } from 'typeorm';
 import { User } from '../entity/Users';
 import { Installation } from '../entity/Installations';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
@@ -226,17 +226,6 @@ describe('TagsLiveService', () => {
 
       tagDetails.installation = installationMock;
 
-      const expectedTag = {
-        id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
-        value: 1,
-        quality: 'fdsfsdfsdfsdf',
-        alarmHint: 'fdsfsdfsdfsdf',
-        ewonTagId: 1,
-        installation: installationMock,
-      };
-
       jest.spyOn(service, 'updateTagLive').mockResolvedValue(null);
 
       const result = await service.updateTagLive(
@@ -352,6 +341,114 @@ describe('TagsLiveService', () => {
       );
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('deleteTagLive', () => {
+    it('should return null if user is not found', async () => {
+      const userId = undefined;
+      const installationId = 2;
+      const tagLiveId = 3;
+
+      // Mocking EntityManager to return null for findOne
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
+
+      const result = await service.deleteTagLive(
+        userId,
+        installationId,
+        tagLiveId,
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if installation is not found', async () => {
+      const userId = 1;
+      const installationId = 99999;
+      const tagLiveId = 3;
+
+      // Mocking EntityManager to return user but not installation
+      jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
+
+      const result = await service.deleteTagLive(
+        userId,
+        installationId,
+        tagLiveId,
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if tagLive is not found', async () => {
+      const userId = 1;
+      const installationId = 2;
+      const tagLiveId = 99999;
+
+      const userMock: User = {
+        userId: userId,
+        username: 'Bobidou',
+        password: 'FakePassword',
+        role: 12,
+        ewonIds: [],
+      };
+
+      // Mocking EntityManager to return user, installation, but not tagLive
+      jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(userMock);
+      jest
+        .spyOn(entityManager, 'findOne')
+        .mockResolvedValueOnce(installationMock);
+      jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(null);
+
+      const result = await service.deleteTagLive(
+        userId,
+        installationId,
+        tagLiveId,
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it('should delete the tagLive and disassociate it from installation', async () => {
+      const userId = 1;
+      const installationId = 2;
+      const tagLiveId = 3;
+
+      const userMock: User = {
+        userId: userId,
+        username: 'Bobidou',
+        password: 'FakePassword',
+        role: 12,
+        ewonIds: [],
+      };
+
+      const tagDetails = {
+        id: 1,
+        lastSynchroDate: 'modifSynchro',
+        dateReq: '255d15d1f5fd8d',
+        value: 1,
+        quality: 'fdsfsdfsdfsdf',
+        alarmHint: 'fdsfsdfsdfsdf',
+        ewonTagId: 1,
+        installation: null,
+      };
+
+      jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(userMock);
+      jest
+        .spyOn(entityManager, 'findOne')
+        .mockResolvedValueOnce(installationMock);
+      jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(tagDetails);
+
+      jest
+        .spyOn(service, 'deleteTagLive')
+        .mockResolvedValueOnce({} as DeleteResult);
+
+      const result = await service.deleteTagLive(
+        userId,
+        installationId,
+        tagLiveId,
+      );
+
+      expect(result).toStrictEqual({});
     });
   });
 });

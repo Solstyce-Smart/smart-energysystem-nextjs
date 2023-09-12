@@ -1,5 +1,4 @@
 export class CreateTagLiveDto {
-  id: number;
   lastSynchroDate: string;
   dateReq: string;
   value: number;

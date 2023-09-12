@@ -43,7 +43,7 @@ export class Installation {
 
   @OneToOne(() => TagsLive)
   @JoinColumn()
-  tagsLive: TagsLive;
+  tagsLive?: TagsLive;
 
   @ManyToOne(() => User, (user) => user.ewonIds, {
     onDelete: 'CASCADE',

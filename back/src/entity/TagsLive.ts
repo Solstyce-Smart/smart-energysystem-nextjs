@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Installation } from './Installations';
 
 @Entity('tags_live')
@@ -24,6 +30,9 @@ export class TagsLive {
   @Column()
   ewonTagId: number;
 
-  @OneToOne(() => Installation)
+  @OneToOne(() => Installation, (installation) => installation.tagsLive, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
   installation: Installation;
 }

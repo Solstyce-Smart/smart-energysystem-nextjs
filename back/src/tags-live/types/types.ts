@@ -1,5 +1,4 @@
 export class CreateTagLiveParams {
-  id: number;
   lastSynchroDate: string;
   dateReq: string;
   value: number;
@@ -9,7 +8,6 @@ export class CreateTagLiveParams {
   installation: null;
 }
 export class UpdateTagLiveParams {
-  id: number;
   lastSynchroDate: string;
   dateReq: string;
   value: number;
