@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Installation } from './entity/Installations';
-import { TagsLive } from './entity/TagsLive';
-import { User } from './entity/Users';
+import { Installation } from './entity/Installations.entity';
+import { TagsLive } from './entity/TagsLive.entity';
+import { User } from './entity/Users.entity';
 import { UsersModule } from './users/users.module';
 import { InstallationsModule } from './installations/installations.module';
 import { TagsLiveModule } from './tags-live/tags-live.module';
@@ -25,7 +23,7 @@ import { TagsLiveModule } from './tags-live/tags-live.module';
     InstallationsModule,
     TagsLiveModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

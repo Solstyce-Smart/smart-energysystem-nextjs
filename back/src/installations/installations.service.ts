@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
-import { Installation } from '../entity/Installations';
+import { Installation } from '../entity/Installations.entity';
 import { Repository, EntityManager } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import {
   CreateInstallationParams,
   UpdateInstallationParams,
 } from './types/types';
-import { User } from '../entity/Users';
+import { User } from '../entity/Users.entity';
 
 @Injectable()
 export class InstallationsService {
@@ -27,18 +27,37 @@ export class InstallationsService {
       where: { userId: userId },
       relations: ['ewonIds'],
     });
+
     if (!user) {
       return null;
     }
 
-    const newInstallation =
-      this.installationRepository.create(installationDetails);
+    const newInstallation = new Installation();
+    newInstallation.ewonId = installationDetails.ewonId;
+    newInstallation.name = installationDetails.name;
+    newInstallation.nbIRVE = installationDetails.nbIRVE;
+    newInstallation.battery = installationDetails.battery;
+    newInstallation.abo = installationDetails.abo;
+    newInstallation.address = installationDetails.address;
+    newInstallation.lastSynchroDate = installationDetails.lastSynchroDate;
 
     newInstallation.user = user;
-    await this.userRepository.save(user);
-    await this.installationRepository.save(newInstallation);
 
-    return { newInstallation, user };
+    const savedData = await this.entityManager.transaction(
+      async (transactionalEntityManager) => {
+        const savedUser = await transactionalEntityManager.save(User, user);
+        const savedInstallation = await transactionalEntityManager.save(
+          Installation,
+          newInstallation,
+        );
+        return { savedUser, savedInstallation };
+      },
+    );
+
+    return {
+      newInstallation: savedData.savedInstallation,
+      user: savedData.savedUser,
+    };
   }
 
   async getInstallationById(userId: number, installationId: number) {

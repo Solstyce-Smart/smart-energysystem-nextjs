@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,7 +6,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { Installation } from './Installations';
+import { Installation } from './Installations.entity';
 
 @Entity('tags_live')
 export class TagsLive {
@@ -33,6 +34,7 @@ export class TagsLive {
   @OneToOne(() => Installation, (installation) => installation.tagsLive, {
     onDelete: 'CASCADE',
   })
+  @ApiProperty({ type: () => [Installation] })
   @JoinColumn()
   installation: Installation;
 }

@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TagsLiveService } from './tags-live.service';
 import { TagsLiveController } from './tags-live.controller';
 import { DeleteResult, EntityManager, Repository } from 'typeorm';
-import { User } from '../entity/Users';
-import { Installation } from '../entity/Installations';
+import { User } from '../entity/Users.entity';
+import { Installation } from '../entity/Installations.entity';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
-import { TagsLive } from '../entity/TagsLive';
+import { TagsLive } from '../entity/TagsLive.entity';
 
 describe('TagsLiveService', () => {
   let service: TagsLiveService;
@@ -350,7 +350,6 @@ describe('TagsLiveService', () => {
       const installationId = 2;
       const tagLiveId = 3;
 
-      // Mocking EntityManager to return null for findOne
       jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
 
       const result = await service.deleteTagLive(
@@ -367,7 +366,6 @@ describe('TagsLiveService', () => {
       const installationId = 99999;
       const tagLiveId = 3;
 
-      // Mocking EntityManager to return user but not installation
       jest.spyOn(entityManager, 'findOne').mockResolvedValue(null);
 
       const result = await service.deleteTagLive(
@@ -392,7 +390,6 @@ describe('TagsLiveService', () => {
         ewonIds: [],
       };
 
-      // Mocking EntityManager to return user, installation, but not tagLive
       jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(userMock);
       jest
         .spyOn(entityManager, 'findOne')

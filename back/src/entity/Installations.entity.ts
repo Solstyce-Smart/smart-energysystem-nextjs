@@ -2,13 +2,13 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   OneToOne,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { TagsLive } from './TagsLive';
-import { User } from './Users';
+import { ApiProperty } from '@nestjs/swagger';
+import { TagsLive } from './TagsLive.entity';
+import { User } from './Users.entity';
 
 @Entity('installation')
 export class Installation {

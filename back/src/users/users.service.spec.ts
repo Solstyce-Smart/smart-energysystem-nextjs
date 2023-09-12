@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { User } from '../entity/Users';
+import { User } from '../entity/Users.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
@@ -33,7 +33,6 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  //Method POST
   it('should create a user', async () => {
     const userToCreate = {
       username: 'toto',
@@ -69,7 +68,7 @@ describe('UsersService', () => {
       true,
     );
   });
-  //Method POST
+
   it('should create a roled user', async () => {
     const userToCreate = {
       username: 'toto',
@@ -106,7 +105,7 @@ describe('UsersService', () => {
       true,
     );
   });
-  //Method GET
+
   it('should get all the users', async () => {
     const users: User[] = [
       {
@@ -135,7 +134,7 @@ describe('UsersService', () => {
 
     expect(result).toEqual(users);
   });
-  //Method GET
+
   it('should return a user with userId, username, role, and ewonIds', async () => {
     const userIdToGet = 2;
 

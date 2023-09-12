@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InstallationsService } from './installations.service';
-import { Installation } from '../entity/Installations';
+import { Installation } from '../entity/Installations.entity';
 import { Repository, EntityManager } from 'typeorm';
 import { InstallationsController } from './installations.controller';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '../entity/Users';
+import { User } from '../entity/Users.entity';
 
 describe('InstallationsService', () => {
   let service: InstallationsService;
@@ -39,7 +39,7 @@ describe('InstallationsService', () => {
     );
     controller = module.get<InstallationsController>(InstallationsController);
     entityManager = module.get<EntityManager>(EntityManager);
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User)); // Injectez UserRepository
+    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
   it('should be defined', () => {

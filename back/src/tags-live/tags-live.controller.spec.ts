@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TagsLiveController } from './tags-live.controller';
 import { TagsLiveService } from './tags-live.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { TagsLive } from '../entity/TagsLive';
+import { TagsLive } from '../entity/TagsLive.entity';
 import { EntityManager, Repository } from 'typeorm';
-import { User } from '../entity/Users';
-import { Installation } from '../entity/Installations';
+import { User } from '../entity/Users.entity';
+import { Installation } from '../entity/Installations.entity';
 
 describe('TagsLiveController', () => {
   let service: TagsLiveService;

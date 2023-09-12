@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '../entity/Users';
+import { User } from '../entity/Users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserParams, UpdateUserParams } from './types/types';
@@ -16,7 +16,7 @@ export class UsersService {
 
     const newUser = this.userRepository.create({
       ...userDetails,
-      password: hashedPassword, // Enregistrer le mot de passe haché dans la base de données
+      password: hashedPassword,
     });
 
     return this.userRepository.save(newUser);

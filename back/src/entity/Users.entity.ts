@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Installation } from './Installations';
+import { Installation } from './Installations.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -16,5 +17,6 @@ export class User {
   role: number;
 
   @OneToMany(() => Installation, (installation) => installation.user)
+  @ApiProperty({ enum: () => [Installation] })
   ewonIds: Installation[];
 }
