@@ -1,0 +1,72 @@
+[
+  {
+    "lastSynchroDate": "2023-09-01T10:00:00Z",
+    "dateRequete": "2023-09-01T10:05:00Z",
+    "value": 25.4,
+    "quality": "Good",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-02T12:30:00Z",
+    "dateRequete": "2023-09-02T12:35:00Z",
+    "value": 30.2,
+    "quality": "Excellent",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-03T14:15:00Z",
+    "dateRequete": "2023-09-03T14:20:00Z",
+    "value": 19.8,
+    "quality": "Good",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-04T08:45:00Z",
+    "dateRequete": "2023-09-04T08:50:00Z",
+    "value": 14.7,
+    "quality": "Fair",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-05T16:20:00Z",
+    "dateRequete": "2023-09-05T16:25:00Z",
+    "value": 22.1,
+    "quality": "Good",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-06T09:10:00Z",
+    "dateRequete": "2023-09-06T09:15:00Z",
+    "value": 28.6,
+    "quality": "Excellent",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-07T13:55:00Z",
+    "dateRequete": "2023-09-07T14:00:00Z",
+    "value": 18.3,
+    "quality": "Good",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-08T11:40:00Z",
+    "dateRequete": "2023-09-08T11:45:00Z",
+    "value": 31.9,
+    "quality": "Excellent",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-09T15:05:00Z",
+    "dateRequete": "2023-09-09T15:10:00Z",
+    "value": 17.2,
+    "quality": "Good",
+    "alarmHint": "No alarm"
+  },
+  {
+    "lastSynchroDate": "2023-09-10T07:30:00Z",
+    "dateRequete": "2023-09-10T07:35:00Z",
+    "value": 24.8,
+    "quality": "Fair",
+    "alarmHint": "No alarm"
+  }
+]

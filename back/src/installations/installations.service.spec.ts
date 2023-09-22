@@ -114,23 +114,13 @@ describe('InstallationsService', () => {
       };
 
       jest.spyOn(entityManager, 'findOne').mockResolvedValue(userMock);
-      jest
-        .spyOn(installationRepository, 'create')
-        .mockReturnValue(installationMock);
-      jest.spyOn(userRepository, 'save').mockResolvedValue(userMock);
-      jest
-        .spyOn(installationRepository, 'save')
-        .mockResolvedValue(installationMock);
 
       const result = await service.createInstallation(
         userId,
         installationDetails,
       );
 
-      expect(result).toEqual({
-        newInstallation: installationMock,
-        user: userMock,
-      });
+      expect(result).toEqual(installationDetails);
     });
 
     it('should handle the case when the user is not found', async () => {
