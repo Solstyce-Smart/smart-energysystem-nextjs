@@ -1,18 +1,22 @@
+import { Installation } from '../../entity/Installations.entity';
+
 export class CreateTagLiveParams {
-  lastSynchroDate: string;
-  dateReq: string;
+  id: number;
+  lastSynchroDate: Date;
+  dateReq: Date;
   value: number;
   quality: string;
   alarmHint: string;
   ewonTagId: number;
-  installation: null;
+  installation: Installation;
 }
 export class UpdateTagLiveParams {
-  lastSynchroDate: string;
-  dateReq: string;
+  id: number;
+  lastSynchroDate: Date;
+  dateReq: Date;
   value: number;
   quality: string;
   alarmHint: string;
   ewonTagId: number;
-  installation: null;
+  installation: Installation;
 }

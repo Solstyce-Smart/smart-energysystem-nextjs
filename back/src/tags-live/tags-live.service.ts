@@ -6,6 +6,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/Users.entity';
 import { TagsLive } from '../entity/TagsLive.entity';
 import { CreateTagLiveParams, UpdateTagLiveParams } from './types/types';
+import { getEwon } from '../ewonApi/getEwon';
 
 @Injectable()
 export class TagsLiveService {
@@ -51,6 +52,11 @@ export class TagsLiveService {
     if (!user) {
       return null;
     }
+    const datas = await getEwon();
+
+    if (!datas) {
+      return null;
+    }
 
     const installation = await this.entityManager.findOne(Installation, {
       where: { id: installationId },
@@ -61,22 +67,37 @@ export class TagsLiveService {
       return null;
     }
 
-    const newTagLive = this.tagsLiveRepository.create({
-      lastSynchroDate: createTagLiveParams.lastSynchroDate,
-      dateReq: createTagLiveParams.dateReq,
-      value: createTagLiveParams.value,
-      quality: createTagLiveParams.quality,
-      alarmHint: createTagLiveParams.alarmHint,
-      ewonTagId: createTagLiveParams.ewonTagId,
-    });
+    // Créez un tableau pour stocker les nouveaux enregistrements TagsLive
+    const newTags: TagsLive[] = [];
 
-    installation.tagsLive = newTagLive;
+    for (let i = 0; i < datas.tags.length; i++) {
+      const newTagLive: CreateTagLiveParams = {
+        id: datas.tags[i].id,
+        lastSynchroDate: datas.lastSynchroDate,
+        dateReq: new Date(),
+        value: datas.tags[i].value,
+        quality: datas.tags[i].quality,
+        alarmHint: datas.tags[i].alarmHint,
+        ewonTagId: datas.tags[i].ewonTagId,
+        installation: installation, // Lien vers l'installation parente
+      };
 
-    await this.userRepository.save(user);
-    await this.tagsLiveRepository.save(newTagLive);
+      newTags.push(newTagLive);
+    }
+
+    // Enregistrez tous les nouveaux enregistrements TagsLive en une seule opération
+    await this.tagsLiveRepository.save(newTags);
+
+    console.log(newTags);
+
+    // Associez les enregistrements TagsLive à l'installation parente
+    installation.tagsLive = newTags;
+
+    // Enregistrez l'installation mise à jour
     await this.installationRepository.save(installation);
 
-    return newTagLive;
+    // Retournez la liste des nouveaux enregistrements TagsLive
+    return newTags;
   }
 
   async updateTagLive(

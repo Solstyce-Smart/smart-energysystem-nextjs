@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Installation } from '../../entity/Installations.entity';
 export class CreateTagLiveDto {
-  @ApiProperty({ default: 'dateRandom' })
-  lastSynchroDate: string;
-  @ApiProperty({ default: 'dateRandom' })
-  dateReq: string;
+  @ApiProperty()
+  id: number;
+  @ApiProperty({ default: '2023-09-20T07:58:59Z' })
+  lastSynchroDate: Date;
+  @ApiProperty({ default: '2023-09-20T07:58:59Z' })
+  dateReq: Date;
   @ApiProperty({ default: 1 })
   value: number;
   @ApiProperty({ default: 'Good' })

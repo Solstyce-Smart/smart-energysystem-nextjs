@@ -63,7 +63,6 @@ export class TagsLiveController {
     status: 500,
     description: 'Erreur serveur',
   })
-  @ApiBody({ type: () => CreateTagLiveDto })
   @ApiParam({
     name: 'userId',
     type: Number,

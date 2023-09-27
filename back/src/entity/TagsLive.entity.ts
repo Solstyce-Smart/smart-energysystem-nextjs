@@ -5,19 +5,21 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
 } from 'typeorm';
 import { Installation } from './Installations.entity';
 
 @Entity('tags_live')
 export class TagsLive {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
-  lastSynchroDate: string;
+  lastSynchroDate: Date;
 
   @Column()
-  dateReq: string;
+  dateReq: Date;
 
   @Column()
   value: number;
@@ -31,10 +33,9 @@ export class TagsLive {
   @Column()
   ewonTagId: number;
 
-  @OneToOne(() => Installation, (installation) => installation.tagsLive, {
+  @ManyToOne(() => Installation, (installation) => installation.tagsLive, {
     onDelete: 'CASCADE',
   })
-  @ApiProperty({ type: () => [Installation] })
-  @JoinColumn()
+  @ApiProperty({ type: () => Installation })
   installation: Installation;
 }
