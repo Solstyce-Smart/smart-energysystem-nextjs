@@ -13,7 +13,7 @@ export class TagsHistory {
   tagName: string;
 
   @Column()
-  dateReq: string;
+  dateReq: Date;
 
   @Column()
   value: number;

@@ -26,8 +26,6 @@ export class dataSearchService {
   }
 
   async searchByEwonId() {
-    console.log(index, ewonId);
-
     const body = await this.elasticService.search<GetDatasResult>({
       index,
       query: {
