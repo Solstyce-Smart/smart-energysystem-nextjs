@@ -9,7 +9,7 @@ async function bootstrap() {
     .setTitle('SMART - ENERGYSYSTEM')
     .setDescription('Endpoints for the SMART - ENERGYSYSTEM')
     .setVersion('1.0')
-    .addTag('smart-energysystem')
+    .addTag('SMART - EnergySystem')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

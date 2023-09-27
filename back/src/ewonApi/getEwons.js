@@ -1,7 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
-
 export const getEwons = () => {
   const url = 'https://data.talk2m.com/getewons';
   const data = new URLSearchParams();
@@ -17,5 +16,3 @@ export const getEwons = () => {
       console.error('Erreur:', error);
     });
 };
-
-getEwons();
