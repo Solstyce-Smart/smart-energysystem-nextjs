@@ -67,6 +67,7 @@ describe('InstallationsService', () => {
   const tagsLiveMock: TagsLive[] = [
     {
       id: 1,
+      name: 'sqdsqdqd',
       lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
       dateReq: new Date('2023-09-20T07:58:59Z'),
       value: 1,

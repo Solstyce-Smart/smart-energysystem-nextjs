@@ -253,6 +253,7 @@ describe('TagsLiveService', () => {
 
       const tagDetails: TagsLive = {
         id: 1,
+        name: 'Tag Name',
         lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
         dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,

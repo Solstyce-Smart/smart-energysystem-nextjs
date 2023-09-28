@@ -16,6 +16,9 @@ export class TagsLive {
   id: number;
 
   @Column()
+  name: string;
+
+  @Column()
   lastSynchroDate: Date;
 
   @Column()

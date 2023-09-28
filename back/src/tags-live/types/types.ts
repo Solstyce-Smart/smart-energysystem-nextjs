@@ -2,6 +2,7 @@ import { Installation } from '../../entity/Installations.entity';
 
 export class CreateTagLiveParams {
   id: number;
+  name: string;
   lastSynchroDate: Date;
   dateReq: Date;
   value: number;
@@ -17,6 +18,7 @@ export class CreateTagLiveParams {
 }
 export class UpdateTagLiveParams {
   id: number;
+  name: string;
   lastSynchroDate: Date;
   dateReq: Date;
   value: number;

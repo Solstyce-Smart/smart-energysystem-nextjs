@@ -73,6 +73,7 @@ export class TagsLiveService {
     for (let i = 0; i < datas.tags.length; i++) {
       const newTagLive: CreateTagLiveParams = {
         id: datas.tags[i].id,
+        name: datas.tags[i].name,
         lastSynchroDate: datas.lastSynchroDate,
         dateReq: new Date(),
         value: datas.tags[i].value,

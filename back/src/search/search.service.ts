@@ -15,6 +15,7 @@ export class searchService {
     for (let i = 0; i < datas.tags.length; i++) {
       const data = {
         ewonId: datas.id,
+        name: datas.tags[i].name,
         lastSynchroDate: datas.lastSynchroDate,
         tagName: datas.tags[i].name,
         dateReq: new Date(),

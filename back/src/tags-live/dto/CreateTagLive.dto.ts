@@ -3,6 +3,8 @@ import { Installation } from '../../entity/Installations.entity';
 export class CreateTagLiveDto {
   @ApiProperty()
   id: number;
+  @ApiProperty({ default: 'Tag Name' })
+  name: string;
   @ApiProperty({ default: '2023-09-20T07:58:59Z' })
   lastSynchroDate: Date;
   @ApiProperty({ default: '2023-09-20T07:58:59Z' })

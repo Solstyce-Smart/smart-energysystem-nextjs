@@ -7,6 +7,9 @@ export class TagsHistory {
   ewonId: string;
 
   @Column()
+  name: string;
+
+  @Column()
   lastSynchroDate: Date;
 
   @Column()
