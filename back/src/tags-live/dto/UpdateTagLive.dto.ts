@@ -17,4 +17,9 @@ export class UpdateTagLiveDto {
   ewonTagId: number;
   @ApiProperty({ type: () => [Installation], readOnly: true })
   installation: null;
+
+  toJSON() {
+    const { installation, ...rest } = this;
+    return rest;
+  }
 }

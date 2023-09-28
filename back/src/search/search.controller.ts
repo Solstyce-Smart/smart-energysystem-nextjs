@@ -44,9 +44,8 @@ export class searchController {
     status: 500,
     description: 'Erreur serveur',
   })
-  @ApiBody({ type: () => PostDatasDto })
-  async postDatas(@Body() data: PostDatasDto) {
-    const result = await this.searchService.postDatas(data);
+  async postDatas() {
+    const result = await this.searchService.postDatas();
     return result;
   }
 }

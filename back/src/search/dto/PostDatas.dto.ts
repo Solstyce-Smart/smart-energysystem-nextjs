@@ -4,8 +4,8 @@ export class PostDatasDto {
   ewonId: string;
   @ApiProperty({ default: 'IRVE1' })
   tagName: string;
-  @ApiProperty({ default: 'dateRandom' })
-  lastSynchroDate: string;
+  @ApiProperty({ default: '2023-09-01T10:48:50Z' })
+  lastSynchroDate: Date;
   @ApiProperty({ default: '2023-09-01T10:48:50Z' })
   dateReq: Date;
   @ApiProperty({ default: 1 })

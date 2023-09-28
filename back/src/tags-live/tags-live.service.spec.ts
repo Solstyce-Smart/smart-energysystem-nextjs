@@ -46,7 +46,7 @@ describe('TagsLiveService', () => {
     nbIRVE: 4,
     battery: true,
     abo: 2,
-    lastSynchroDate: '255d15d1f5fd8d',
+    lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
     address: [
       {
         address: '3 rue des machins',
@@ -57,7 +57,7 @@ describe('TagsLiveService', () => {
     ],
     tagsLive: null,
     user: null,
-  };
+  } as Installation;
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -92,14 +92,14 @@ describe('TagsLiveService', () => {
 
       const tagsLiveMock: TagsLive = {
         id: 1,
-        lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
 
       const entityManagerFindOneSpy = jest.spyOn(entityManager, 'findOne');
       entityManagerFindOneSpy.mockResolvedValue({
@@ -118,29 +118,29 @@ describe('TagsLiveService', () => {
       const userId = 1;
       const installationId = 2;
       const tagId = 3;
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
 
       tagDetails.installation = installationMock;
 
-      const expectedTag = {
+      const expectedTag: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: installationMock,
-      };
+      } as TagsLive;
 
       jest.spyOn(service, 'updateTagLive').mockResolvedValue(expectedTag);
 
@@ -157,16 +157,16 @@ describe('TagsLiveService', () => {
       const userId = undefined;
       const installationId = 2;
       const tagId = 3;
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
 
       tagDetails.installation = installationMock;
 
@@ -185,16 +185,16 @@ describe('TagsLiveService', () => {
       const userId = 1;
       const installationId = undefined;
       const tagId = 3;
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
 
       tagDetails.installation = installationMock;
 
@@ -213,16 +213,16 @@ describe('TagsLiveService', () => {
       const userId = 1;
       const installationId = 2;
       const tagId = undefined;
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
 
       tagDetails.installation = installationMock;
 
@@ -251,17 +251,20 @@ describe('TagsLiveService', () => {
         ewonIds: [],
       };
 
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
+        toJSON: () => {
+          const { installation, ...rest } = tagDetails[0];
+          return rest;
+        },
       };
-
       tagDetails.installation = installationMock;
 
       jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(userMock);
@@ -269,7 +272,7 @@ describe('TagsLiveService', () => {
         .spyOn(entityManager, 'findOne')
         .mockResolvedValueOnce(installationMock);
 
-      jest.spyOn(service, 'createTagLive').mockResolvedValue(tagDetails);
+      jest.spyOn(service, 'createTagLive').mockResolvedValue([tagDetails]);
 
       const result = await service.createTagLive(
         userId,
@@ -278,23 +281,23 @@ describe('TagsLiveService', () => {
       );
 
       expect(result).toBeDefined();
-      expect(result.installation).toEqual(installationMock);
+      expect(result[0].installation).toEqual(installationMock);
     });
 
     it('should return null if user is not found', async () => {
       const userId = 999;
       const installationId = 2;
 
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
 
       jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(null);
       jest
@@ -313,16 +316,16 @@ describe('TagsLiveService', () => {
     it('should return null if installation is not found', async () => {
       const userId = 1;
       const installationId = 999;
-      const tagDetails = {
+      const tagDetails: TagsLive = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
         ewonTagId: 1,
         installation: null,
-      };
+      } as TagsLive;
       const userMock: User = {
         userId: userId,
         username: 'Bobidou',
@@ -420,8 +423,8 @@ describe('TagsLiveService', () => {
 
       const tagDetails = {
         id: 1,
-        lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-10-20T07:58:59Z'),
+        dateReq: new Date('2023-09-20T07:58:59Z'),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',

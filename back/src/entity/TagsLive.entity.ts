@@ -38,4 +38,9 @@ export class TagsLive {
   })
   @ApiProperty({ type: () => Installation })
   installation: Installation;
+
+  toJSON() {
+    const { installation, ...rest } = this;
+    return rest;
+  }
 }

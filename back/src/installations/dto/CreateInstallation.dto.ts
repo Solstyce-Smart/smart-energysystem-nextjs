@@ -14,8 +14,8 @@ export class CreateInstallationsDto {
   battery: boolean;
   @ApiProperty({ default: 0 })
   abo: number;
-  @ApiProperty({ default: '2021-01-01' })
-  lastSynchroDate: string;
+  @ApiProperty({ default: '2023-09-20T07:58:59Z' })
+  lastSynchroDate: Date;
   @ApiProperty({
     type: () => [Object],
     default: [
@@ -33,8 +33,8 @@ export class CreateInstallationsDto {
     latitude: string;
     longitude: string;
   }[];
-  @ApiProperty({ type: () => [TagsLive] })
-  tagsLive: any;
+  @ApiProperty({ type: () => [TagsLive], readOnly: true })
+  tagsLive: TagsLive[];
   @ApiProperty({ type: () => [User], readOnly: true })
-  user: any;
+  user: User;
 }

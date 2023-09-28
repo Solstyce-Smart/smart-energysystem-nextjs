@@ -7,6 +7,6 @@ export class UpdateUserDto {
   password: string;
   @ApiProperty({ default: 0 })
   role: number;
-  @ApiProperty({ type: () => [Installation] })
+  @ApiProperty({ type: () => [Installation], readOnly: true })
   ewonIds: [];
 }

@@ -12,17 +12,19 @@ const ewonId = process.env.ELASTICSEARCH_EWONID;
 export class dataSearchService {
   constructor(private readonly elasticService: ElasticsearchService) {}
 
-  async create(tagsHistory: TagsHistory) {
-    return this.elasticService.index({
-      index,
-      body: {
+  async create(tagsHistoryArray: TagsHistory[]) {
+    const body = tagsHistoryArray.flatMap((tagsHistory) => [
+      { index: { _index: index } },
+      {
         ewonId: tagsHistory.ewonId,
         tagName: tagsHistory.tagName,
         dateReq: tagsHistory.dateReq,
         value: tagsHistory.value,
         quality: tagsHistory.quality,
       },
-    });
+    ]);
+
+    return this.elasticService.bulk({ body });
   }
 
   async searchByEwonId() {

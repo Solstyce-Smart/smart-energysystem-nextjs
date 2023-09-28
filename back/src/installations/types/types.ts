@@ -1,3 +1,6 @@
+import { TagsLive } from '../../entity/TagsLive.entity';
+import { User } from '../../entity/Users.entity';
+
 export type CreateInstallationParams = {
   id: number;
   ewonId: string;
@@ -5,15 +8,15 @@ export type CreateInstallationParams = {
   nbIRVE: number;
   battery: boolean;
   abo: number;
-  lastSynchroDate: string;
+  lastSynchroDate: Date;
   address?: {
     address: string;
     postalCode: number;
     latitude: string;
     longitude: string;
   }[];
-  tagsLive: any;
-  user: any;
+  tagsLive: TagsLive[];
+  user: User;
 };
 
 export type UpdateInstallationParams = {
@@ -23,13 +26,13 @@ export type UpdateInstallationParams = {
   nbIRVE: number;
   battery: boolean;
   abo: number;
-  lastSynchroDate: string;
+  lastSynchroDate: Date;
   address?: {
     address: string;
     postalCode: number;
     latitude: string;
     longitude: string;
   }[];
-  tagsLive: any;
-  user: any;
+  tagsLive: TagsLive[];
+  user: User;
 };

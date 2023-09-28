@@ -32,7 +32,7 @@ export class Installation {
   abo: number;
 
   @Column()
-  lastSynchroDate: string;
+  lastSynchroDate: Date;
 
   @Column('json', { nullable: true })
   address?: {

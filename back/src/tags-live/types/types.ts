@@ -9,6 +9,11 @@ export class CreateTagLiveParams {
   alarmHint: string;
   ewonTagId: number;
   installation: Installation;
+
+  toJSON() {
+    const { installation, ...rest } = this;
+    return rest;
+  }
 }
 export class UpdateTagLiveParams {
   id: number;
@@ -19,4 +24,9 @@ export class UpdateTagLiveParams {
   alarmHint: string;
   ewonTagId: number;
   installation: Installation;
+
+  toJSON() {
+    const { installation, ...rest } = this;
+    return rest;
+  }
 }

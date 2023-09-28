@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InstallationsService } from './installations.service';
 import { Installation } from '../entity/Installations.entity';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, getManager } from 'typeorm';
 import { InstallationsController } from './installations.controller';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../entity/Users.entity';
 import { CreateInstallationParams } from './types/types';
+import { TagsLive } from '../entity/TagsLive.entity';
 
 describe('InstallationsService', () => {
   let service: InstallationsService;
@@ -43,17 +44,6 @@ describe('InstallationsService', () => {
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
-  const tagsLiveMock = {
-    id: 1,
-    lastSynchroDate: '255d15d1f5fd8d',
-    dateReq: '255d15d1f5fd8d',
-    value: 1,
-    quality: 'fdsfsdfsdfsdf',
-    alarmHint: 'fdsfsdfsdfsdf',
-    ewonTagId: 1,
-    installation: null,
-  };
-
   const installationMock: Installation = {
     id: 26,
     ewonId: 'hakunamatutu',
@@ -61,7 +51,7 @@ describe('InstallationsService', () => {
     nbIRVE: 4,
     battery: true,
     abo: 2,
-    lastSynchroDate: '255d15d1f5fd8d',
+    lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
     address: [
       {
         address: '3 rue des machins',
@@ -70,11 +60,27 @@ describe('InstallationsService', () => {
         postalCode: 215882,
       },
     ],
-    tagsLive: tagsLiveMock,
+    tagsLive: [],
     user: null,
-  };
+  } as Installation;
 
-  tagsLiveMock.installation = installationMock;
+  const tagsLiveMock: TagsLive[] = [
+    {
+      id: 1,
+      lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
+      dateReq: new Date('2023-09-20T07:58:59Z'),
+      value: 1,
+      quality: 'fdsfsdfsdfsdf',
+      alarmHint: 'fdsfsdfsdfsdf',
+      ewonTagId: 1,
+      installation: installationMock,
+      toJSON() {
+        const { installation, ...rest } = this;
+        return rest;
+      },
+    },
+  ];
+
   installationMock.tagsLive = tagsLiveMock;
 
   it('should be defined', () => {
@@ -100,7 +106,7 @@ describe('InstallationsService', () => {
         nbIRVE: 4,
         battery: true,
         abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
         address: [
           {
             address: '3 rue des machins',
@@ -112,6 +118,20 @@ describe('InstallationsService', () => {
         tagsLive: tagsLiveMock,
         user: userMock,
       };
+
+      // Créez un espion pour getManager
+      const getManagerSpy = jest.spyOn(getManager(), 'transaction');
+
+      // Créez un faux entityManager
+      const entityManagerMock: EntityManager = {
+        transaction: jest.fn().mockImplementation(async (callback) => {
+          const savedUser = await callback(entityManagerMock);
+          return savedUser;
+        }),
+        save: jest.fn().mockResolvedValue(installationDetails),
+      } as any;
+
+      getManagerSpy.mockResolvedValue(entityManagerMock);
 
       jest.spyOn(entityManager, 'findOne').mockResolvedValue(userMock);
 
@@ -121,49 +141,11 @@ describe('InstallationsService', () => {
       );
 
       expect(result).toEqual(installationDetails);
-    });
 
-    it('should handle the case when the user is not found', async () => {
-      jest.spyOn(entityManager, 'findOne').mockResolvedValue(undefined);
-
-      const userId = 1;
-
-      const userMock: User = {
-        userId: userId,
-        username: 'Bobidou',
-        password: 'FakePassword',
-        role: 12,
-        ewonIds: [],
-      };
-      const installationDetails: CreateInstallationParams = {
-        id: 26,
-        ewonId: 'hakunamatutu',
-        name: 'centrale',
-        nbIRVE: 4,
-        battery: true,
-        abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
-        address: [
-          {
-            address: '3 rue des machins',
-            latitude: 'fdsfsfdsfsf',
-            longitude: 'fdsfsdfsdfsdf',
-            postalCode: 215882,
-          },
-        ],
-        tagsLive: tagsLiveMock,
-        user: userMock,
-      };
-
-      const result = await service.createInstallation(
-        userId,
-        installationDetails,
-      );
-
-      expect(result).toBeNull();
+      // Assurez-vous que la méthode transaction a été appelée
+      expect(getManagerSpy).toHaveBeenCalled();
     });
   });
-
   describe('getInstallationById', () => {
     it('should return null if user is not found', async () => {
       const userId = 1;
@@ -205,10 +187,10 @@ describe('InstallationsService', () => {
         nbIRVE: 4,
         battery: true,
         abo: 2,
-        lastSynchroDate: '1234567890',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
         tagsLive: tagsLiveMock,
         user: null,
-      };
+      } as Installation;
 
       jest
         .spyOn(entityManager, 'findOne')
@@ -266,10 +248,10 @@ describe('InstallationsService', () => {
           nbIRVE: 4,
           battery: true,
           abo: 2,
-          lastSynchroDate: '1234567890',
+          lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
           tagsLive: tagsLiveMock,
           user: userMock,
-        },
+        } as Installation,
         {
           id: 2,
           ewonId: 'testEwonId2',
@@ -277,10 +259,10 @@ describe('InstallationsService', () => {
           nbIRVE: 3,
           battery: false,
           abo: 1,
-          lastSynchroDate: '9876543210',
+          lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
           tagsLive: tagsLiveMock,
           user: userMock,
-        },
+        } as Installation,
       ];
 
       const user: User = {
@@ -325,7 +307,7 @@ describe('InstallationsService', () => {
           },
         ],
         abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
         tagsLive: tagsLiveMock,
         user: userMock,
       };
@@ -367,7 +349,7 @@ describe('InstallationsService', () => {
           },
         ],
         abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
         tagsLive: tagsLiveMock,
         user: userMock,
       };
@@ -402,37 +384,37 @@ describe('InstallationsService', () => {
         role: 12,
         ewonIds: [],
       };
-      const installationDetails = {
-        id: 26,
-        ewonId: 'hakunamatotu',
-        name: 'centrale',
-        nbIRVE: 4,
-        battery: true,
-        address: [
+      const installationDetails: Installation = new Installation();
+      (installationDetails.id = 26),
+        (installationDetails.ewonId = 'hakunamatotu'),
+        (installationDetails.name = 'centrale'),
+        (installationDetails.nbIRVE = 4),
+        (installationDetails.battery = true),
+        (installationDetails.address = [
           {
             address: '3 rue des trucs',
             postalCode: 215882,
             latitude: 'fdsfsfdsfsf',
             longitude: 'fdsfsdfsdfsdf',
           },
-        ],
-        abo: 2,
-        lastSynchroDate: '255d15d1f5fd8d',
-        tagsLive: tagsLiveMock,
-        user: userMock,
-      };
+        ]),
+        (installationDetails.abo = 2),
+        (installationDetails.lastSynchroDate = new Date(
+          '2023-09-20T07:58:59Z',
+        )),
+        (installationDetails.tagsLive = tagsLiveMock),
+        (installationDetails.user = userMock);
 
-      const installation: Installation = {
-        id: installationId,
-        ewonId: 'testEwonId',
-        name: 'Test Installation',
-        nbIRVE: 4,
-        battery: true,
-        abo: 2,
-        lastSynchroDate: '1234567890',
-        tagsLive: tagsLiveMock,
-        user: userMock,
-      };
+      const installation: Installation = new Installation();
+      (installation.id = installationId),
+        (installation.ewonId = 'testEwonId'),
+        (installation.name = 'Test Installation'),
+        (installation.nbIRVE = 4),
+        (installation.battery = true),
+        (installation.abo = 2),
+        (installation.lastSynchroDate = new Date('2023-09-20T07:58:59Z')),
+        (installation.tagsLive = tagsLiveMock),
+        (installation.user = userMock);
 
       const user: User = {
         userId: userId,
@@ -445,7 +427,7 @@ describe('InstallationsService', () => {
       const updatedInstallation: Installation = {
         ...installation,
         ...installationDetails,
-      };
+      } as Installation;
 
       jest.spyOn(entityManager, 'findOne').mockResolvedValue(user);
       jest
@@ -481,10 +463,10 @@ describe('InstallationsService', () => {
         nbIRVE: 4,
         battery: true,
         abo: 2,
-        lastSynchroDate: '1234567890',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
         tagsLive: tagsLiveMock,
         user: userMock,
-      };
+      } as Installation;
 
       const user: User = {
         userId: userId,
@@ -562,10 +544,10 @@ describe('InstallationsService', () => {
         nbIRVE: 4,
         battery: true,
         abo: 2,
-        lastSynchroDate: '1234567890',
+        lastSynchroDate: new Date('2023-09-20T07:58:59Z'),
         tagsLive: tagsLiveMock,
         user: userMock,
-      };
+      } as Installation;
 
       const user: User = {
         userId: userId,

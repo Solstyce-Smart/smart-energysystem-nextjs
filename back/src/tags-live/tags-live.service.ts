@@ -79,7 +79,11 @@ export class TagsLiveService {
         quality: datas.tags[i].quality,
         alarmHint: datas.tags[i].alarmHint,
         ewonTagId: datas.tags[i].ewonTagId,
-        installation: installation, // Lien vers l'installation parente
+        installation: installation,
+        toJSON() {
+          const { installation, ...rest } = this;
+          return rest;
+        },
       };
 
       newTags.push(newTagLive);

@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { Installation } from '../entity/Installations.entity';
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, DeepPartial } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import {
   CreateInstallationParams,
   UpdateInstallationParams,
 } from './types/types';
 import { User } from '../entity/Users.entity';
+import { TagsLive } from '../entity/TagsLive.entity';
 
 @Injectable()
 export class InstallationsService {
@@ -127,6 +128,7 @@ export class InstallationsService {
     const updatedInstallation = await this.installationRepository.save({
       ...installation,
       ...installationDetails,
+      tagsLive: installation.tagsLive as DeepPartial<TagsLive[]>,
     });
 
     return updatedInstallation;
