@@ -1,6 +1,7 @@
 import { Installation } from '../../entity/Installations.entity';
 
 export class CreateTagLiveParams {
+  _id?: string;
   id: number;
   name: string;
   lastSynchroDate: Date;
@@ -17,6 +18,7 @@ export class CreateTagLiveParams {
   }
 }
 export class UpdateTagLiveParams {
+  _id?: string;
   id: number;
   name: string;
   lastSynchroDate: Date;

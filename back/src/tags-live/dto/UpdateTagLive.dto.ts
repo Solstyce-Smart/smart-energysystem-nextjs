@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Installation } from '../../entity/Installations.entity';
 export class UpdateTagLiveDto {
   @ApiProperty()
+  _id?: string;
+  @ApiProperty()
   id: number;
   @ApiProperty({ default: 'Tag Name' })
   name: string;

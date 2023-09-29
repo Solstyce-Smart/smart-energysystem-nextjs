@@ -12,7 +12,10 @@ import { Installation } from './Installations.entity';
 
 @Entity('tags_live')
 export class TagsLive {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
+  _id?: string;
+
+  @Column()
   id: number;
 
   @Column()

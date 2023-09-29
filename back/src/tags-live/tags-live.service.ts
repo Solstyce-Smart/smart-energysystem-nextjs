@@ -52,6 +52,7 @@ export class TagsLiveService {
     if (!user) {
       return null;
     }
+
     const datas = await getEwon();
 
     if (!datas) {
@@ -67,11 +68,12 @@ export class TagsLiveService {
       return null;
     }
 
-    // Créez un tableau pour stocker les nouveaux enregistrements TagsLive
+    const currentTags = installation.tagsLive || [];
+
     const newTags: TagsLive[] = [];
 
     for (let i = 0; i < datas.tags.length; i++) {
-      const newTagLive: CreateTagLiveParams = {
+      const newTagParams: CreateTagLiveParams = {
         id: datas.tags[i].id,
         name: datas.tags[i].name,
         lastSynchroDate: datas.lastSynchroDate,
@@ -87,21 +89,26 @@ export class TagsLiveService {
         },
       };
 
-      newTags.push(newTagLive);
+      const existingTag = currentTags.find((tag) => tag.id === newTagParams.id);
+
+      if (existingTag) {
+        existingTag.lastSynchroDate = newTagParams.lastSynchroDate;
+        existingTag.dateReq = newTagParams.dateReq;
+        existingTag.value = newTagParams.value;
+        existingTag.quality = newTagParams.quality;
+        existingTag.alarmHint = newTagParams.alarmHint;
+        newTags.push(existingTag);
+      } else {
+        newTags.push(newTagParams);
+      }
     }
 
-    // Enregistrez tous les nouveaux enregistrements TagsLive en une seule opération
     await this.tagsLiveRepository.save(newTags);
 
-    console.log(newTags);
-
-    // Associez les enregistrements TagsLive à l'installation parente
     installation.tagsLive = newTags;
 
-    // Enregistrez l'installation mise à jour
     await this.installationRepository.save(installation);
 
-    // Retournez la liste des nouveaux enregistrements TagsLive
     return newTags;
   }
 
