@@ -1,8 +1,9 @@
+import Navbar from "@/components/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
-const outfit = Outfit({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SMART - EnergySystem",
@@ -16,7 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={outfit.className}>{children}</body>
+      <body className={montserrat.className}>
+        <div className="h-full">
+          <Navbar />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
