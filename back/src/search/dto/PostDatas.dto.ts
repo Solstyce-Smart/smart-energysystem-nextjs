@@ -1,8 +1,8 @@
-export interface PostDatasDto {
+export class PostDatasDto {
   ewonId: string;
   tagName: string;
   lastSynchroDate: string;
-  dateReq: string;
+  dateReq: Date;
   value: number;
   quality: string;
 }

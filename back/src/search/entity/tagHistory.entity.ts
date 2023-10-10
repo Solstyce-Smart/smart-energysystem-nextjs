@@ -12,8 +12,8 @@ export class TagsHistory {
   @Column()
   tagName: string;
 
-  @Column()
-  dateReq: string;
+  @Column({ default: new Date() })
+  dateReq: Date;
 
   @Column()
   value: number;

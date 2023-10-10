@@ -1,0 +1,719 @@
+{
+  "id": 1425275,
+  "name": "Prototype automate Solstyce",
+  "tags": [
+    {
+      "id": 10154970,
+      "name": "IRVE1_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité phase 3 IRVE1",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 100
+    },
+    {
+      "id": 10155036,
+      "name": "IRVE4_CPW",
+      "dataType": "Int",
+      "description": "Statut borne Schneider 4",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154916,
+      "name": "P_IRVE4",
+      "dataType": "Float",
+      "description": "Puissance de soutirage IRVE4",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154937,
+      "name": "SAE_I_CON_IRVE4",
+      "dataType": "Int",
+      "description": "Consigne de bridage de la borne IRVE4",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10604685,
+      "name": "METER1_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité compteur 1 phase 1",
+      "alarmHint": "",
+      "value": 16.399999618530273,
+      "quality": "good",
+      "ewonTagId": 111
+    },
+    {
+      "id": 10154934,
+      "name": "SAE_I_CON_IRVE3",
+      "dataType": "Int",
+      "description": "Consigne de bridage de la borne IRVE3",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154949,
+      "name": "PILOTAGE",
+      "dataType": "Bool",
+      "description": "Mode de pilotage (auto ou forcé)",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10277619,
+      "name": "Test",
+      "dataType": "UInt",
+      "description": "",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "good",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10604634,
+      "name": "IRVE1_E",
+      "dataType": "Float",
+      "description": "Energie de la charge en cours ou passée IRVE1",
+      "alarmHint": "",
+      "value": 1.2990000247955322,
+      "quality": "good",
+      "ewonTagId": 104
+    },
+    {
+      "id": 10607832,
+      "name": "IRVE1_A",
+      "dataType": "Int",
+      "description": "Statut  IRVE1",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "good",
+      "ewonTagId": 114
+    },
+    {
+      "id": 10154931,
+      "name": "SAE_I_CON_IRVE2",
+      "dataType": "Int",
+      "description": "Consigne de bridage de la borne IRVE2",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10604622,
+      "name": "IRVE2_P",
+      "dataType": "Float",
+      "description": "Puissance active de la borne IRVE2",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 89
+    },
+    {
+      "id": 10604697,
+      "name": "METER1_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité compteur 1 phase 2",
+      "alarmHint": "",
+      "value": 38.70000076293945,
+      "quality": "good",
+      "ewonTagId": 112
+    },
+    {
+      "id": 10154967,
+      "name": "IRVE1_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité phase 2 IRVE1",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 96
+    },
+    {
+      "id": 10154979,
+      "name": "IRVE2_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité phase 3 IRVE2",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 101
+    },
+    {
+      "id": 10604628,
+      "name": "IRVE4_P",
+      "dataType": "Float",
+      "description": "Puissance active de la borne IRVE4",
+      "alarmHint": "",
+      "value": 10.687908172607422,
+      "quality": "good",
+      "ewonTagId": 91
+    },
+    {
+      "id": 10154946,
+      "name": "IRVE4_I_CON",
+      "dataType": "Int",
+      "description": "Intensité bridé de la borne IRVE4",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10561071,
+      "name": "IRVE1_C_E",
+      "dataType": "Int",
+      "description": "Consigne de charge de la borne IRVE1",
+      "alarmHint": "",
+      "value": 16,
+      "quality": "good",
+      "ewonTagId": 87
+    },
+    {
+      "id": 10154982,
+      "name": "IRVE3_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité phase 1 IRVE3",
+      "alarmHint": "",
+      "value": 0.019999999552965164,
+      "quality": "good",
+      "ewonTagId": 93
+    },
+    {
+      "id": 10155003,
+      "name": "RESEAU_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité phase 2 soutirée au réseau",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155012,
+      "name": "PV1_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité phase 2 PV1",
+      "alarmHint": "",
+      "value": 20.0,
+      "quality": "good",
+      "ewonTagId": 83
+    },
+    {
+      "id": 10604637,
+      "name": "IRVE3_E",
+      "dataType": "Float",
+      "description": "Energie de la charge en cours ou passée IRVE3",
+      "alarmHint": "",
+      "value": 41.13600158691406,
+      "quality": "good",
+      "ewonTagId": 106
+    },
+    {
+      "id": 10154922,
+      "name": "RESEAU_P_AC",
+      "dataType": "Float",
+      "description": "Puissance en kW du soutirage du bâtiment",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154910,
+      "name": "P_IRVE1",
+      "dataType": "Float",
+      "description": "Puissance de soutirage IRVE1",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154988,
+      "name": "IRVE3_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité phase 3 IRVE3",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 102
+    },
+    {
+      "id": 10155033,
+      "name": "IRVE3_CPW",
+      "dataType": "Int",
+      "description": "Statut borne Schneider 3",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10604625,
+      "name": "IRVE3_P",
+      "dataType": "Float",
+      "description": "Puissance active de la borne IRVE3",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 90
+    },
+    {
+      "id": 10155030,
+      "name": "IRVE2_CPW",
+      "dataType": "Int",
+      "description": "Statut borne Schneider 2",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10604643,
+      "name": "IRVE2_C_E",
+      "dataType": "Int",
+      "description": "Consigne de charge de la borne IRVE2",
+      "alarmHint": "",
+      "value": 16,
+      "quality": "good",
+      "ewonTagId": 108
+    },
+    {
+      "id": 10604649,
+      "name": "IRVE4_C_E",
+      "dataType": "Int",
+      "description": "Consigne de charge de la borne IRVE4",
+      "alarmHint": "",
+      "value": 16,
+      "quality": "good",
+      "ewonTagId": 110
+    },
+    {
+      "id": 10155009,
+      "name": "PV1_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité phase 1 PV1",
+      "alarmHint": "",
+      "value": 20.0,
+      "quality": "good",
+      "ewonTagId": 82
+    },
+    {
+      "id": 10604640,
+      "name": "IRVE4_E",
+      "dataType": "Float",
+      "description": "Energie de la charge en cours ou passée IRVE4",
+      "alarmHint": "",
+      "value": 12.824000358581543,
+      "quality": "good",
+      "ewonTagId": 107
+    },
+    {
+      "id": 10154991,
+      "name": "IRVE4_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité phase 1 IRVE4",
+      "alarmHint": "",
+      "value": 15.520000457763672,
+      "quality": "good",
+      "ewonTagId": 95
+    },
+    {
+      "id": 10155021,
+      "name": "PV1_EDAY",
+      "dataType": "Float",
+      "description": "Energie produite du jour PV1",
+      "alarmHint": "",
+      "value": 5.099999904632568,
+      "quality": "good",
+      "ewonTagId": 85
+    },
+    {
+      "id": 10155018,
+      "name": "I_REF",
+      "dataType": "Int",
+      "description": "Intensité disponible pour le bridage",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154913,
+      "name": "P_IRVE3",
+      "dataType": "Float",
+      "description": "Puissance de soutirage IRVE3",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154976,
+      "name": "IRVE2_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité phase 2 IRVE2",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 120
+    },
+    {
+      "id": 10561059,
+      "name": "PV1_TOT",
+      "dataType": "Float",
+      "description": "Energie produite depuis la mise en service PV1",
+      "alarmHint": "",
+      "value": 355.197998046875,
+      "quality": "good",
+      "ewonTagId": 86
+    },
+    {
+      "id": 10604619,
+      "name": "IRVE1_P",
+      "dataType": "Float",
+      "description": "Puissance active de la borne IRVE1",
+      "alarmHint": "",
+      "value": 3.584190607070923,
+      "quality": "good",
+      "ewonTagId": 88
+    },
+    {
+      "id": 10608189,
+      "name": "PV1_P",
+      "dataType": "Float",
+      "description": "Production instantanée PV1",
+      "alarmHint": "",
+      "value": 14.92500114440918,
+      "quality": "good",
+      "ewonTagId": 118
+    },
+    {
+      "id": 10155000,
+      "name": "RESEAU_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité phase 1 soutirée au réseau",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154964,
+      "name": "IRVE1_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité phase 1 IRVE1",
+      "alarmHint": "",
+      "value": 15.5600004196167,
+      "quality": "good",
+      "ewonTagId": 92
+    },
+    {
+      "id": 10607838,
+      "name": "IRVE3_A",
+      "dataType": "Int",
+      "description": "Statut  IRVE3",
+      "alarmHint": "",
+      "value": 3,
+      "quality": "good",
+      "ewonTagId": 116
+    },
+    {
+      "id": 10155048,
+      "name": "IRVE4_S",
+      "dataType": "Int",
+      "description": "Statut Solstyce borne 4",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154955,
+      "name": "IRVE2_status",
+      "dataType": "Int",
+      "description": "Statut de la borne IRVE2",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155042,
+      "name": "IRVE2_S",
+      "dataType": "Int",
+      "description": "Statut Solstyce borne 2",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155039,
+      "name": "IRVE1_S",
+      "dataType": "Int",
+      "description": "Statut Solstyce borne 1",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155024,
+      "name": "COEFF_PV",
+      "dataType": "Int",
+      "description": "Coefficient pour calcul puissance max PV et bridage",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154952,
+      "name": "IRVE1_status",
+      "dataType": "Int",
+      "description": "Statut de la borne IRVE1",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154919,
+      "name": "IRVE1_I_CON",
+      "dataType": "Int",
+      "description": "Intensité bridé de la borne IRVE1",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154943,
+      "name": "IRVE3_I_CON",
+      "dataType": "Int",
+      "description": "Intensité bridé de la borne IRVE3",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154940,
+      "name": "IRVE2_I_CON",
+      "dataType": "Int",
+      "description": "Intensité bridé de la borne IRVE2",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155045,
+      "name": "IRVE3_S",
+      "dataType": "Int",
+      "description": "Statut Solstyce borne 3",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155006,
+      "name": "RESEAU_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité phase 3 soutirée au réseau",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154958,
+      "name": "IRVE3_status",
+      "dataType": "Int",
+      "description": "Statut de la borne IRVE3",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10169166,
+      "name": "IRVE2_E",
+      "dataType": "Float",
+      "description": "Energie de la charge en cours ou passée IRVE2",
+      "alarmHint": "",
+      "value": 8.427000045776367,
+      "quality": "good",
+      "ewonTagId": 105
+    },
+    {
+      "id": 10154907,
+      "name": "P_IRVE2",
+      "dataType": "Float",
+      "description": "Puissance de soutirage IRVE2",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154973,
+      "name": "IRVE2_I_PH1",
+      "dataType": "Float",
+      "description": "Intensité phase 1 IRVE2",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 119
+    },
+    {
+      "id": 10154961,
+      "name": "IRVE4_status",
+      "dataType": "Int",
+      "description": "Statut de la borne IRVE4",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154928,
+      "name": "SAE_I_CON_IRVE1",
+      "dataType": "Int",
+      "description": "Consigne de bridage de la borne IRVE1",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10607835,
+      "name": "IRVE2_A",
+      "dataType": "Int",
+      "description": "Statut  IRVE2",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "good",
+      "ewonTagId": 115
+    },
+    {
+      "id": 10154925,
+      "name": "BAT_P_AC",
+      "dataType": "Float",
+      "description": "Puissance en kW consommé par le bâtiment (hors bornes)",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10154997,
+      "name": "IRVE4_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité phase 3 IRVE4",
+      "alarmHint": "",
+      "value": 15.300000190734863,
+      "quality": "good",
+      "ewonTagId": 103
+    },
+    {
+      "id": 10154904,
+      "name": "METER1_P",
+      "dataType": "Float",
+      "description": "Puissance active compteur 1",
+      "alarmHint": "",
+      "value": 16.46000099182129,
+      "quality": "good",
+      "ewonTagId": 3
+    },
+    {
+      "id": 10604700,
+      "name": "METER1_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité compteur 1 phase 3",
+      "alarmHint": "",
+      "value": 16.899999618530273,
+      "quality": "good",
+      "ewonTagId": 113
+    },
+    {
+      "id": 10604646,
+      "name": "IRVE3_C_E",
+      "dataType": "Int",
+      "description": "Consigne de charge de la borne IRVE3",
+      "alarmHint": "",
+      "value": 16,
+      "quality": "good",
+      "ewonTagId": 109
+    },
+    {
+      "id": 10154985,
+      "name": "IRVE3_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité phase 2 IRVE3",
+      "alarmHint": "",
+      "value": 0.0,
+      "quality": "good",
+      "ewonTagId": 98
+    },
+    {
+      "id": 10154994,
+      "name": "IRVE4_I_PH2",
+      "dataType": "Float",
+      "description": "Intensité phase 2 IRVE4",
+      "alarmHint": "",
+      "value": 15.460000038146973,
+      "quality": "good",
+      "ewonTagId": 99
+    },
+    {
+      "id": 10607841,
+      "name": "IRVE4_A",
+      "dataType": "Int",
+      "description": "Statut  IRVE4",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "good",
+      "ewonTagId": 117
+    },
+    {
+      "id": 10155027,
+      "name": "IRVE1_CPW",
+      "dataType": "Int",
+      "description": "Statut borne Schneider 1",
+      "alarmHint": "",
+      "value": 0,
+      "quality": "unknown",
+      "ewonTagId": -1
+    },
+    {
+      "id": 10155015,
+      "name": "PV1_I_PH3",
+      "dataType": "Float",
+      "description": "Intensité phase 3 PV1",
+      "alarmHint": "",
+      "value": 20.0,
+      "quality": "good",
+      "ewonTagId": 84
+    }
+  ],
+  "lastSynchroDate": "2023-10-10T07:11:35Z",
+  "timeZone": "Europe/Paris",
+  "success": true
+}

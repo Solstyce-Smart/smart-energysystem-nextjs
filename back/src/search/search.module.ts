@@ -12,6 +12,9 @@ import { dataSearchService } from './dataSearch.service';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         node: configService.get('ELASTICSEARCH_URL'),
+        ssl: {
+          rejectUnauthorized: false,
+        },
         auth: {
           username: configService.get('ELASTICSEARCH_USERNAME'),
           password: configService.get('ELASTICSEARCH_PASSWORD'),

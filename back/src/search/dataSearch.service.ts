@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const index = process.env.ELASTICSEARCH_INDEX;
-const ewonId = process.env.ELASTICSEARCH_EWONID;
 @Injectable()
 export class dataSearchService {
   constructor(private readonly elasticService: ElasticsearchService) {}
@@ -25,7 +24,7 @@ export class dataSearchService {
     });
   }
 
-  async searchByEwonId() {
+  async searchByEwonId(ewonId: string) {
     console.log(index, ewonId);
 
     const body = await this.elasticService.search<GetDatasResult>({

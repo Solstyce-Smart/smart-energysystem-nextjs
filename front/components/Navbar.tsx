@@ -10,8 +10,8 @@ import MobileNavbar from "./MobileNavbar";
 
 const Navbar = () => {
   return (
-    <header className="flex h-[100px] w-full">
-      <nav className="flex justify-between items-center h-full w-full px-20">
+    <header className="flex h-[10vh] w-full">
+      <nav className="flex justify-between items-center h-full w-full px-5 md:px-20">
         <div className="flex items-center justify-center ">
           <Link href="/" className="flex h-[50px] w-auto">
             <Image

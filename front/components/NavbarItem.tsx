@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,6 @@ interface NavbarItemProps {
 
 const NavbarItem = ({ name, href }: NavbarItemProps) => {
   const pathname = usePathname();
-  const router = useRouter();
   const isActive = pathname === href;
 
   return (

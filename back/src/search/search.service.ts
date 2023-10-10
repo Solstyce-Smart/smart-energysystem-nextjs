@@ -10,7 +10,7 @@ export class searchService {
     return this.elasticService.create(data);
   }
 
-  async getDatasByEwonId() {
-    return this.elasticService.searchByEwonId();
+  async getDatasByEwonId(ewonId: string) {
+    return this.elasticService.searchByEwonId(ewonId);
   }
 }

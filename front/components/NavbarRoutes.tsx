@@ -9,7 +9,7 @@ const navbarRoutes = [
     href: "/",
   },
   {
-    name: "Exemple",
+    name: "Notre démonstrateur",
     href: "/installation",
   },
   {
