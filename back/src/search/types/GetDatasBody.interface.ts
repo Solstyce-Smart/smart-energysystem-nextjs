@@ -2,7 +2,7 @@ export interface GetDatasBody {
   ewonId: string;
   tagName: string;
   lastSynchroDate: string;
-  dateReq: string;
+  dateReq: Date;
   value: number;
   quality: string;
 }

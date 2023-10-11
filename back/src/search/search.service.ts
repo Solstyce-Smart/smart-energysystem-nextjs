@@ -6,7 +6,7 @@ import { PostDatasDto } from './dto/PostDatas.dto';
 export class searchService {
   constructor(private readonly elasticService: dataSearchService) {}
 
-  async postDatas(data: PostDatasDto) {
+  async postDatas(data: PostDatasDto[]) {
     return this.elasticService.create(data);
   }
 

@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { InstallationsModule } from './installations/installations.module';
 import { TagsLiveModule } from './tags-live/tags-live.module';
 import { SearchModule } from './search/search.module';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import dotenv from 'dotenv';
 
 dotenv.config();

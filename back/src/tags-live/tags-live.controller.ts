@@ -79,7 +79,7 @@ export class TagsLiveController {
   createTagLive(
     @Param('userId') userId: number,
     @Param('id') installationId: number,
-    @Body() createTagLiveDto: CreateTagLiveDto,
+    @Body() createTagLiveDto: CreateTagLiveDto[],
   ) {
     return this.tagsLiveService.createTagLive(
       userId,

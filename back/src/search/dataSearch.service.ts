@@ -11,22 +11,22 @@ const index = process.env.ELASTICSEARCH_INDEX;
 export class dataSearchService {
   constructor(private readonly elasticService: ElasticsearchService) {}
 
-  async create(tagsHistory: TagsHistory) {
-    return this.elasticService.index({
-      index,
-      body: {
+  async create(tagsHistoryArray: TagsHistory[]) {
+    const body = tagsHistoryArray.flatMap((tagsHistory) => [
+      { index: { _index: index } },
+      {
         ewonId: tagsHistory.ewonId,
         tagName: tagsHistory.tagName,
         dateReq: tagsHistory.dateReq,
         value: tagsHistory.value,
         quality: tagsHistory.quality,
       },
-    });
+    ]);
+
+    return this.elasticService.bulk({ body });
   }
 
   async searchByEwonId(ewonId: string) {
-    console.log(index, ewonId);
-
     const body = await this.elasticService.search<GetDatasResult>({
       index,
       query: {
@@ -34,6 +34,7 @@ export class dataSearchService {
           ewonId: ewonId,
         },
       },
+      size: 10000,
     });
     return body.hits.hits.map((hit) => hit._source);
   }

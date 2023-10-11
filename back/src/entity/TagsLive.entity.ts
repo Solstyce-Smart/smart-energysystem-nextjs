@@ -5,6 +5,7 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Installation } from './Installations.entity';
 
@@ -13,25 +14,25 @@ export class TagsLive {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: 'dateRandom', nullable: true })
   lastSynchroDate: string;
 
-  @Column()
-  dateReq: string;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  dateReq: Date;
 
-  @Column()
+  @Column({ default: 0 })
   value: number;
 
-  @Column()
+  @Column({ default: 'Good' })
   quality: string;
 
-  @Column()
+  @Column({ default: '' })
   alarmHint: string;
 
-  @Column()
+  @Column({ default: 999 })
   ewonTagId: number;
 
-  @OneToOne(() => Installation, (installation) => installation.tagsLive, {
+  @ManyToOne(() => Installation, (installation) => installation.tagsLive, {
     onDelete: 'CASCADE',
   })
   @ApiProperty({ type: () => [Installation] })

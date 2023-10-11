@@ -42,7 +42,7 @@ export class TagsLiveService {
   async createTagLive(
     userId: number,
     installationId: number,
-    createTagLiveParams: CreateTagLiveParams,
+    createTagLiveParams: CreateTagLiveParams[],
   ) {
     const user = await this.entityManager.findOne(User, {
       where: { userId: userId },
@@ -61,22 +61,41 @@ export class TagsLiveService {
       return null;
     }
 
-    const newTagLive = this.tagsLiveRepository.create({
-      lastSynchroDate: createTagLiveParams.lastSynchroDate,
-      dateReq: createTagLiveParams.dateReq,
-      value: createTagLiveParams.value,
-      quality: createTagLiveParams.quality,
-      alarmHint: createTagLiveParams.alarmHint,
-      ewonTagId: createTagLiveParams.ewonTagId,
-    });
+    if (!installation.tagsLive) {
+      installation.tagsLive = [];
+    }
 
-    installation.tagsLive = newTagLive;
+    for (const params of createTagLiveParams) {
+      const ewonTagId = params.ewonTagId;
+      const existingTagsLive = installation.tagsLive.find(
+        (tagLive) => tagLive.ewonTagId === ewonTagId,
+      );
+      if (existingTagsLive) {
+        existingTagsLive.lastSynchroDate = params.lastSynchroDate;
+        existingTagsLive.dateReq = new Date();
+        existingTagsLive.value = params.value;
+        existingTagsLive.quality = params.quality;
+        existingTagsLive.alarmHint = params.alarmHint;
+        await this.tagsLiveRepository.save(existingTagsLive);
+      } else {
+        const newTagLive = this.tagsLiveRepository.create({
+          lastSynchroDate: params.lastSynchroDate,
+          value: params.value,
+          quality: params.quality,
+          alarmHint: params.alarmHint,
+          ewonTagId: params.ewonTagId,
+          installation: installation,
+        });
 
-    await this.userRepository.save(user);
-    await this.tagsLiveRepository.save(newTagLive);
+        installation.tagsLive.push(newTagLive);
+        await this.tagsLiveRepository.save(newTagLive);
+      }
+    }
+
     await this.installationRepository.save(installation);
+    await this.userRepository.save(user);
 
-    return newTagLive;
+    return;
   }
 
   async updateTagLive(

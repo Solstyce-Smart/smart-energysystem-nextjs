@@ -3,8 +3,8 @@ import { Installation } from '../../entity/Installations.entity';
 export class CreateTagLiveDto {
   @ApiProperty({ default: 'dateRandom' })
   lastSynchroDate: string;
-  @ApiProperty({ default: 'dateRandom' })
-  dateReq: string;
+  @ApiProperty({ default: Date.now() })
+  dateReq: Date;
   @ApiProperty({ default: 1 })
   value: number;
   @ApiProperty({ default: 'Good' })

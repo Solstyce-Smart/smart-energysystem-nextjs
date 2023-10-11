@@ -5,6 +5,7 @@ import {
   OneToOne,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { TagsLive } from './TagsLive.entity';
@@ -30,7 +31,7 @@ export class Installation {
   @Column()
   abo: number;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   lastSynchroDate: string;
 
   @Column('json', { nullable: true })
@@ -41,9 +42,11 @@ export class Installation {
     longitude: string;
   }[];
 
-  @OneToOne(() => TagsLive)
+  @OneToMany(() => TagsLive, (tagsLive) => tagsLive.installation, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  tagsLive?: TagsLive;
+  tagsLive?: TagsLive[];
 
   @ManyToOne(() => User, (user) => user.ewonIds, {
     onDelete: 'CASCADE',

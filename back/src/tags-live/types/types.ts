@@ -1,6 +1,6 @@
 export class CreateTagLiveParams {
   lastSynchroDate: string;
-  dateReq: string;
+  dateReq: Date;
   value: number;
   quality: string;
   alarmHint: string;
@@ -9,7 +9,7 @@ export class CreateTagLiveParams {
 }
 export class UpdateTagLiveParams {
   lastSynchroDate: string;
-  dateReq: string;
+  dateReq: Date;
   value: number;
   quality: string;
   alarmHint: string;

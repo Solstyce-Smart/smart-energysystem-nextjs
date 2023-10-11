@@ -33,7 +33,7 @@ export class CreateInstallationsDto {
     latitude: string;
     longitude: string;
   }[];
-  @ApiProperty({ type: () => [TagsLive] })
+  @ApiProperty({ type: () => [TagsLive], readOnly: true })
   tagsLive: any;
   @ApiProperty({ type: () => [User], readOnly: true })
   user: any;
