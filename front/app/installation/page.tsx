@@ -145,7 +145,7 @@ const Installation = () => {
             </div>
           ) : null}
           <div id="activityContainer">
-            <ActivityChart />
+            <ActivityChart dataProd={dataProd} dataConso={dataConso} />
           </div>
         </div>
       </main>

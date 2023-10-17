@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
@@ -13,8 +11,26 @@ if (typeof Highcharts === "object") {
   solidGauge(Highcharts);
 }
 
-const ActivityChart = () => {
+interface ActivityChartProps {
+  dataProd: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
+  dataConso: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
+}
+
+const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
   const [options, setOptions] = useState<any>(null);
+
   useEffect(() => {
     const parentElement = document.getElementById("activityContainer");
     const parentWidth = parentElement?.offsetWidth;
@@ -23,6 +39,97 @@ const ActivityChart = () => {
     const x = parentWidth ? parentWidth / 2 : 0;
     const y = parentHeight ? parentHeight / 2 : 0;
 
+    // Filtrer les données pour le jour en cours
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1; // Les mois sont indexés à partir de 0
+    const currentDay = currentDate.getDate();
+
+    const filteredDataConsoJournaliere = dataConso.filter((item: any) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === currentYear &&
+        itemDate.getMonth() + 1 === currentMonth &&
+        itemDate.getDate() === currentDay
+      );
+    });
+
+    const filteredDataProdJournaliere = dataProd.filter((item: any) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === currentYear &&
+        itemDate.getMonth() + 1 === currentMonth &&
+        itemDate.getDate() === currentDay
+      );
+    });
+
+    const totalProductionJournaliere = filteredDataProdJournaliere.reduce(
+      (acc: number, item: any) => acc + item.value,
+      0
+    );
+    const totalConsommationJournaliere = filteredDataConsoJournaliere.reduce(
+      (acc: number, item: any) => acc + item.value,
+      0
+    );
+
+    const pourcentageAutoconsommationJournaliere = Math.round(
+      (totalProductionJournaliere / totalConsommationJournaliere) * 100
+    );
+
+    // Filtrer les données pour le mois en cours
+    const filteredDataConsoMensuelle = dataConso.filter((item: any) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === currentYear &&
+        itemDate.getMonth() + 1 === currentMonth
+      );
+    });
+
+    const filteredDataProdMensuelle = dataProd.filter((item: any) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === currentYear &&
+        itemDate.getMonth() + 1 === currentMonth
+      );
+    });
+
+    const totalProductionMensuelle = filteredDataProdMensuelle.reduce(
+      (acc: number, item: any) => acc + item.value,
+      0
+    );
+    const totalConsommationMensuelle = filteredDataConsoMensuelle.reduce(
+      (acc: number, item: any) => acc + item.value,
+      0
+    );
+
+    const pourcentageAutoconsommationMensuelle = Math.round(
+      (totalProductionMensuelle / totalConsommationMensuelle) * 100
+    );
+
+    // Filtrer les données pour l'année en cours
+    const filteredDataConsoAnnuelle = dataConso.filter((item: any) => {
+      const itemDate = new Date(item.dateReq);
+      return itemDate.getFullYear() === currentYear;
+    });
+
+    const filteredDataProdAnnuelle = dataProd.filter((item: any) => {
+      const itemDate = new Date(item.dateReq);
+      return itemDate.getFullYear() === currentYear;
+    });
+
+    const totalProductionAnnuelle = filteredDataProdAnnuelle.reduce(
+      (acc: number, item: any) => acc + item.value,
+      0
+    );
+    const totalConsommationAnnuelle = filteredDataConsoAnnuelle.reduce(
+      (acc: number, item: any) => acc + item.value,
+      0
+    );
+
+    const pourcentageAutoconsommationAnnuelle = Math.round(
+      (totalProductionAnnuelle / totalConsommationAnnuelle) * 100
+    );
+
     const options = {
       chart: {
         type: "solidgauge",
@@ -30,7 +137,6 @@ const ActivityChart = () => {
       exporting: {
         enabled: false,
       },
-
       title: {
         text: "Autoconsommation",
       },
@@ -63,7 +169,6 @@ const ActivityChart = () => {
         valueSuffix: "%",
         pointFormat:
           '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}</span>',
-
         max: 100,
         lineWidth: 0,
         tickPositions: [],
@@ -100,7 +205,7 @@ const ActivityChart = () => {
               color: "#04276E",
               radius: "112%",
               innerRadius: "88%",
-              y: 80,
+              y: pourcentageAutoconsommationJournaliere,
             },
           ],
         },
@@ -111,7 +216,7 @@ const ActivityChart = () => {
               color: "#009DE0",
               radius: "87%",
               innerRadius: "63%",
-              y: 27,
+              y: pourcentageAutoconsommationMensuelle,
             },
           ],
         },
@@ -122,7 +227,7 @@ const ActivityChart = () => {
               color: "#04276E",
               radius: "62%",
               innerRadius: "38%",
-              y: 27,
+              y: pourcentageAutoconsommationAnnuelle,
             },
           ],
         },
@@ -164,7 +269,7 @@ const ActivityChart = () => {
       },
     };
     setOptions(options);
-  }, []);
+  }, [dataConso, dataProd]);
 
   return (
     <div className="block w-[100%] h-[100%]">
@@ -172,4 +277,5 @@ const ActivityChart = () => {
     </div>
   );
 };
+
 export default ActivityChart;
