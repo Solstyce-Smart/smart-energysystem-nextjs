@@ -13,4 +13,7 @@ export class searchService {
   async getDatasByEwonId(ewonId: string) {
     return this.elasticService.searchByEwonId(ewonId);
   }
+  async getDatasByTagsName(ewonId: string, tagsName: string) {
+    return this.elasticService.searchByTagsName(ewonId, tagsName);
+  }
 }

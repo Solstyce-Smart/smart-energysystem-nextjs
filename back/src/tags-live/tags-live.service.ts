@@ -66,9 +66,9 @@ export class TagsLiveService {
     }
 
     for (const params of createTagLiveParams) {
-      const ewonTagId = params.ewonTagId;
+      const tagName = params.tagName;
       const existingTagsLive = installation.tagsLive.find(
-        (tagLive) => tagLive.ewonTagId === ewonTagId,
+        (tagLive) => tagLive.tagName === tagName,
       );
       if (existingTagsLive) {
         existingTagsLive.lastSynchroDate = params.lastSynchroDate;
@@ -83,7 +83,7 @@ export class TagsLiveService {
           value: params.value,
           quality: params.quality,
           alarmHint: params.alarmHint,
-          ewonTagId: params.ewonTagId,
+          tagName: params.tagName,
           installation: installation,
         });
 
@@ -134,7 +134,7 @@ export class TagsLiveService {
     tagLive.value = updateTagLiveParams.value;
     tagLive.quality = updateTagLiveParams.quality;
     tagLive.alarmHint = updateTagLiveParams.alarmHint;
-    tagLive.ewonTagId = updateTagLiveParams.ewonTagId;
+    tagLive.tagName = updateTagLiveParams.tagName;
 
     await this.tagsLiveRepository.save(tagLive);
 

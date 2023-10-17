@@ -18,10 +18,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={montserrat.className}>
-        <div className="h-full">
+        <>
           <Navbar />
           {children}
-        </div>
+        </>
       </body>
     </html>
   );

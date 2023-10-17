@@ -46,7 +46,7 @@ describe('InstallationsService', () => {
   const tagsLiveMock = {
     id: 1,
     lastSynchroDate: '255d15d1f5fd8d',
-    dateReq: '255d15d1f5fd8d',
+    dateReq: new Date(),
     value: 1,
     quality: 'fdsfsdfsdfsdf',
     alarmHint: 'fdsfsdfsdfsdf',
@@ -70,12 +70,12 @@ describe('InstallationsService', () => {
         postalCode: 215882,
       },
     ],
-    tagsLive: tagsLiveMock,
+    tagsLive: [tagsLiveMock],
     user: null,
   };
 
   tagsLiveMock.installation = installationMock;
-  installationMock.tagsLive = tagsLiveMock;
+  installationMock.tagsLive = [tagsLiveMock];
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -206,7 +206,7 @@ describe('InstallationsService', () => {
         battery: true,
         abo: 2,
         lastSynchroDate: '1234567890',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: null,
       };
 
@@ -267,7 +267,7 @@ describe('InstallationsService', () => {
           battery: true,
           abo: 2,
           lastSynchroDate: '1234567890',
-          tagsLive: tagsLiveMock,
+          tagsLive: [tagsLiveMock],
           user: userMock,
         },
         {
@@ -278,7 +278,7 @@ describe('InstallationsService', () => {
           battery: false,
           abo: 1,
           lastSynchroDate: '9876543210',
-          tagsLive: tagsLiveMock,
+          tagsLive: [tagsLiveMock],
           user: userMock,
         },
       ];
@@ -326,7 +326,7 @@ describe('InstallationsService', () => {
         ],
         abo: 2,
         lastSynchroDate: '255d15d1f5fd8d',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: userMock,
       };
 
@@ -368,7 +368,7 @@ describe('InstallationsService', () => {
         ],
         abo: 2,
         lastSynchroDate: '255d15d1f5fd8d',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: userMock,
       };
 
@@ -418,7 +418,7 @@ describe('InstallationsService', () => {
         ],
         abo: 2,
         lastSynchroDate: '255d15d1f5fd8d',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: userMock,
       };
 
@@ -430,7 +430,7 @@ describe('InstallationsService', () => {
         battery: true,
         abo: 2,
         lastSynchroDate: '1234567890',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: userMock,
       };
 
@@ -482,7 +482,7 @@ describe('InstallationsService', () => {
         battery: true,
         abo: 2,
         lastSynchroDate: '1234567890',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: userMock,
       };
 
@@ -563,7 +563,7 @@ describe('InstallationsService', () => {
         battery: true,
         abo: 2,
         lastSynchroDate: '1234567890',
-        tagsLive: tagsLiveMock,
+        tagsLive: [tagsLiveMock],
         user: userMock,
       };
 

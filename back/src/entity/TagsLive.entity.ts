@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Installation } from './Installations.entity';
+import { addHours } from 'date-fns';
 
 @Entity('tags_live')
 export class TagsLive {
@@ -29,8 +30,8 @@ export class TagsLive {
   @Column({ default: '' })
   alarmHint: string;
 
-  @Column({ default: 999 })
-  ewonTagId: number;
+  @Column({ default: 'IRVE_1' })
+  tagName: string;
 
   @ManyToOne(() => Installation, (installation) => installation.tagsLive, {
     onDelete: 'CASCADE',

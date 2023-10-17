@@ -11,8 +11,8 @@ export class CreateTagLiveDto {
   quality: string;
   @ApiProperty({ default: "Pas d'alarmes" })
   alarmHint: string;
-  @ApiProperty({ default: 27 })
-  ewonTagId: number;
+  @ApiProperty({ default: 'IRVE_1' })
+  tagName: string;
   @ApiProperty({ type: () => [Installation], readOnly: true })
   installation: null;
 }

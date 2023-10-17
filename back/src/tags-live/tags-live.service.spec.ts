@@ -93,7 +93,7 @@ describe('TagsLiveService', () => {
       const tagsLiveMock: TagsLive = {
         id: 1,
         lastSynchroDate: '255d15d1f5fd8d',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -121,7 +121,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -134,7 +134,7 @@ describe('TagsLiveService', () => {
       const expectedTag = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -160,7 +160,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -188,7 +188,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -216,7 +216,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -254,7 +254,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -271,11 +271,9 @@ describe('TagsLiveService', () => {
 
       jest.spyOn(service, 'createTagLive').mockResolvedValue(tagDetails);
 
-      const result = await service.createTagLive(
-        userId,
-        installationId,
+      const result = await service.createTagLive(userId, installationId, [
         tagDetails,
-      );
+      ]);
 
       expect(result).toBeDefined();
       expect(result.installation).toEqual(installationMock);
@@ -288,7 +286,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -301,11 +299,9 @@ describe('TagsLiveService', () => {
         .spyOn(entityManager, 'findOne')
         .mockResolvedValueOnce(installationMock);
 
-      const result = await service.createTagLive(
-        userId,
-        installationId,
+      const result = await service.createTagLive(userId, installationId, [
         tagDetails,
-      );
+      ]);
 
       expect(result).toBeNull();
     });
@@ -316,7 +312,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',
@@ -334,11 +330,9 @@ describe('TagsLiveService', () => {
       jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(userMock);
       jest.spyOn(entityManager, 'findOne').mockResolvedValueOnce(null);
 
-      const result = await service.createTagLive(
-        userId,
-        installationId,
+      const result = await service.createTagLive(userId, installationId, [
         tagDetails,
-      );
+      ]);
 
       expect(result).toBeNull();
     });
@@ -421,7 +415,7 @@ describe('TagsLiveService', () => {
       const tagDetails = {
         id: 1,
         lastSynchroDate: 'modifSynchro',
-        dateReq: '255d15d1f5fd8d',
+        dateReq: new Date(),
         value: 1,
         quality: 'fdsfsdfsdfsdf',
         alarmHint: 'fdsfsdfsdfsdf',

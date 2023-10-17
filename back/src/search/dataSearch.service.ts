@@ -38,4 +38,28 @@ export class dataSearchService {
     });
     return body.hits.hits.map((hit) => hit._source);
   }
+
+  async searchByTagsName(ewonId: string, tagsName: string) {
+    const body = await this.elasticService.search<GetDatasResult>({
+      index,
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                ewonId: ewonId,
+              },
+            },
+            {
+              match: {
+                tagName: tagsName,
+              },
+            },
+          ],
+        },
+      },
+      size: 10000,
+    });
+    return body.hits.hits.map((hit) => hit._source);
+  }
 }

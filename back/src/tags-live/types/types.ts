@@ -4,7 +4,7 @@ export class CreateTagLiveParams {
   value: number;
   quality: string;
   alarmHint: string;
-  ewonTagId: number;
+  tagName: string;
   installation: null;
 }
 export class UpdateTagLiveParams {
@@ -13,6 +13,6 @@ export class UpdateTagLiveParams {
   value: number;
   quality: string;
   alarmHint: string;
-  ewonTagId: number;
+  tagName: string;
   installation: null;
 }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
+import cron from 'node-cron';
 
 dotenv.config();
 
@@ -19,16 +20,19 @@ const getDatas = async () => {
       const ewonId = response.data.id.toString();
       response.data.tags.forEach((tag) => {
         const { value, quality, alarmHint, ewonTagId, name } = tag;
+        const adjustedDate = new Date();
+        adjustedDate.setTime(adjustedDate.getTime() + 2 * 60 * 60 * 1000);
 
         if (ewonTagId === -1) {
           return;
         } else {
           dataFiltered.push({
             lastSynchroDate,
+            dateReq: adjustedDate,
             value,
             quality,
             alarmHint,
-            ewonTagId,
+            tagName: name,
             installationId: process.env.CENTRALEID,
           });
           elasticFiltered.push({
@@ -47,19 +51,22 @@ const getDatas = async () => {
     });
 
   await axios.post(
-    `http://localhost:3001/${process.env.USERID}/installations/${process.env.CENTRALEID}/tags-live`,
+    `http://164.132.50.131:3001/${process.env.USERID}/installations/${process.env.CENTRALEID}/tags-live`,
     dataFiltered,
   );
 
   try {
-    console.log(typeof elasticFiltered);
     await axios.post(
-      `http://localhost:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
+      `http://164.132.50.131:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
       elasticFiltered,
     );
   } catch (error) {
     console.error('Erreur:', error);
   }
+
+  console.log('Cron job done');
 };
 
-getDatas();
+cron.schedule('*/5 * * * *', () => {
+  getDatas();
+});
