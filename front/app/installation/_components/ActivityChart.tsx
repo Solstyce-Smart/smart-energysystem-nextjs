@@ -42,8 +42,8 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
     // Filtrer les données pour le jour en cours
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1; // Les mois sont indexés à partir de 0
-    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate() - 1;
 
     const filteredDataConsoJournaliere = dataConso.filter((item: any) => {
       const itemDate = new Date(item.dateReq);
@@ -63,17 +63,32 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       );
     });
 
-    const totalProductionJournaliere = filteredDataProdJournaliere.reduce(
+    const productionJournaliere = filteredDataProdJournaliere.reduce(
       (acc: number, item: any) => acc + item.value,
       0
     );
-    const totalConsommationJournaliere = filteredDataConsoJournaliere.reduce(
+    const consommationJournaliere = filteredDataConsoJournaliere.reduce(
       (acc: number, item: any) => acc + item.value,
       0
     );
 
-    const pourcentageAutoconsommationJournaliere = Math.round(
-      (totalProductionJournaliere / totalConsommationJournaliere) * 100
+    const calculateAutoconsumptionRate = (
+      dailyProduction: number,
+      dailyConsumption: number
+    ) => {
+      if (dailyProduction > 0 && dailyConsumption > 0) {
+        if (dailyProduction > dailyConsumption) {
+          return Math.round((dailyConsumption / dailyProduction) * 100);
+        } else {
+          return Math.round((dailyProduction / dailyConsumption) * 100);
+        }
+      }
+      return 0;
+    };
+
+    const tauxAutoconsommationJournalier = calculateAutoconsumptionRate(
+      productionJournaliere,
+      consommationJournaliere
     );
 
     // Filtrer les données pour le mois en cours
@@ -93,17 +108,20 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       );
     });
 
-    const totalProductionMensuelle = filteredDataProdMensuelle.reduce(
+    const productionMensuelle = filteredDataProdMensuelle.reduce(
       (acc: number, item: any) => acc + item.value,
       0
     );
-    const totalConsommationMensuelle = filteredDataConsoMensuelle.reduce(
+    const consommationMensuelle = filteredDataConsoMensuelle.reduce(
       (acc: number, item: any) => acc + item.value,
       0
     );
 
-    const pourcentageAutoconsommationMensuelle = Math.round(
-      (totalProductionMensuelle / totalConsommationMensuelle) * 100
+    calculateAutoconsumptionRate(productionMensuelle, consommationMensuelle);
+
+    const tauxAutoconsommationMensuel = calculateAutoconsumptionRate(
+      productionMensuelle,
+      consommationMensuelle
     );
 
     // Filtrer les données pour l'année en cours
@@ -117,17 +135,18 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       return itemDate.getFullYear() === currentYear;
     });
 
-    const totalProductionAnnuelle = filteredDataProdAnnuelle.reduce(
+    const productionAnnuelle = filteredDataProdAnnuelle.reduce(
       (acc: number, item: any) => acc + item.value,
       0
     );
-    const totalConsommationAnnuelle = filteredDataConsoAnnuelle.reduce(
+    const consommationAnnuelle = filteredDataConsoAnnuelle.reduce(
       (acc: number, item: any) => acc + item.value,
       0
     );
 
-    const pourcentageAutoconsommationAnnuelle = Math.round(
-      (totalProductionAnnuelle / totalConsommationAnnuelle) * 100
+    const tauxAutoconsommationAnnuel = calculateAutoconsumptionRate(
+      productionAnnuelle,
+      consommationAnnuelle
     );
 
     const options = {
@@ -138,7 +157,7 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
         enabled: false,
       },
       title: {
-        text: "Autoconsommation",
+        text: null,
       },
       plotOptions: {
         solidgauge: {
@@ -164,11 +183,11 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
           fontSize: "16px",
         },
         positioner: function () {
-          return { x: x - 40, y: y - 20 };
+          return { x: x - 45, y: y - 70 };
         },
         valueSuffix: "%",
         pointFormat:
-          '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}</span>',
+          '<div style="text-align: center; display: flex; align-items: center; justify-content: center;">{series.name}<br><span style="text-align: center; font-size:2em; color: {point.color}; font-weight: bold">{point.y}</span></div>',
         max: 100,
         lineWidth: 0,
         tickPositions: [],
@@ -200,36 +219,45 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       series: [
         {
           name: "Journalière",
+          overshoot: 100,
           data: [
             {
               color: "#04276E",
               radius: "112%",
               innerRadius: "88%",
-              y: pourcentageAutoconsommationJournaliere,
+              y: tauxAutoconsommationJournalier,
             },
           ],
+          lineWidth: 2,
+          borderColor: "#000",
         },
         {
           name: "Mensuelle",
+          overshoot: 100,
           data: [
             {
               color: "#009DE0",
               radius: "87%",
               innerRadius: "63%",
-              y: pourcentageAutoconsommationMensuelle,
+              y: tauxAutoconsommationMensuel,
             },
           ],
+          lineWidth: 2,
+          borderColor: "#000",
         },
         {
           name: "Annuelle",
+          overshoot: 100,
           data: [
             {
               color: "#04276E",
               radius: "62%",
               innerRadius: "38%",
-              y: pourcentageAutoconsommationAnnuelle,
+              y: tauxAutoconsommationAnnuel,
             },
           ],
+          lineWidth: 2,
+          borderColor: "#000",
         },
       ],
       responsive: {
@@ -243,16 +271,6 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
                 align: "center",
                 verticalAlign: "bottom",
                 layout: "horizontal",
-              },
-              yAxis: {
-                labels: {
-                  align: "left",
-                  x: 0,
-                  y: -5,
-                },
-                title: {
-                  text: null,
-                },
               },
               subtitle: {
                 text: null,
@@ -272,8 +290,13 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
   }, [dataConso, dataProd]);
 
   return (
-    <div className="block w-[100%] h-[100%]">
-      <HighchartsReact highcharts={Highcharts} options={options} id="test" />
+    <div className="block w-[100%] h-[100%]  mb-1">
+      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white mr-[1px] ">
+        <h2 className="text-xl font-bold text-primary mb-6">
+          Autoconsommation
+        </h2>
+      </div>
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import { Button } from "@/components/ui/button";
 
 interface AreaChartProps {
   dataProd: {
@@ -20,37 +21,33 @@ interface AreaChartProps {
 }
 
 const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
-  const currentDate = new Date();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [newDate, setNewDate] = useState(0);
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1; // Les mois sont indexés à partir de 0
-  const currentDay = currentDate.getDate();
+  const currentDay = currentDate.getDate() + newDate;
+  const dateToShow = new Date(currentDate);
+  dateToShow.setDate(dateToShow.getDate() + newDate);
+  const day = ("0" + dateToShow.getDate()).slice(-2);
+  const month = ("0" + (dateToShow.getMonth() + 1)).slice(-2);
+  const year = dateToShow.getFullYear();
+  const formattedDate = `${day} / ${month} / ${year}`;
 
-  // Filtrer les données pour la journée en cours
-  const filteredDataProd = dataProd
-    .map((item) => {
-      const itemDate = new Date(item.dateReq);
-      itemDate.setHours(itemDate.getHours());
+  const updateDate = (delta: number) => {
+    const updatedDate = new Date(currentDate);
+    updatedDate.setDate(updatedDate.getDate() + delta);
+    setCurrentDate(updatedDate);
+  };
 
-      // Formater la date en heure sans les secondes
-      const formattedDate = new Date(itemDate);
-      formattedDate.setSeconds(0);
-      formattedDate.setMilliseconds(0);
+  const sortedDataProd = dataProd.sort((a, b) => {
+    return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
+  });
 
-      return {
-        ...item,
-        dateReq: formattedDate,
-      };
-    })
-    // @ts-ignore
-    .sort((a, b) => a.dateReq - b.dateReq)
-    .filter((item) =>
-      item.dateReq
-        .toISOString()
-        .includes(currentDate.toISOString().substr(0, 10))
-    )
-    .filter((item, index) => index % 5 === 0);
+  const sortedDataConso = dataConso.sort((a, b) => {
+    return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
+  });
 
-  const chartDataProd = filteredDataProd.map((item) => {
+  const chartDataProd = sortedDataProd.map((item) => {
     const timestamp = new Date(item.dateReq).getTime();
 
     return {
@@ -58,31 +55,8 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
       y: Number(item.value.toFixed(2)),
     };
   });
-  const filteredDataConso = dataConso
-    .map((item) => {
-      const itemDate = new Date(item.dateReq);
-      itemDate.setHours(itemDate.getHours());
 
-      // Formater la date en heure sans les secondes
-      const formattedDate = new Date(itemDate);
-      formattedDate.setSeconds(0);
-      formattedDate.setMilliseconds(0);
-
-      return {
-        ...item,
-        dateReq: formattedDate,
-      };
-    })
-    // @ts-ignore
-    .sort((a, b) => a.dateReq - b.dateReq)
-    .filter((item) =>
-      item.dateReq
-        .toISOString()
-        .includes(currentDate.toISOString().substr(0, 10))
-    )
-    .filter((item, index) => index % 5 === 0);
-
-  const chartDataConso = filteredDataConso.map((item) => {
+  const chartDataConso = sortedDataConso.map((item) => {
     const timestamp = new Date(item.dateReq).getTime();
 
     return {
@@ -94,20 +68,47 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
   const startOfDay = new Date(
     currentYear,
     currentMonth - 1,
-    currentDay,
+    currentDay + newDate,
     0,
     0,
     0
   );
-
   const endOfDay = new Date(
     currentYear,
     currentMonth - 1,
-    currentDay,
+    currentDay + newDate,
     23,
     59,
     59
   );
+
+  const dataExistePourDate = (delta: number) => {
+    const dateCible = new Date(currentDate);
+    dateCible.setDate(dateCible.getDate() + delta);
+
+    // Vérifier si des données existent dans dataProd pour la date cible
+    const dataProdExiste = dataProd.some((item) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === dateCible.getFullYear() &&
+        itemDate.getMonth() === dateCible.getMonth() &&
+        itemDate.getDate() === dateCible.getDate()
+      );
+    });
+
+    // Vérifier si des données existent dans dataConso pour la date cible
+    const dataConsoExiste = dataConso.some((item) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === dateCible.getFullYear() &&
+        itemDate.getMonth() === dateCible.getMonth() &&
+        itemDate.getDate() === dateCible.getDate()
+      );
+    });
+
+    // Retourner true si des données existent pour au moins l'un des tableaux
+    return dataProdExiste || dataConsoExiste;
+  };
 
   const options = {
     chart: {
@@ -117,7 +118,7 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
       enabled: false,
     },
     title: {
-      text: "Installation",
+      text: null,
     },
     plotOptions: {
       area: {
@@ -128,7 +129,7 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
     },
     yAxis: {
       title: {
-        text: "kWh",
+        text: "kW",
       },
     },
     xAxis: {
@@ -148,6 +149,7 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
           // Formatage de l'axe X au format "00h, 01h, ..., 22h, 23h"
           const date = new Date(this.value);
           const hours = date.getHours();
+
           return hours.toString().padStart(2, "0") + "h";
         },
         rotation: 0, // Rotation à 0 degrés (horizontal)
@@ -166,7 +168,32 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
       },
     ],
     tooltip: {
-      headerFormat: `{point.key:%Hh%M}<br/>`,
+      useHTML: true,
+      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+        let tooltip = '<div class="custom-tooltip z-50">';
+        if (this.x !== undefined) {
+          const date = new Date(this.x);
+          date.setHours(date.getHours() + 2);
+          const formattedTime =
+            ("0" + date.getUTCHours()).slice(-2) +
+            "h" +
+            ("0" + date.getUTCMinutes()).slice(-2);
+
+          tooltip += `<div>Heure :</div>
+          <div class="tooltip-time">${formattedTime} ⌚</div><br />`;
+        }
+        if (this.y !== undefined && this.y !== null) {
+          tooltip +=
+            '<div class="tooltip-series" style="display: flex; flex-direction: row">' +
+            this.series.name +
+            " : ⚡</div> " +
+            '<span class="tooltip-value" style="">' +
+            Highcharts.numberFormat(this.y, 2) +
+            " kW</span>";
+        }
+        tooltip += "</div>";
+        return tooltip;
+      },
     },
     responsive: {
       rules: [
@@ -207,6 +234,28 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
 
   return (
     <div className="block w-[100%] h-[100%]  mb-1">
+      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white mr-[1px] ">
+        <h2 className="text-xl font-bold text-primary">Installation</h2>
+        <div className="flex gap-3 justify-center items-center text-center">
+          {dataExistePourDate(-1) && (
+            <button
+              className="text-primary text-md font-semibold"
+              onClick={() => updateDate(-1)}
+            >
+              &lt;
+            </button>
+          )}
+          <h3 className="text-md">{formattedDate}</h3>
+          {dataExistePourDate(1) && (
+            <button
+              className="text-primary text-md font-semibold"
+              onClick={() => updateDate(1)}
+            >
+              &gt;
+            </button>
+          )}
+        </div>
+      </div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );

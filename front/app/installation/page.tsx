@@ -97,7 +97,7 @@ const Installation = () => {
             </div>
           ) : graph === "bar" ? (
             <div className="flex flex-col items-center justify-center relative">
-              <BarChart />
+              <BarChart dataProd={dataProd} dataConso={dataConso} />
               <div className="flex gap-4 mt-4 max-w-full items-center justify-center md:pt-0 absolute bottom-[-3em]">
                 <Button
                   className="w-[100px] h-10 "
@@ -121,7 +121,7 @@ const Installation = () => {
             </div>
           ) : graph === "barMonth" ? (
             <div className="flex flex-col items-center justify-center relative">
-              <BarChartMonth />
+              <BarChartMonth dataProd={dataProd} dataConso={dataConso} />
               <div className="flex gap-4 mt-4 max-w-full items-center justify-center md:pt-0 absolute bottom-[-3em]">
                 <Button
                   className="w-[100px] h-10 "

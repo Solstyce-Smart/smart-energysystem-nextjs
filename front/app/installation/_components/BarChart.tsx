@@ -2,32 +2,75 @@ import React from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 
-const BarChart = () => {
-  const randomConsommation: any[] = [];
-  const setrandomConsommation = () => {
-    while (randomConsommation.length < 30) {
-      const randomNumber = Math.floor(Math.random() * 100);
-      if (!randomConsommation.includes(randomNumber)) {
-        randomConsommation.push(randomNumber);
+interface BarChartProps {
+  dataProd: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
+  dataConso: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
+}
+
+const BarChart = ({ dataConso, dataProd }: BarChartProps) => {
+  // Filtrer les données pour le mois en cours
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const dateToShow = new Date(currentDate);
+  dateToShow.setDate(dateToShow.getDate());
+  const month = ("0" + (dateToShow.getMonth() + 1)).slice(-2);
+  const year = dateToShow.getFullYear();
+  const formattedDate = `${month} / ${year}`;
+
+  const filteredDataConso = Array.from({ length: daysInMonth }, (_, day) => {
+    const dayString = `${currentYear}-${(currentMonth + 1)
+      .toString()
+      .padStart(2, "0")}-${(day + 1).toString().padStart(2, "0")}`;
+    const filteredData = dataConso.filter(
+      (item) => item.dateReq.startsWith(dayString) && item.value !== 0
+    );
+    const totalConso = filteredData.reduce((acc, item, index, array) => {
+      if (index > 0) {
+        const prevValue = array[index - 1].value;
+        const currValue = item.value;
+        const hours = 5 / 60;
+        const consumption = ((currValue + prevValue) / 2) * hours;
+        return acc + Math.abs(consumption);
       }
-    }
+      return acc;
+    }, 0);
 
-    return randomConsommation;
-  };
-  const randomProduction: any[] = [];
-  const setrandomProduction = () => {
-    while (randomProduction.length < 30) {
-      const randomNumber = Math.floor(Math.random() * 100);
-      if (!randomProduction.includes(randomNumber)) {
-        randomProduction.push(randomNumber);
+    return Math.round(totalConso);
+  });
+
+  const filteredDataProd = Array.from({ length: daysInMonth }, (_, day) => {
+    const dayString = `${currentYear}-${(currentMonth + 1)
+      .toString()
+      .padStart(2, "0")}-${(day + 1).toString().padStart(2, "0")}`;
+    const filteredData = dataProd.filter(
+      (item) => item.dateReq.startsWith(dayString) && item.value !== 0
+    );
+    const totalProd = filteredData.reduce((acc, item, index, array) => {
+      if (index > 0) {
+        const prevValue = array[index - 1].value;
+        const currValue = item.value;
+        const hours = 5 / 60;
+        const production = ((currValue + prevValue) / 2) * hours;
+        return acc + Math.abs(production);
       }
-    }
-
-    return randomProduction;
-  };
-
-  setrandomConsommation();
-  setrandomProduction();
+      return acc;
+    }, 0);
+    return Math.round(totalProd);
+  });
 
   const options = {
     chart: {
@@ -37,7 +80,7 @@ const BarChart = () => {
       enabled: false,
     },
     title: {
-      text: "Installation",
+      text: null,
     },
     plotOptions: {
       column: {
@@ -56,19 +99,21 @@ const BarChart = () => {
       title: {
         text: "Jours",
       },
-      categories: Array.from({ length: 30 }, (_, i) => (i + 1).toString()),
-      max: 29,
+      categories: Array.from({ length: daysInMonth }, (_, day) =>
+        (day + 1).toString()
+      ),
+      max: daysInMonth - 1,
     },
     series: [
       {
         name: "Consommation",
-        data: randomConsommation,
-        color: "#009DE0",
+        data: filteredDataConso,
+        color: "#04276E",
       },
       {
         name: "Production",
-        data: randomProduction,
-        color: "#04276E",
+        data: filteredDataProd,
+        color: "#009DE0",
       },
     ],
     responsive: {
@@ -110,6 +155,12 @@ const BarChart = () => {
 
   return (
     <div className="block w-[100%] h-[100%]  mb-1">
+      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white mr-[1px] ">
+        <h2 className="text-xl font-bold text-primary">Installation</h2>
+        <div className="flex gap-3 justify-center items-center text-center">
+          <h3 className="text-md">{formattedDate}</h3>
+        </div>
+      </div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
