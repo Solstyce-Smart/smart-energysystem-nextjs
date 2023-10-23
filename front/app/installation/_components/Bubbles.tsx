@@ -155,13 +155,13 @@ const Bubbles = (props: BubblesProps) => {
         icon={bubbles.basic[1]?.icon}
         ref={buildingRef}
       />
-      <CustomArrow startRef={pvRef} endRef={networkRef} />
-      <CustomArrow startRef={pvRef} endRef={consoRef} />
-      <CustomArrow startRef={pvRef} endRef={batteryRef} />
-      <CustomArrow startRef={batteryRef} endRef={consoRef} />
-      <CustomArrow startRef={networkRef} endRef={consoRef} />
-      <CustomArrow startRef={consoRef} endRef={irveRef} />
-      <CustomArrow startRef={consoRef} endRef={buildingRef} />
+      <CustomArrow startRef={pvRef} endRef={networkRef} animated />
+      <CustomArrow startRef={pvRef} endRef={consoRef} animated />
+      <CustomArrow startRef={pvRef} endRef={batteryRef} animated />
+      <CustomArrow startRef={batteryRef} endRef={consoRef} animated />
+      <CustomArrow startRef={networkRef} endRef={consoRef} animated />
+      <CustomArrow startRef={consoRef} endRef={irveRef} dashed animated />
+      <CustomArrow startRef={consoRef} endRef={buildingRef} animated />
     </div>
   );
 };

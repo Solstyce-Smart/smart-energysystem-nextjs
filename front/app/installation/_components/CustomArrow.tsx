@@ -3,9 +3,16 @@ import React, { useEffect, useRef, RefObject } from "react";
 interface CustomArrowProps {
   startRef: RefObject<HTMLDivElement>;
   endRef: RefObject<HTMLDivElement>;
+  dashed?: boolean;
+  animated?: boolean;
 }
 
-const CustomArrow: React.FC<CustomArrowProps> = ({ startRef, endRef }) => {
+const CustomArrow: React.FC<CustomArrowProps> = ({
+  startRef,
+  endRef,
+  dashed,
+  animated,
+}) => {
   const arrowRef = useRef<SVGSVGElement>(null);
   const arrowHead1Ref = useRef<SVGTextElement | null>(null);
 
@@ -60,29 +67,58 @@ const CustomArrow: React.FC<CustomArrowProps> = ({ startRef, endRef }) => {
 
       const pathElement = arrowElement.querySelector("path");
       if (pathElement) {
-        pathElement.setAttribute(
-          "d",
-          `M0,${arrowElement.height.baseVal.value / 2} L${arrowLength},${
-            arrowElement.height.baseVal.value / 2
-          } L${arrowLength},${arrowElement.height.baseVal.value / 2 + 2} L0,${
-            arrowElement.height.baseVal.value / 2 + 2
-          }`
-        );
+        if (dashed) {
+          const line = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "line"
+          );
+          line.setAttribute("x1", "0");
+          line.setAttribute("y1", `${arrowElement.height.baseVal.value / 2}`);
+          line.setAttribute("x2", `${arrowLength}`);
+          line.setAttribute("y2", `${arrowElement.height.baseVal.value / 2}`);
+          line.setAttribute("stroke", "grey");
+          line.setAttribute("stroke-width", "2");
+          line.setAttribute("stroke-dasharray", "7,7");
+          pathElement.replaceWith(line);
+          const animateLine = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "animate"
+          );
+          if (animated) {
+            animateLine.setAttribute("attributeName", "stroke-dashoffset");
+            line.setAttribute("stroke", "#009DE0");
+            animateLine.setAttribute("from", "14");
+            animateLine.setAttribute("to", "-15"); // Réduisez-la pour faire avancer le trait pointillé
+            animateLine.setAttribute("dur", ".5");
+            animateLine.setAttribute("repeatCount", "indefinite");
+            line.appendChild(animateLine);
+          }
+        } else {
+          pathElement.setAttribute(
+            "d",
+            `M0,${arrowElement.height.baseVal.value / 2} L${arrowLength},${
+              arrowElement.height.baseVal.value / 2
+            } L${arrowLength},${arrowElement.height.baseVal.value / 2 + 2} L0,${
+              arrowElement.height.baseVal.value / 2 + 2
+            }`
+          );
+        }
       }
 
-      // Positionnez et animez le signe ">" le long de la ligne
-      arrowHead1Element.setAttribute("x", "0"); // Position initiale du signe ">"
+      if (animated) {
+        arrowHead1Element.setAttribute("x", "0");
 
-      const animateElement1 = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "animate"
-      );
-      animateElement1.setAttribute("attributeName", "x");
-      animateElement1.setAttribute("from", "0");
-      animateElement1.setAttribute("to", `${arrowLength - 8}`);
-      animateElement1.setAttribute("dur", "2s");
-      animateElement1.setAttribute("repeatCount", "indefinite");
-      arrowHead1Element.appendChild(animateElement1);
+        const animateElement1 = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "animate"
+        );
+        animateElement1.setAttribute("attributeName", "x");
+        animateElement1.setAttribute("from", "0");
+        animateElement1.setAttribute("to", `${arrowLength - 8}`);
+        animateElement1.setAttribute("dur", "2s");
+        animateElement1.setAttribute("repeatCount", "indefinite");
+        arrowHead1Element.appendChild(animateElement1);
+      }
     }
   }, [startRef, endRef]);
 
@@ -90,7 +126,7 @@ const CustomArrow: React.FC<CustomArrowProps> = ({ startRef, endRef }) => {
     <svg ref={arrowRef} xmlns="http://www.w3.org/2000/svg" width="0" height="0">
       <text
         ref={arrowHead1Ref}
-        y="20"
+        y="19"
         fontSize="30"
         fontWeight="bold"
         fill="#009DE0"
