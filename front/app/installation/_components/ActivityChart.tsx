@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HighchartsReact from "highcharts-react-official";
-import Highcharts from "highcharts";
+import Highcharts, { chart } from "highcharts";
 import solidGauge from "highcharts/modules/solid-gauge.js";
 import HighchartsMore from "highcharts/highcharts-more";
 import HighchartsExporting from "highcharts/modules/exporting";
@@ -43,7 +43,7 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
-    const currentDay = currentDate.getDate() - 1;
+    const currentDay = currentDate.getDate();
 
     const filteredDataConsoJournaliere = dataConso.filter((item: any) => {
       const itemDate = new Date(item.dateReq);
@@ -182,8 +182,14 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
         style: {
           fontSize: "16px",
         },
-        positioner: function () {
-          return { x: x - 45, y: y - 70 };
+        positioner: function (labelWidth: any, labelHeight: any, point: any) {
+          let chartWidth = this.chart.chartWidth;
+          let chartHeight = this.chart.chartHeight;
+
+          return {
+            x: chartWidth / 2 - 40,
+            y: chartHeight / 2 - 40,
+          };
         },
         valueSuffix: "%",
         pointFormat:
@@ -290,8 +296,8 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
   }, [dataConso, dataProd]);
 
   return (
-    <div className="block w-[100%] h-[100%]  mb-1">
-      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white mr-[1px] ">
+    <div className="block  w-full h-full  mb-1">
+      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
         <h2 className="text-xl font-bold text-primary mb-6">
           Autoconsommation
         </h2>

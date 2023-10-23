@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../public/logo.jpg";
 import NavbarRoutes from "./NavbarRoutes";
 import { Button } from "./ui/button";
@@ -24,7 +24,7 @@ const Navbar = () => {
         <div className="hidden md:flex">
           <NavbarRoutes />
         </div>
-        <div className="hidden md:flex">
+        <div className="hidden md:flex gap-2">
           <Button
             variant="primary"
             className="transition font-bold tracking-normal"

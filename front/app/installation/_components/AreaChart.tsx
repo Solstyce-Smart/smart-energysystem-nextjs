@@ -160,11 +160,13 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
         name: "Consommation",
         data: chartDataConso,
         color: "#04276E",
+        turboThreshold: 0,
       },
       {
         name: "Production",
         data: chartDataProd,
         color: "#009DE0",
+        turboThreshold: 0,
       },
     ],
     tooltip: {
@@ -180,13 +182,13 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
             ("0" + date.getUTCMinutes()).slice(-2);
 
           tooltip += `<div>Heure :</div>
-          <div class="tooltip-time">${formattedTime} ⌚</div><br />`;
+          <div class="tooltip-time">${formattedTime} </div><br />`;
         }
         if (this.y !== undefined && this.y !== null) {
           tooltip +=
             '<div class="tooltip-series" style="display: flex; flex-direction: row">' +
             this.series.name +
-            " : ⚡</div> " +
+            " : </div> " +
             '<span class="tooltip-value" style="">' +
             Highcharts.numberFormat(this.y, 2) +
             " kW</span>";
