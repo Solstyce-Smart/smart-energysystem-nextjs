@@ -160,12 +160,13 @@ const BarChartMonth = ({ dataConso, dataProd }: BarChartMonthProps) => {
     },
     credits: {
       text: "SOLSTYCE - SMART ©",
+      href: "https://www.solstyce.fr/",
     },
   };
 
   return (
-    <div className="block w-[100%] h-[100%]  mb-1">
-      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white mr-[1px] ">
+    <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
+      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
         <h2 className="text-xl font-bold text-primary">Installation</h2>
         <div className="flex gap-3 justify-center items-center text-center">
           <h3 className="text-md">{formattedDate}</h3>

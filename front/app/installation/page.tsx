@@ -82,21 +82,22 @@ const Installation = () => {
           setIsSmarted(smartActiveTag.value === 1);
         }
         setInstallation(installation);
+
         setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("Erreur lors du fetch des datas" + err));
   };
 
   useEffect(() => {
     fetchData(); // Appeler initialement les données
 
-    const interval = setInterval(fetchData, 60000);
+    const interval = setInterval(fetchData, 60000 * 5);
     return () => clearInterval(interval);
   }, []);
 
   if (!isLoading) {
     return (
-      <main className=" relative w-full h-full min-h-[90vh] bg-primary">
+      <main className="relative w-full h-full min-h-[90vh] bg-primary gap-6">
         <label className="absolute top-0 right-0 inline-flex items-center cursor-pointer mt-1.5 mr-2">
           <input
             type="checkbox"
@@ -110,89 +111,94 @@ const Installation = () => {
             {isSmarted ? "SMART ON" : "SMART OFF"}
           </span>
         </label>
-        <div className="flex bg-primary p-2 md:p-10  ">
-          {/* {graph === "area" ? (
-            <div className="flex flex-col items-center justify-center relative max-h-[40vh]">
-              <AreaChart dataProd={dataProd} dataConso={dataConso} />
-              <div className="flex gap-4 mt-4 max-w-full items-center justify-center md:pt-0 absolute bottom-[-4em]">
-                <Button
-                  className="w-[100px] h-10 "
-                  variant="primary"
-                  onClick={() => {
-                    setGraph("bar");
-                  }}
-                >
-                  Mensuel
-                </Button>
-                <Button
-                  className="w-[100px] h-10 "
-                  variant="primary"
-                  onClick={() => {
-                    setGraph("barMonth");
-                  }}
-                >
-                  Annuel
-                </Button>
-              </div>
-            </div>
-          ) : graph === "bar" ? (
-            <div className="flex flex-col items-center justify-center relative max-h-[40vh]">
-              <BarChart dataProd={dataProd} dataConso={dataConso} />
-              <div className="flex gap-4 mt-4 max-w-full items-center justify-center md:pt-0 absolute bottom-[-4em]">
-                <Button
-                  className="w-[100px] h-10 "
-                  variant="primary"
-                  onClick={() => {
-                    setGraph("area");
-                  }}
-                >
-                  Journalier
-                </Button>
-                <Button
-                  className="w-[100px] h-10 "
-                  variant="primary"
-                  onClick={() => {
-                    setGraph("barMonth");
-                  }}
-                >
-                  Annuel
-                </Button>
-              </div>
-            </div>
-          ) : graph === "barMonth" ? (
-            <div className="flex flex-col items-center justify-center relative max-h-[40vh]">
-              <BarChartMonth dataProd={dataProd} dataConso={dataConso} />
-              <div className="flex gap-4 mt-4 max-w-full items-center justify-center md:pt-0 absolute bottom-[-4em]">
-                <Button
-                  className="w-[100px] h-10 "
-                  variant="primary"
-                  onClick={() => {
-                    setGraph("area");
-                  }}
-                >
-                  Journalier
-                </Button>
-                <Button
-                  className="w-[100px] h-10 "
-                  variant="primary"
-                  onClick={() => {
-                    setGraph("bar");
-                  }}
-                >
-                  Mensuel
-                </Button>
-              </div>
-            </div>
-          ) : null} */}
-          {/* <div
+        <div className="flex flex-wrap bg-primary p-2 md:p-10 ">
+          <div className="flex flex-col items-center justify-center relative w-full md:w-1/2 pt-10 md:pt-0 md:max-h-full ">
+            {graph === "area" && (
+              <>
+                <AreaChart dataProd={dataProd} dataConso={dataConso} />
+                <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
+                  <Button
+                    className="w-[100px] h-10"
+                    variant="primary"
+                    onClick={() => {
+                      setGraph("bar");
+                    }}
+                  >
+                    Mensuel
+                  </Button>
+                  <Button
+                    className="w-[100px] h-10"
+                    variant="primary"
+                    onClick={() => {
+                      setGraph("barMonth");
+                    }}
+                  >
+                    Annuel
+                  </Button>
+                </div>
+              </>
+            )}
+            {graph === "bar" && (
+              <>
+                <BarChart dataProd={dataProd} dataConso={dataConso} />
+                <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
+                  <Button
+                    className="w-[100px] h-10"
+                    variant="primary"
+                    onClick={() => {
+                      setGraph("area");
+                    }}
+                  >
+                    Journalier
+                  </Button>
+                  <Button
+                    className="w-[100px] h-10"
+                    variant="primary"
+                    onClick={() => {
+                      setGraph("barMonth");
+                    }}
+                  >
+                    Annuel
+                  </Button>
+                </div>
+              </>
+            )}
+            {graph === "barMonth" && (
+              <>
+                <BarChartMonth dataProd={dataProd} dataConso={dataConso} />
+                <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
+                  <Button
+                    className="w-[100px] h-10"
+                    variant="primary"
+                    onClick={() => {
+                      setGraph("area");
+                    }}
+                  >
+                    Journalier
+                  </Button>
+                  <Button
+                    className="w-[100px] h-10"
+                    variant="primary"
+                    onClick={() => {
+                      setGraph("bar");
+                    }}
+                  >
+                    Mensuel
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+          <div
             id="activityContainer"
-            className="flex flex-col items-center justify-center relative w-full h-full max-h-[30vh]"
+            className="flex w-full md:w-1/2 flex-col items-center justify-center"
           >
             <ActivityChart dataProd={dataProd} dataConso={dataConso} />
-          </div> */}
-          <div className="flex">
+          </div>
+          {/* <div className="flex w-full md:w-1/2 items-center justify-center">
             <Bubbles installation={installation} />
           </div>
+          <div className="flex w-full md:w-1/2"></div> */}
         </div>
       </main>
     );

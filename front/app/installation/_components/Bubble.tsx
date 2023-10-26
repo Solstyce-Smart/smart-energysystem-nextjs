@@ -21,15 +21,16 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
   };
 
   return (
-    <div className="menu relative w-[300px] h-[300px] bg-primary items-center justify-center flex">
+    <div className="menu relative p-6  bg-primary items-center justify-center flex">
       <div
         onClick={showChildrens}
         ref={ref}
-        className={`toggle flex-col shadow-md shadow-secondary text-primary transition-all duration-1000 absolute w-[100px] h-[100px] bg-white flex items-center justify-center z-20 rounded-full cursor-pointer text-xl ${
+        className={`toggle flex-col shadow-md shadow-secondary text-primary transition-all duration-1000 bg-white flex items-center w-[75px] h-[75px] justify-center z-20 rounded-full cursor-pointer text-xl ${
           childrensDisplayed ? "rotate-[360deg]" : ""
         }`}
       >
         {icon}
+        {name !== "IRVE" ? <span className="text-sm">{value} kW</span> : ""}
       </div>
       {name === "IRVE" ? (
         <>
@@ -49,19 +50,19 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                       }
                     : {}
                 }
-                className={`absolute shadow-md shadow-secondary rotate-0  left-0 list-none origin-[150px] bg-white flex items-center justify-center w-[75px] h-[75px] rounded-full transition-all duration-1000 ${
+                className={`absolute rotate-0 -ml-[65px] left-0 list-none origin-[125px] bg-white flex items-center justify-center w-[75px] h-[75px] rounded-full transition-all duration-1000 ${
                   childrensDisplayed ? `opacity-1 z-20` : "opacity-0 z-0"
-                } `}
+                } ${irve.value !== 0 ? "animate-animateShadow" : ""} `}
                 key={irve.name}
               >
                 <span
-                  className=" flex flex-col  text-primary items-center justify-center text-center"
+                  className="flex flex-col  text-primary items-center justify-center text-center"
                   style={{
                     transform: `rotate(${inverseRotateText})`,
                   }}
                 >
                   {irve.icon}
-                  {irve.value}
+                  {irve.value} kW
                 </span>
               </li>
             );

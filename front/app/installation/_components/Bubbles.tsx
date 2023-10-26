@@ -107,7 +107,7 @@ const Bubbles = (props: BubblesProps) => {
   };
 
   return (
-    <div className="grid grid-cols-3 grid-rows-3 gap-0 items-center justify-center">
+    <div className="grid grid-cols-3 grid-rows-3 gap-0 py-8 items-center justify-center">
       {/* 1 */}
       <div></div>
       <Bubble

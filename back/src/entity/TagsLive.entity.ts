@@ -8,8 +8,6 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Installation } from './Installations.entity';
-import { addHours } from 'date-fns';
-
 @Entity('tags_live')
 export class TagsLive {
   @PrimaryGeneratedColumn()

@@ -177,23 +177,30 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       },
       tooltip: {
         borderWidth: 0,
+        useHTML: true,
         backgroundColor: "none",
         shadow: false,
         style: {
           fontSize: "16px",
         },
         positioner: function (labelWidth: any, labelHeight: any, point: any) {
-          let chartWidth = this.chart.chartWidth;
-          let chartHeight = this.chart.chartHeight;
+          // @ts-ignore
+          let chartWidth: number = this.chart.chartWidth;
+          // @ts-ignore
+          let chartHeight: number = this.chart.chartHeight;
 
           return {
-            x: chartWidth / 2 - 40,
+            x: chartWidth / 2 - 50,
             y: chartHeight / 2 - 40,
           };
         },
         valueSuffix: "%",
         pointFormat:
-          '<div style="text-align: center; display: flex; align-items: center; justify-content: center;">{series.name}<br><span style="text-align: center; font-size:2em; color: {point.color}; font-weight: bold">{point.y}</span></div>',
+          '<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">' +
+          '<div style="font-size: calc(1em + 0.2vw);">{series.name}</div>' +
+          "</br>" +
+          '<div style="font-size: calc(1em + 0.5vw); color: {point.color}; font-weight: bold;">{point.y}</div>' +
+          "</div>",
         max: 100,
         lineWidth: 0,
         tickPositions: [],
@@ -290,14 +297,15 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       },
       credits: {
         text: "SOLSTYCE - SMART ©",
+        href: "https://www.solstyce.fr/",
       },
     };
     setOptions(options);
   }, [dataConso, dataProd]);
 
   return (
-    <div className="block  w-full h-full  mb-1">
-      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
+    <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
+      <div className="subtitle-container flex pt-2 flex-col items-center justify-center bg-white ">
         <h2 className="text-xl font-bold text-primary mb-6">
           Autoconsommation
         </h2>
