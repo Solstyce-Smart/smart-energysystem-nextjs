@@ -307,7 +307,7 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
     <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
       <div className="subtitle-container flex pt-2 flex-col items-center justify-center bg-white ">
         <h2 className="text-xl font-bold text-primary mb-6">
-          Autoconsommation
+          Taux d'autoproduction solaire
         </h2>
       </div>
       <HighchartsReact highcharts={Highcharts} options={options} />
