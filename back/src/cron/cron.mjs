@@ -13,6 +13,12 @@ const getDatas = async () => {
   const dataFiltered = [];
   const elasticFiltered = [];
 
+  const config = {
+  headers: {
+    Authorization: `Basic ${Buffer.from(`${process.env.ELASTICSEARCH_USERNAME}:${process.env.ELASTICSEARCH_PASSWORD}`).toString('base64')}`,
+  },
+};
+
   await axios
     .post(url, data)
     .then((response) => {
@@ -51,13 +57,14 @@ const getDatas = async () => {
     });
 
   await axios.post(
-    `http://164.132.50.131:3001/${process.env.USERID}/installations/${process.env.CENTRALEID}/tags-live`,
+    `https://164.132.50.131:3001/${process.env.USERID}/installations/${process.env.CENTRALEID}/tags-live`,
     dataFiltered,
   );
 
   try {
     await axios.post(
-      `http://164.132.50.131:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
+      `https://164.132.50.131:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
+      config,
       elasticFiltered,
     );
   } catch (error) {
