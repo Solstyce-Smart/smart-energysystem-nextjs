@@ -17,7 +17,7 @@ const Installation = () => {
   const [isSmarted, setIsSmarted] = useState(false);
 
   const fetchData = () => {
-    fetch("http://164.132.50.131:3001/elastic/dataindex/1425275/PV1_P", {
+    fetch("https://164.132.50.131:3001/elastic/dataindex/1425275/PV1_P", {
       method: "GET",
       headers: {
         Origin: "http://localhost:3000",
@@ -38,7 +38,7 @@ const Installation = () => {
         console.log("Mis a jour");
       })
       .catch((err) => console.log(err));
-    fetch("http://164.132.50.131:3001/elastic/dataindex/1425275/METER1_P", {
+    fetch("https://164.132.50.131:3001/elastic/dataindex/1425275/METER1_P", {
       method: "GET",
       headers: {
         Origin: "http://localhost:3000",
@@ -58,7 +58,7 @@ const Installation = () => {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-    fetch("http://164.132.50.131:3001/1/installations/1", {
+    fetch("https://164.132.50.131:3001/1/installations/1", {
       method: "GET",
       headers: {
         Origin: "http://localhost:3000",
