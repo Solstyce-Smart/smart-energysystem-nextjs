@@ -1,6 +1,11 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 import cron from 'node-cron';
+import https from 'https';
+
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 dotenv.config();
 
@@ -14,10 +19,12 @@ const getDatas = async () => {
   const elasticFiltered = [];
 
   const config = {
-  headers: {
-    Authorization: `Basic ${Buffer.from(`${process.env.ELASTICSEARCH_USERNAME}:${process.env.ELASTICSEARCH_PASSWORD}`).toString('base64')}`,
-  },
-};
+    headers: {
+      Authorization: `Basic ${Buffer.from(
+        `${process.env.ELASTICSEARCH_USERNAME}:${process.env.ELASTICSEARCH_PASSWORD}`,
+      ).toString('base64')}`,
+    },
+  };
 
   await axios
     .post(url, data)
@@ -59,13 +66,14 @@ const getDatas = async () => {
   await axios.post(
     `https://164.132.50.131:3001/${process.env.USERID}/installations/${process.env.CENTRALEID}/tags-live`,
     dataFiltered,
+    { httpsAgent: agent, ...config },
   );
 
   try {
     await axios.post(
       `https://164.132.50.131:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
-      config,
       elasticFiltered,
+      { httpsAgent: agent, ...config },
     );
   } catch (error) {
     console.error('Erreur:', error);

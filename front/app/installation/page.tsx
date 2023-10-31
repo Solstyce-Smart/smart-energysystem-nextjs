@@ -6,7 +6,12 @@ import BarChart from "./_components/BarChart";
 import BarChartMonth from "./_components/BarChartMonth";
 import { Button } from "@/components/ui/button";
 import ActivityChart from "./_components/ActivityChart";
+const https = require("https");
 import Bubbles from "./_components/Bubbles";
+
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 const Installation = () => {
   const [graph, setGraph] = useState("area");
@@ -24,7 +29,8 @@ const Installation = () => {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-    })
+      agent: httpsAgent,
+    } as RequestInit & { agent?: any })
       .then((res) => {
         if (!res.ok) {
           console.log("Erreur");
@@ -45,7 +51,8 @@ const Installation = () => {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-    })
+      agent: httpsAgent,
+    } as RequestInit & { agent?: any })
       .then((res) => {
         if (!res.ok) {
           console.log("Erreur");
@@ -65,7 +72,8 @@ const Installation = () => {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-    })
+      agent: httpsAgent,
+    } as RequestInit & { agent?: any })
       .then((res) => {
         if (!res.ok) {
           console.log("Erreur");
