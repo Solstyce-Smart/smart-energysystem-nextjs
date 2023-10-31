@@ -25,7 +25,7 @@ const Installation = () => {
     fetch("https://164.132.50.131:3001/elastic/dataindex/1425275/PV1_P", {
       method: "GET",
       headers: {
-        Origin: "http://localhost:3000",
+        Origin: "https://smart-energysys.vercel.app",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
@@ -47,7 +47,7 @@ const Installation = () => {
     fetch("https://164.132.50.131:3001/elastic/dataindex/1425275/METER1_P", {
       method: "GET",
       headers: {
-        Origin: "http://localhost:3000",
+        Origin: "https://smart-energysys.vercel.app",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
@@ -68,7 +68,7 @@ const Installation = () => {
     fetch("https://164.132.50.131:3001/1/installations/1", {
       method: "GET",
       headers: {
-        Origin: "http://localhost:3000",
+        Origin: "https://smart-energysys.vercel.app",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
