@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import { Button } from "@/components/ui/button";
@@ -18,14 +18,22 @@ interface AreaChartProps {
     value: number;
     quality: string;
   }[];
+  dataIrve: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
 }
 
-const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
+const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newDate, setNewDate] = useState(0);
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1; // Les mois sont indexés à partir de 0
   const currentDay = currentDate.getDate() + newDate;
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const dateToShow = new Date(currentDate);
   dateToShow.setDate(dateToShow.getDate() + newDate);
   const day = ("0" + dateToShow.getDate()).slice(-2);
@@ -43,11 +51,23 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
     return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
   });
 
+  const sortedDataIrve = dataIrve.sort((a, b) => {
+    return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
+  });
+
   const sortedDataConso = dataConso.sort((a, b) => {
     return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
   });
 
   const chartDataProd = sortedDataProd.map((item) => {
+    const timestamp = new Date(item.dateReq).getTime();
+
+    return {
+      x: timestamp,
+      y: Number(item.value.toFixed(2)),
+    };
+  });
+  const chartDataIrve = sortedDataIrve.map((item) => {
     const timestamp = new Date(item.dateReq).getTime();
 
     return {
@@ -161,12 +181,21 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
         data: chartDataConso,
         color: "#04276E",
         turboThreshold: 0,
+        stack: "Consommation",
+      },
+      {
+        name: "Consommation IRVE",
+        data: chartDataIrve,
+        color: "darkmagenta",
+        turboThreshold: 0,
+        stack: "Consommation",
       },
       {
         name: "Production",
         data: chartDataProd,
         color: "#009DE0",
         turboThreshold: 0,
+        stack: "Production",
       },
     ],
     tooltip: {
@@ -175,7 +204,7 @@ const AreaChart = ({ dataProd, dataConso }: AreaChartProps) => {
         let tooltip = '<div class="custom-tooltip z-50">';
         if (this.x !== undefined) {
           const date = new Date(this.x);
-          date.setHours(date.getHours() + 2);
+          date.setHours(date.getHours() + 1);
           const formattedTime =
             ("0" + date.getUTCHours()).slice(-2) +
             "h" +

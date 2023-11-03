@@ -17,9 +17,16 @@ interface BarChartProps {
     value: number;
     quality: string;
   }[];
+  dataIrve: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
 }
 
-const BarChart = ({ dataConso, dataProd }: BarChartProps) => {
+const BarChart = ({ dataConso, dataProd, dataIrve }: BarChartProps) => {
   // Filtrer les données pour le mois en cours
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -31,45 +38,36 @@ const BarChart = ({ dataConso, dataProd }: BarChartProps) => {
   const year = dateToShow.getFullYear();
   const formattedDate = `${month} / ${year}`;
 
-  const filteredDataConso = Array.from({ length: daysInMonth }, (_, day) => {
-    const dayString = `${currentYear}-${(currentMonth + 1)
-      .toString()
-      .padStart(2, "0")}-${(day + 1).toString().padStart(2, "0")}`;
-    const filteredData = dataConso.filter(
-      (item) => item.dateReq.startsWith(dayString) && item.value !== 0
-    );
-    const totalConso = filteredData.reduce((acc, item, index, array) => {
-      if (index > 0) {
-        const prevValue = array[index - 1].value;
-        const currValue = item.value;
-        const hours = 5 / 60;
-        const consumption = ((currValue + prevValue) / 2) * hours;
-        return acc + Math.abs(consumption);
-      }
-      return acc;
-    }, 0);
+  // Fonction générique pour calculer le total avec filtrage
+  function calculateTotalWithFilter(data: any[]) {
+    return Array.from({ length: daysInMonth }, (_, day) => {
+      const dayString = `${currentYear}-${(currentMonth + 1)
+        .toString()
+        .padStart(2, "0")}-${(day + 1).toString().padStart(2, "0")}`;
+      const filteredData = data.filter(
+        (item) => item.dateReq.startsWith(dayString) && item.value !== 0
+      );
+      const total = filteredData.reduce((acc, item, index, array) => {
+        if (index > 0) {
+          const prevValue = array[index - 1].value;
+          const currValue = item.value;
+          const hours = 5 / 60;
+          const consumption = ((currValue + prevValue) / 2) * hours;
+          return acc + Math.abs(consumption);
+        }
+        return acc;
+      }, 0);
 
-    return Math.round(totalConso);
-  });
+      return parseFloat(total.toFixed(2));
+    });
+  }
 
-  const filteredDataProd = Array.from({ length: daysInMonth }, (_, day) => {
-    const dayString = `${currentYear}-${(currentMonth + 1)
-      .toString()
-      .padStart(2, "0")}-${(day + 1).toString().padStart(2, "0")}`;
-    const filteredData = dataProd.filter(
-      (item) => item.dateReq.startsWith(dayString) && item.value !== 0
-    );
-    const totalProd = filteredData.reduce((acc, item, index, array) => {
-      if (index > 0) {
-        const prevValue = array[index - 1].value;
-        const currValue = item.value;
-        const hours = 5 / 60;
-        const production = ((currValue + prevValue) / 2) * hours;
-        return acc + Math.abs(production);
-      }
-      return acc;
-    }, 0);
-    return Math.round(totalProd);
+  const filteredIrve = calculateTotalWithFilter(dataIrve);
+  const filteredDataConso = calculateTotalWithFilter(dataConso);
+  const filteredDataProd = calculateTotalWithFilter(dataProd);
+
+  const filteredConsoWithoutIrve = filteredDataConso.map((conso, i) => {
+    return parseFloat((conso - filteredIrve[i]).toFixed(2));
   });
 
   const options = {
@@ -84,15 +82,37 @@ const BarChart = ({ dataConso, dataProd }: BarChartProps) => {
     },
     plotOptions: {
       column: {
-        marker: {
-          enabled: false,
-        },
-        pointPadding: -0.2,
+        stacking: "normal",
       },
     },
     yAxis: {
       title: {
         text: "kWh",
+      },
+    },
+    tooltip: {
+      useHTML: true,
+      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+        let tooltip = '<div class="custom-tooltip z-50">';
+        if (this.y !== undefined && this.y !== null) {
+          tooltip +=
+            "<div>" +
+            `${
+              this.series.name === "Production PV"
+                ? "Production totale : "
+                : "Consommation totale : "
+            }` +
+            this.point.total +
+            " kWh" +
+            '</div><br/><div class="tooltip-series" style="display: flex; flex-direction: row">' +
+            this.series.name +
+            " : </div> " +
+            '<span class="tooltip-value" style="">' +
+            Highcharts.numberFormat(this.y, 2) +
+            " kWh</span>";
+        }
+        tooltip += "</div>";
+        return tooltip;
       },
     },
     xAxis: {
@@ -106,14 +126,22 @@ const BarChart = ({ dataConso, dataProd }: BarChartProps) => {
     },
     series: [
       {
-        name: "Consommation",
-        data: filteredDataConso,
-        color: "#04276E",
+        name: "Consommation IRVE",
+        data: filteredIrve,
+        color: "darkmagenta",
+        stack: "Consommation",
       },
       {
-        name: "Production",
+        name: "Consommation du bâtiment",
+        data: filteredConsoWithoutIrve,
+        color: "#04276E",
+        stack: "Consommation",
+      },
+      {
+        name: "Production PV",
         data: filteredDataProd,
         color: "#009DE0",
+        stack: "Production",
       },
     ],
     responsive: {

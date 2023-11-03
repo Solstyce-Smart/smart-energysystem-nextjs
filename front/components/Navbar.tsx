@@ -18,6 +18,7 @@ const Navbar = () => {
               src={logo}
               alt="Logo de l'entreprise"
               className="h-full w-full object-cover"
+              unoptimized
             />
           </Link>
         </div>

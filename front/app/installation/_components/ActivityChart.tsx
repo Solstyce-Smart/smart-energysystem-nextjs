@@ -177,33 +177,25 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
       },
       tooltip: {
         borderWidth: 0,
-        useHTML: true,
         backgroundColor: "none",
         shadow: false,
         style: {
           fontSize: "16px",
         },
-        positioner: function (labelWidth: any, labelHeight: any, point: any) {
-          // @ts-ignore
-          let chartWidth: number = this.chart.chartWidth;
-          // @ts-ignore
-          let chartHeight: number = this.chart.chartHeight;
-
-          return {
-            x: chartWidth / 2 - 50,
-            y: chartHeight / 2 - 40,
-          };
-        },
         valueSuffix: "%",
         pointFormat:
-          '<div style="display: flex; flex-direction: column; align-items: center; text-align: center;">' +
-          '<div style="font-size: calc(1em + 0.2vw);">{series.name}</div>' +
-          "</br>" +
-          '<div style="font-size: calc(1em + 0.5vw); color: {point.color}; font-weight: bold;">{point.y}</div>' +
-          "</div>",
-        max: 100,
-        lineWidth: 0,
-        tickPositions: [],
+          "{series.name}<br>" +
+          '<span style="font-size: 2em; color: {point.color};' +
+          'font-weight: bold; text-align: center;">{point.y}</span>',
+        // @ts-expect-error
+        positioner: function (labelWidth) {
+          return {
+            // @ts-expect-error
+            x: (this.chart.chartWidth - labelWidth) / 2,
+            // @ts-expect-error
+            y: this.chart.plotHeight / 2 - 25,
+          };
+        },
       },
       pane: {
         startAngle: 0,

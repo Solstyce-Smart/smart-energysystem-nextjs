@@ -6,53 +6,30 @@ import BarChart from "./_components/BarChart";
 import BarChartMonth from "./_components/BarChartMonth";
 import { Button } from "@/components/ui/button";
 import ActivityChart from "./_components/ActivityChart";
-const https = require("https");
 import Bubbles from "./_components/Bubbles";
-
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
-});
+import Loader from "@/components/Loader";
 
 const Installation = () => {
   const [graph, setGraph] = useState("area");
   const [installation, setInstallation] = useState<any>();
   const [dataProd, setDataProd] = useState([]);
+  const [dataIrve, setDataIrve] = useState([]);
   const [dataConso, setDataConso] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSmarted, setIsSmarted] = useState(false);
 
   const fetchData = () => {
-    fetch("https://164.132.50.131:3001/elastic/dataindex/1425275/PV1_P", {
-      method: "GET",
-      headers: {
-        Origin: "https://smart-energysys.vercel.app",
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-      agent: httpsAgent,
-    } as RequestInit & { agent?: any })
-      .then((res) => {
-        if (!res.ok) {
-          console.log("Erreur");
-          throw new Error("HTTP error " + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setDataProd(data);
-        setIsLoading(false);
-        console.log("Mis a jour");
-      })
-      .catch((err) => console.log(err));
-    fetch("https://164.132.50.131:3001/elastic/dataindex/1425275/METER1_P", {
-      method: "GET",
-      headers: {
-        Origin: "https://smart-energysys.vercel.app",
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-      agent: httpsAgent,
-    } as RequestInit & { agent?: any })
+    fetch(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/BTM_P",
+      {
+        method: "GET",
+        headers: {
+          Origin: "https://smart-energysystem.fr",
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((res) => {
         if (!res.ok) {
           console.log("Erreur");
@@ -63,17 +40,40 @@ const Installation = () => {
       .then((data) => {
         setDataConso(data);
         setIsLoading(false);
+        console.log("Mis a jour");
       })
       .catch((err) => console.log(err));
-    fetch("https://164.132.50.131:3001/1/installations/1", {
+    fetch(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_SUM",
+      {
+        method: "GET",
+        headers: {
+          Origin: "https://smart-energysystem.fr",
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erreur");
+          throw new Error("HTTP error " + res.status);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setDataProd(data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+    fetch("https://vps.smart-energysystem.fr:3001/1/installations/1", {
       method: "GET",
       headers: {
-        Origin: "https://smart-energysys.vercel.app",
+        Origin: "https://smart-energysystem.fr",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-      agent: httpsAgent,
-    } as RequestInit & { agent?: any })
+    })
       .then((res) => {
         if (!res.ok) {
           console.log("Erreur");
@@ -90,7 +90,6 @@ const Installation = () => {
           setIsSmarted(smartActiveTag.value === 1);
         }
         setInstallation(installation);
-
         setIsLoading(false);
       })
       .catch((err) => console.log("Erreur lors du fetch des datas" + err));
@@ -123,7 +122,11 @@ const Installation = () => {
           <div className="flex flex-col items-center justify-center relative w-full md:w-1/2 pt-10 md:pt-0 md:max-h-full ">
             {graph === "area" && (
               <>
-                <AreaChart dataProd={dataProd} dataConso={dataConso} />
+                <AreaChart
+                  dataProd={dataProd}
+                  dataConso={dataConso}
+                  dataIrve={dataIrve}
+                />
                 <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
                   <Button
                     className="w-[100px] h-10"
@@ -148,7 +151,11 @@ const Installation = () => {
             )}
             {graph === "bar" && (
               <>
-                <BarChart dataProd={dataProd} dataConso={dataConso} />
+                <BarChart
+                  dataProd={dataProd}
+                  dataConso={dataConso}
+                  dataIrve={dataIrve}
+                />
                 <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
                   <Button
                     className="w-[100px] h-10"
@@ -211,7 +218,7 @@ const Installation = () => {
       </main>
     );
   } else {
-    return "hm";
+    return <Loader />;
   }
 };
 
