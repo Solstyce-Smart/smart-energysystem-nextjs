@@ -161,7 +161,7 @@ const Bubbles = (props: BubblesProps) => {
       <CustomArrow startRef={batteryRef} endRef={consoRef} animated />
       <CustomArrow startRef={networkRef} endRef={consoRef} animated />
       <CustomArrow startRef={consoRef} endRef={irveRef} dashed animated />
-      <CustomArrow startRef={consoRef} endRef={buildingRef} animated />
+      <CustomArrow startRef={consoRef} endRef={buildingRef} dashed animated />
     </div>
   );
 };

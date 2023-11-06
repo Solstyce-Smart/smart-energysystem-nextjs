@@ -39,7 +39,6 @@ const Installation = () => {
       })
       .then((data) => {
         setDataConso(data);
-        setIsLoading(false);
         console.log("Mis a jour");
       })
       .catch((err) => console.log(err));
@@ -63,7 +62,6 @@ const Installation = () => {
       })
       .then((data) => {
         setDataProd(data);
-        setIsLoading(false);
       })
       .catch((err) => console.log(err));
     fetch("https://vps.smart-energysystem.fr:3001/1/installations/1", {
@@ -110,7 +108,7 @@ const Installation = () => {
             type="checkbox"
             value=""
             className="sr-only peer"
-            defaultChecked={isSmarted}
+            checked={isSmarted}
             onClick={() => setIsSmarted(!isSmarted)}
           />
           <div className="w-10 h-5 bg-white ring-2 ring-white peer-focus:outline-none peer-checked:ring-2 peer-checked:ring-white peer-focus:ring-2 peer-focus:ring-white rounded-full peer peer-checked:after:translate-x-[115%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[-3px] after:bg-white after:border-primary after:border-4 after:rounded-full after:ring-1 after:ring-white after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-checked:after:bg-primary peer-checked:after:border-2"></div>
@@ -119,7 +117,7 @@ const Installation = () => {
           </span>
         </label>
         <div className="flex flex-wrap bg-primary p-2 md:p-10 ">
-          <div className="flex flex-col items-center justify-center relative w-full md:w-1/2 pt-10 md:pt-0 md:max-h-full ">
+          {/* <div className="flex flex-col items-center justify-center relative w-full md:w-1/2 pt-10 md:pt-0 md:max-h-full ">
             {graph === "area" && (
               <>
                 <AreaChart
@@ -209,11 +207,11 @@ const Installation = () => {
             className="flex w-full md:w-1/2 flex-col items-center justify-center"
           >
             <ActivityChart dataProd={dataProd} dataConso={dataConso} />
-          </div>
-          {/* <div className="flex w-full md:w-1/2 items-center justify-center">
+          </div> */}
+          <div className="flex w-full md:w-1/2 items-center justify-center">
             <Bubbles installation={installation} />
           </div>
-          <div className="flex w-full md:w-1/2"></div> */}
+          <div className="flex w-full md:w-1/2"></div>
         </div>
       </main>
     );

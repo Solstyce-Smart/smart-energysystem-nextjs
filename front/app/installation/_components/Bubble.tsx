@@ -30,7 +30,13 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
         }`}
       >
         {icon}
-        {name !== "IRVE" ? <span className="text-sm">{value} kW</span> : ""}
+        {name === "IRVE" ? (
+          ""
+        ) : name === "Batterie" ? (
+          <span className="text-sm">{value} %</span>
+        ) : (
+          <span className="text-sm">{value} kW</span>
+        )}
       </div>
       {name === "IRVE" ? (
         <>
@@ -62,7 +68,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                   }}
                 >
                   {irve.icon}
-                  {irve.value} kW
+                  {irve.value}kW
                 </span>
               </li>
             );
