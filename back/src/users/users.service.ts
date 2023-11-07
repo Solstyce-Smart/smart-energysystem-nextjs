@@ -15,22 +15,30 @@ export class UsersService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(userDetails.password, saltRounds);
 
-    await clerkClient.users.createUser({
-      emailAddress: [userDetails.email],
-      password: userDetails.password,
-      publicMetadata: {
-        role: userDetails.role,
-      },
-    });
-
-    const newUser = this.userRepository.create({
-      ...userDetails,
-      password: hashedPassword,
-    });
-
-    return this.userRepository.save(newUser);
+    try {
+      const clerkUser = await clerkClient.users.createUser({
+        emailAddress: [userDetails.email],
+        password: userDetails.password,
+        publicMetadata: {
+          role: userDetails.role,
+        },
+      });
+      const newUser = this.userRepository.create({
+        ...userDetails,
+        password: hashedPassword,
+        clerkId: clerkUser.id,
+      });
+      return this.userRepository.save(newUser);
+    } catch (error) {
+      console.log(error);
+    }
   }
-  getAllUsers() {
+  async getAllUsers() {
+    try {
+      await clerkClient.users.getUserList();
+    } catch (error) {
+      console.log(error);
+    }
     return this.userRepository.find();
   }
   getOneUser(userId: number) {
@@ -40,7 +48,7 @@ export class UsersService {
       relations: ['ewonIds'],
     });
   }
-  async updateUser(userId: number, updateUserDetails: UpdateUserParams) {
+  async updateUser(userId: number, updateUserDetails: UpdateUserParams | any) {
     if (updateUserDetails.password) {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(
@@ -59,10 +67,24 @@ export class UsersService {
     }
 
     const updatedUser = await this.userRepository.findOne({
-      select: ['userId', 'email', 'role', 'ewonIds', 'password'],
+      select: ['userId', 'email', 'clerkId', 'role', 'ewonIds', 'password'],
       where: { userId },
     });
 
+    console.log(updatedUser);
+
+    try {
+      await clerkClient.users.updateUser(updatedUser.clerkId, {
+        primaryEmailAddress: 'nouvel-email@example.com',
+        password: updatedUser.password,
+        publicMetadata: {
+          role: updatedUser.role,
+        },
+        externalID: updatedUser.userId.toString(),
+      } as UpdateUserParams | any);
+    } catch (error) {
+      console.log(error);
+    }
     return updatedUser;
   }
   deleteUser(userId: number) {

@@ -86,9 +86,10 @@ export class UsersController {
     required: true,
     description: "Id de l'utilisateur",
   })
+  @ApiBody({ type: () => UpdateUserDto })
   async updateUserById(
+    @Body() updateUserDto: CreateUserDto,
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() updateUserDto: UpdateUserDto,
   ) {
     const updatedUser = await this.usersService.updateUser(
       userId,
