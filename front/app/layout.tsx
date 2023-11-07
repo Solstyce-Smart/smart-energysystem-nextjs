@@ -2,6 +2,8 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { frFR } from "@clerk/localizations";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -16,11 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
-      <body className={montserrat.className}>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <ClerkProvider localization={frFR}>
+      <html lang="fr">
+        <body className={montserrat.className}>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -60,28 +60,31 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
   });
 
   const chartDataProd = sortedDataProd.map((item) => {
-    const timestamp = new Date(item.dateReq).getTime();
+    const timestamp = new Date(item.dateReq);
+    timestamp.setSeconds(0, 0); // Arrondir au début de la minute
 
     return {
-      x: timestamp,
-      y: Number(item.value.toFixed(2)),
+      x: timestamp.getTime(),
+      y: item.value ? Number(item.value.toFixed(2)) : 0,
     };
   });
   const chartDataIrve = sortedDataIrve.map((item) => {
-    const timestamp = new Date(item.dateReq).getTime();
+    const timestamp = new Date(item.dateReq);
+    timestamp.setSeconds(0, 0); // Arrondir au début de la minute
 
     return {
-      x: timestamp,
-      y: Number(item.value.toFixed(2)),
+      x: timestamp.getTime(),
+      y: item.value ? Number(item.value.toFixed(2)) : 0,
     };
   });
 
   const chartDataConso = sortedDataConso.map((item) => {
-    const timestamp = new Date(item.dateReq).getTime();
+    const timestamp = new Date(item.dateReq);
+    timestamp.setSeconds(0, 0); // Arrondir au début de la minute
 
     return {
-      x: timestamp,
-      y: Number(item.value.toFixed(2)),
+      x: timestamp.getTime(),
+      y: item.value ? Number(item.value.toFixed(2)) : 0,
     };
   });
 
@@ -125,9 +128,17 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
         itemDate.getDate() === dateCible.getDate()
       );
     });
+    const dataIrveExiste = dataIrve.some((item) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === dateCible.getFullYear() &&
+        itemDate.getMonth() === dateCible.getMonth() &&
+        itemDate.getDate() === dateCible.getDate()
+      );
+    });
 
     // Retourner true si des données existent pour au moins l'un des tableaux
-    return dataProdExiste || dataConsoExiste;
+    return dataProdExiste || dataConsoExiste || dataIrveExiste;
   };
 
   const options = {
@@ -143,6 +154,11 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
     plotOptions: {
       area: {
         marker: {
+          enabled: false,
+        },
+        stacking: "normal",
+        connectNulls: true,
+        dataGrouping: {
           enabled: false,
         },
       },
