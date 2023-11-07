@@ -11,7 +11,6 @@ import { useUser, UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const user = useUser();
-  console.log(user);
 
   return (
     <header className="flex h-[10vh] w-full">

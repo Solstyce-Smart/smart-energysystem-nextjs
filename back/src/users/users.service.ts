@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserParams, UpdateUserParams } from './types/types';
 import * as bcrypt from 'bcrypt';
+import { clerkClient } from '@clerk/clerk-sdk-node';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,14 @@ export class UsersService {
   async createUser(userDetails: CreateUserParams) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(userDetails.password, saltRounds);
+
+    await clerkClient.users.createUser({
+      emailAddress: [userDetails.email],
+      password: userDetails.password,
+      publicMetadata: {
+        role: userDetails.role,
+      },
+    });
 
     const newUser = this.userRepository.create({
       ...userDetails,
@@ -26,7 +35,7 @@ export class UsersService {
   }
   getOneUser(userId: number) {
     return this.userRepository.findOne({
-      select: ['userId', 'username', 'role', 'ewonIds', 'password'],
+      select: ['userId', 'email', 'role', 'ewonIds', 'password'],
       where: { userId },
       relations: ['ewonIds'],
     });
@@ -50,7 +59,7 @@ export class UsersService {
     }
 
     const updatedUser = await this.userRepository.findOne({
-      select: ['userId', 'username', 'role', 'ewonIds', 'password'],
+      select: ['userId', 'email', 'role', 'ewonIds', 'password'],
       where: { userId },
     });
 

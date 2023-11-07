@@ -18,7 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider localization={frFR}>
+    <ClerkProvider
+      localization={frFR}
+      appearance={{
+        elements: {
+          footer: "hidden",
+        },
+      }}
+    >
       <html lang="fr">
         <body className={montserrat.className}>
           <Navbar />
