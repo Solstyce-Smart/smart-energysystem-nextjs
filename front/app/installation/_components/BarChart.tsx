@@ -1,6 +1,12 @@
+"use client";
+
 import React from "react";
-import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import dynamic from "next/dynamic";
+
+const HighchartsReact = dynamic(() => import("highcharts-react-official"), {
+  ssr: false,
+});
 
 interface BarChartProps {
   dataProd: {
@@ -183,15 +189,17 @@ const BarChart = ({ dataConso, dataProd, dataIrve }: BarChartProps) => {
   };
 
   return (
-    <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
-      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
-        <h2 className="text-xl font-bold text-primary">Installation</h2>
-        <div className="flex gap-3 justify-center items-center text-center">
-          <h3 className="text-md">{formattedDate}</h3>
+    typeof document !== undefined && (
+      <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
+        <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
+          <h2 className="text-xl font-bold text-primary">Installation</h2>
+          <div className="flex gap-3 justify-center items-center text-center">
+            <h3 className="text-md">{formattedDate}</h3>
+          </div>
         </div>
+        <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    )
   );
 };
 

@@ -7,7 +7,7 @@ import NavbarRoutes from "./NavbarRoutes";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import MobileNavbar from "./MobileNavbar";
-import { useUser, UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
   const user = useUser();
@@ -30,14 +30,26 @@ const Navbar = () => {
         </div>
         <div className="hidden md:flex gap-2">
           {user.user ? (
-            <UserButton
-              afterSignOutUrl="/"
-              appearance={{
-                elements: {
-                  avatarBox: "w-[60px] h-[60px] shadow-slate-500 shadow-md",
-                },
-              }}
-            />
+            <div className="flex items-center justify-center gap-2">
+              {user.user.publicMetadata.role === 4 && (
+                <Link href="/create">
+                  <Button
+                    variant="primary"
+                    className="transition font-bold tracking-normal"
+                  >
+                    Création
+                  </Button>
+                </Link>
+              )}
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "w-[60px] h-[60px] shadow-slate-500 shadow-md",
+                  },
+                }}
+              />
+            </div>
           ) : (
             <Button
               variant="primary"

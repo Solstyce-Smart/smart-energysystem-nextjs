@@ -1,8 +1,12 @@
+"use client";
 import React, { useState, useEffect } from "react";
-import HighchartsReact from "highcharts-react-official";
+import dynamic from "next/dynamic";
 import Highcharts from "highcharts";
 import { Button } from "@/components/ui/button";
 
+const HighchartsReact = dynamic(() => import("highcharts-react-official"), {
+  ssr: false,
+});
 interface AreaChartProps {
   dataProd: {
     ewonId: string;
@@ -145,6 +149,10 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
     chart: {
       type: "area",
     },
+    accessibility: {
+      enabled: false,
+    },
+
     exporting: {
       enabled: false,
     },
@@ -193,16 +201,16 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
     },
     series: [
       {
-        name: "Consommation",
-        data: chartDataConso,
-        color: "#04276E",
+        name: "Consommation IRVE",
+        data: chartDataIrve,
+        color: "darkmagenta",
         turboThreshold: 0,
         stack: "Consommation",
       },
       {
-        name: "Consommation IRVE",
-        data: chartDataIrve,
-        color: "darkmagenta",
+        name: "Consommation",
+        data: chartDataConso,
+        color: "#04276E",
         turboThreshold: 0,
         stack: "Consommation",
       },
@@ -281,31 +289,33 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
   };
 
   return (
-    <div className="flex flex-col w-[100%] h-[100%] mb-1 md:px-8">
-      <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
-        <h2 className="text-xl font-bold text-primary">Installation</h2>
-        <div className="flex gap-3 justify-center items-center text-center">
-          {dataExistePourDate(-1) && (
-            <button
-              className="text-primary text-md font-semibold"
-              onClick={() => updateDate(-1)}
-            >
-              &lt;
-            </button>
-          )}
-          <h3 className="text-md">{formattedDate}</h3>
-          {dataExistePourDate(1) && (
-            <button
-              className="text-primary text-md font-semibold"
-              onClick={() => updateDate(1)}
-            >
-              &gt;
-            </button>
-          )}
+    typeof document !== "undefined" && (
+      <div className="flex flex-col w-[100%] h-[100%] mb-1 md:px-8">
+        <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
+          <h2 className="text-xl font-bold text-primary">Installation</h2>
+          <div className="flex gap-3 justify-center items-center text-center">
+            {dataExistePourDate(-1) && (
+              <button
+                className="text-primary text-md font-semibold"
+                onClick={() => updateDate(-1)}
+              >
+                &lt;
+              </button>
+            )}
+            <h3 className="text-md">{formattedDate}</h3>
+            {dataExistePourDate(1) && (
+              <button
+                className="text-primary text-md font-semibold"
+                onClick={() => updateDate(1)}
+              >
+                &gt;
+              </button>
+            )}
+          </div>
         </div>
+        <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    )
   );
 };
 

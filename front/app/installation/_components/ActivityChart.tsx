@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts, { chart } from "highcharts";
@@ -29,7 +31,7 @@ interface ActivityChartProps {
 }
 
 const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
-  const [options, setOptions] = useState<any>(null);
+  const [options, setOptions] = useState<any>({});
 
   useEffect(() => {
     const parentElement = document.getElementById("activityContainer");
@@ -152,6 +154,9 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
     const options = {
       chart: {
         type: "solidgauge",
+      },
+      accessibility: {
+        enabled: false,
       },
       exporting: {
         enabled: false,
@@ -296,14 +301,16 @@ const ActivityChart = ({ dataConso, dataProd }: ActivityChartProps) => {
   }, [dataConso, dataProd]);
 
   return (
-    <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
-      <div className="subtitle-container flex pt-2 flex-col items-center justify-center bg-white ">
-        <h2 className="text-xl font-bold text-primary mb-6">
-          Taux d'autoproduction solaire
-        </h2>
+    typeof document !== undefined && (
+      <div className="flex flex-col w-[100%] h-[100%] md:px-8 mb-1">
+        <div className="subtitle-container flex pt-2 flex-col items-center justify-center bg-white ">
+          <h2 className="text-xl font-bold text-primary mb-6">
+            Taux d'autoproduction solaire
+          </h2>
+        </div>
+        <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    )
   );
 };
 
