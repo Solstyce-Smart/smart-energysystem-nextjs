@@ -13,112 +13,97 @@ const Installation = () => {
   const [graph, setGraph] = useState("area");
   const [installation, setInstallation] = useState<any>();
   const [dataProd, setDataProd] = useState([]);
+  const [dataProd2, setDataProd2] = useState([]);
   const [dataIrve, setDataIrve] = useState([]);
   const [dataConso, setDataConso] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSmarted, setIsSmarted] = useState(false);
 
-  const fetchData = () => {
-    fetch(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/BTM_P",
-      {
+  const fetchData = async (
+    url: string,
+    setDataCallback: (data: any) => void
+  ) => {
+    try {
+      const res = await fetch(url, {
         method: "GET",
         headers: {
           Origin: "https://smart-energysystem.fr",
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
         },
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          console.log("Erreur");
-          throw new Error("HTTP error " + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setDataConso(data);
-        console.log("Mis a jour");
       });
-    fetch(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/IRVE_P_SUM",
-      {
-        method: "GET",
-        headers: {
-          Origin: "https://smart-energysystem.fr",
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          console.log("Erreur");
-          throw new Error("HTTP error " + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setDataIrve(data);
-        console.log("Mis a jour");
-      })
-      .catch((err) => console.log(err));
-    fetch(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_SUM",
-      {
-        method: "GET",
-        headers: {
-          Origin: "https://smart-energysystem.fr",
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          console.log("Erreur");
-          throw new Error("HTTP error " + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setDataProd(data);
-      })
-      .catch((err) => console.log(err));
-    fetch("https://vps.smart-energysystem.fr:3001/1/installations/1", {
-      method: "GET",
-      headers: {
-        Origin: "https://smart-energysystem.fr",
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          console.log("Erreur");
-          throw new Error("HTTP error " + res.status);
-        }
-        return res.json();
-      })
-      .then((installation) => {
-        const smartActiveTag = installation.tagsLive.find(
-          (tag: any) => tag.tagName === "SMART_ACTIVE"
-        );
 
-        if (smartActiveTag) {
-          setIsSmarted(smartActiveTag.value === 1);
-        }
-        setInstallation(installation);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log("Erreur lors du fetch des datas" + err));
+      if (!res.ok) {
+        console.log("Erreur");
+        throw new Error("HTTP error " + res.status);
+      }
+
+      const data = await res.json();
+      setDataCallback(data);
+      console.log("Mis à jour");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  useEffect(() => {
-    fetchData(); // Appeler initialement les données
+  const fetchDataAndUpdateState = async () => {
+    await fetchData(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/BTM_P",
+      setDataConso
+    );
+    await fetchData(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/IRVE_P_SUM",
+      setDataIrve
+    );
+    await fetchData(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_SUM",
+      setDataProd
+    );
+    await fetchData(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV2_P",
+      setDataProd2
+    );
 
-    const interval = setInterval(fetchData, 60000 * 5);
+    try {
+      const res = await fetch(
+        "https://vps.smart-energysystem.fr:3001/1/installations/1",
+        {
+          method: "GET",
+          headers: {
+            Origin: "https://smart-energysystem.fr",
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        console.log("Erreur");
+        throw new Error("HTTP error " + res.status);
+      }
+
+      const installation = await res.json();
+      const smartActiveTag = installation.tagsLive.find(
+        (tag: any) => tag.tagName === "SMART_ACTIVE"
+      );
+
+      if (smartActiveTag) {
+        setIsSmarted(smartActiveTag.value === 1);
+      }
+
+      setInstallation(installation);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("Erreur lors du fetch des datas" + error);
+    }
+  };
+
+  console.log(installation);
+
+  useEffect(() => {
+    fetchDataAndUpdateState(); // Appeler initialement les données
+
+    const interval = setInterval(fetchDataAndUpdateState, 60000 * 5);
     return () => clearInterval(interval);
   }, []);
 
@@ -139,16 +124,17 @@ const Installation = () => {
             {isSmarted ? "SMART ON" : "SMART OFF"}
           </span>
         </label>
-        <div className="flex flex-wrap bg-primary p-2 md:p-10 ">
-          <div className="flex flex-col items-center justify-center relative w-full md:w-1/2 pt-10 md:pt-0 md:max-h-full ">
+        <div className="flex flex-wrap bg-primary p-2 lg:p-10 gap-y-10 ">
+          <div className="flex flex-col items-center justify-center relative w-full lg:w-1/2 pt-10 lg:pt-0 lg:max-h-full ">
             {graph === "area" && (
               <>
                 <AreaChart
                   dataProd={dataProd}
                   dataConso={dataConso}
                   dataIrve={dataIrve}
+                  dataProd2={dataProd2}
                 />
-                <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
+                <div className="flex gap-4 my-4 max-w-full items-center justify-center lg:pt-0">
                   <Button
                     className="w-[100px] h-10"
                     variant="primary"
@@ -177,7 +163,7 @@ const Installation = () => {
                   dataConso={dataConso}
                   dataIrve={dataIrve}
                 />
-                <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
+                <div className="flex gap-4 my-4 max-w-full items-center justify-center lg:pt-0">
                   <Button
                     className="w-[100px] h-10"
                     variant="primary"
@@ -202,7 +188,7 @@ const Installation = () => {
             {graph === "barMonth" && (
               <>
                 <BarChartMonth dataProd={dataProd} dataConso={dataConso} />
-                <div className="flex gap-4 my-4 max-w-full items-center justify-center md:pt-0">
+                <div className="flex gap-4 my-4 max-w-full items-center justify-center lg:pt-0">
                   <Button
                     className="w-[100px] h-10"
                     variant="primary"
@@ -227,14 +213,14 @@ const Installation = () => {
           </div>
           <div
             id="activityContainer"
-            className="flex w-full md:w-1/2 flex-col items-center justify-center"
+            className="flex w-full lg:w-1/2 flex-col items-center justify-center"
           >
             <ActivityChart dataProd={dataProd} dataConso={dataConso} />
           </div>
-          {/* <div className="flex w-full md:w-1/2 items-center justify-center">
+          <div className="flex w-full lg:w-1/2 items-center justify-center">
             <Bubbles installation={installation} />
-          </div> */}
-          <div className="flex w-full md:w-1/2"></div>
+          </div>
+          <div className="flex w-full lg:w-1/2"></div>
         </div>
       </main>
     );

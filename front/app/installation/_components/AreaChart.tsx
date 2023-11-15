@@ -54,7 +54,6 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
   const sortedDataProd = dataProd.sort((a, b) => {
     return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
   });
-
   const sortedDataIrve = dataIrve.sort((a, b) => {
     return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
   });

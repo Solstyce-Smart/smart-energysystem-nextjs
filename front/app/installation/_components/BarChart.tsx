@@ -72,10 +72,6 @@ const BarChart = ({ dataConso, dataProd, dataIrve }: BarChartProps) => {
   const filteredDataConso = calculateTotalWithFilter(dataConso);
   const filteredDataProd = calculateTotalWithFilter(dataProd);
 
-  const filteredConsoWithoutIrve = filteredDataConso.map((conso, i) => {
-    return parseFloat((conso - filteredIrve[i]).toFixed(2));
-  });
-
   const options = {
     chart: {
       type: "column",
@@ -139,7 +135,7 @@ const BarChart = ({ dataConso, dataProd, dataIrve }: BarChartProps) => {
       },
       {
         name: "Consommation du bâtiment",
-        data: filteredConsoWithoutIrve,
+        data: filteredDataConso,
         color: "#04276E",
         stack: "Consommation",
       },

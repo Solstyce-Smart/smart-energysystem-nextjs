@@ -14,9 +14,9 @@ const Navbar = () => {
 
   return (
     <header className="flex h-[10vh] w-full">
-      <nav className="flex justify-between items-center h-full w-full px-5 md:px-20">
+      <nav className="flex justify-between items-center h-full w-full px-5 lg:px-20">
         <div className="flex items-center justify-center ">
-          <Link href="/" className="flex h-[50px] w-auto">
+          <Link href="/" className="flex h-[50px] w-auto p-2">
             <Image
               src={logo}
               alt="Logo de l'entreprise"
@@ -25,10 +25,10 @@ const Navbar = () => {
             />
           </Link>
         </div>
-        <div className="hidden md:flex">
+        <div className="hidden lg:flex">
           <NavbarRoutes />
         </div>
-        <div className="hidden md:flex gap-2">
+        <div className="hidden lg:flex gap-2">
           {user.user ? (
             <div className="flex items-center justify-center gap-2">
               {user.user.publicMetadata.role === 4 && (
@@ -45,7 +45,7 @@ const Navbar = () => {
                 afterSignOutUrl="/"
                 appearance={{
                   elements: {
-                    avatarBox: "w-[60px] h-[60px] shadow-slate-500 shadow-md",
+                    avatarBox: "w-[60px] h-[60px] shadow-slate-500 shadow-lg",
                   },
                 }}
               />
@@ -59,7 +59,7 @@ const Navbar = () => {
             </Button>
           )}
         </div>
-        <div className="flex md:hidden">
+        <div className="flex lg:hidden mr-5">
           <MobileNavbar />
         </div>
       </nav>

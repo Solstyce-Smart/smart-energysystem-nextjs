@@ -19,7 +19,7 @@ export class TagsLive {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateReq: Date;
 
-  @Column({ default: 0 })
+  @Column({ type: 'float', precision: 10, scale: 2, default: 0 })
   value: number;
 
   @Column({ default: 'Good' })

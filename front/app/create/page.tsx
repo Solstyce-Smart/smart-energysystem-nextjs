@@ -564,7 +564,6 @@ const Create = () => {
                       )}
                       onClick={() => {
                         setStep((prev) => prev + 1);
-                        console.log(step);
                       }}
                     >
                       Étape suivante
@@ -743,7 +742,7 @@ const Create = () => {
                 </h4>
                 <p className="mb-4">{form.getValues("name")}</p>
                 <h4 className="flex text-primary font-semibold mb-1">
-                  Addresse de la centrale :
+                  Adresse de la centrale :
                 </h4>
                 <p className="capitalize mb-4">{form.getValues("address")}</p>
                 <h4 className="flex text-primary font-semibold mb-1">

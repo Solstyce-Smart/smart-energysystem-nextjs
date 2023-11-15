@@ -16,7 +16,7 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
 }) => {
   const arrowRef = useRef<SVGSVGElement>(null);
   const arrowHead1Ref = useRef<SVGForeignObjectElement | null>(null);
-  const arrowHeight = 10;
+  const arrowHeight = 2;
 
   useEffect(() => {
     const startElement = startRef.current;
@@ -28,15 +28,13 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
       const startRect = startElement.getBoundingClientRect();
       const endRect = endElement.getBoundingClientRect();
 
-      console.log(startRect.left + startRect.width / 2);
       // Calculez le centre de l'élément de départ en tenant compte des marges
       const startCenterX = startRect.left + startRect.width / 2;
-      const startCenterY = startRect.top + startRect.height / 2 - 100;
+      const startCenterY = startRect.top + startRect.height / 2 - 50;
 
       // Calculez le centre de l'élément d'arrivée en tenant compte des marges
       const endCenterX = endRect.left + endRect.width / 2 + window.scrollX;
-      const endCenterY =
-        endRect.top + endRect.height / 2 + window.scrollY - 100;
+      const endCenterY = endRect.top + endRect.height / 2 + window.scrollY - 50;
 
       const arrowLength = Math.sqrt(
         Math.pow(endCenterX - startCenterX, 2) +
@@ -45,6 +43,7 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
 
       arrowElement.setAttribute("width", `${arrowLength + 20}`);
       arrowElement.setAttribute("height", `${arrowHeight}`);
+      arrowElement.style.zIndex = "0";
       arrowElement.style.fill = "#009DE0";
       arrowElement.style.position = "absolute";
       arrowElement.style.left = `${startCenterX}px`;
@@ -70,6 +69,7 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
           line.setAttribute("x2", `${arrowLength}`);
           line.setAttribute("y2", `${arrowElement.height.baseVal.value}`);
           line.setAttribute("stroke", "grey");
+          line.style.zIndex = "0";
           line.setAttribute("stroke-width", "2");
           line.setAttribute("stroke-dasharray", "7,7");
           pathElement.replaceWith(line);
@@ -124,16 +124,7 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
           height={arrowHeight * 2}
           x="0"
           y="-5"
-        >
-          {/*@ts-ignore*/}
-          <div xmlns="http://www.w3.org/1999/xhtml">
-            <Zap
-              width={arrowHeight * 2}
-              height={arrowHeight * 2}
-              stroke="#009DE0"
-            />
-          </div>
-        </foreignObject>
+        ></foreignObject>
       )}
       {!dashed && (
         <foreignObject
@@ -142,16 +133,7 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
           height={arrowHeight * 2}
           x="0"
           y="-5"
-        >
-          {/*@ts-ignore*/}
-          <div xmlns="http://www.w3.org/1999/xhtml">
-            <Zap
-              width={arrowHeight * 2}
-              height={arrowHeight * 2}
-              stroke="#009DE0"
-            />
-          </div>
-        </foreignObject>
+        ></foreignObject>
       )}
       <path d="M0,0 L0,0 L0,0 L0,0" fill="#009DE0" />
     </svg>
