@@ -1,4 +1,3 @@
-import { Zap } from "lucide-react";
 import React, { useEffect, useRef, RefObject } from "react";
 
 interface CustomArrowProps {
@@ -30,11 +29,12 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
 
       // Calculez le centre de l'élément de départ en tenant compte des marges
       const startCenterX = startRect.left + startRect.width / 2;
-      const startCenterY = startRect.top + startRect.height / 2 - 50;
+      const startCenterY = startRect.top + startRect.height / 2 - 100;
 
       // Calculez le centre de l'élément d'arrivée en tenant compte des marges
       const endCenterX = endRect.left + endRect.width / 2 + window.scrollX;
-      const endCenterY = endRect.top + endRect.height / 2 + window.scrollY - 50;
+      const endCenterY =
+        endRect.top + endRect.height / 2 + window.scrollY - 100;
 
       const arrowLength = Math.sqrt(
         Math.pow(endCenterX - startCenterX, 2) +
@@ -69,7 +69,6 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
           line.setAttribute("x2", `${arrowLength}`);
           line.setAttribute("y2", `${arrowElement.height.baseVal.value}`);
           line.setAttribute("stroke", "grey");
-          line.style.zIndex = "0";
           line.setAttribute("stroke-width", "2");
           line.setAttribute("stroke-dasharray", "7,7");
           pathElement.replaceWith(line);

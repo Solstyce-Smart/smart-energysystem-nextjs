@@ -15,12 +15,6 @@ import {
   LucideArrowBigRightDash as ArrowBigRightDash,
 } from "lucide-react";
 import CustomArrow from "./CustomArrow";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import Image from "next/image";
 import Onduleur from "@/public/Onduleur";
 
 interface BubbleData {
@@ -79,6 +73,7 @@ const Bubbles = (props: BubblesProps) => {
   >([]);
   const [consoValue, setConsoValue] = useState(0);
   const [batteryValue, setBatteryValue] = useState(0);
+  const [batteryPuis, setBatteryPuis] = useState(0);
   const [networkValue, setNetworkValue] = useState(0);
   const [totalIrveValues, setTotalIrveValues] = useState(0);
   const [dataReady, setDataReady] = useState(false);
@@ -125,16 +120,27 @@ const Bubbles = (props: BubblesProps) => {
 
       let batteryIcon;
 
+      const calculateHue = (percentage: number) => {
+        return (percentage / 100) * 120;
+      };
+
+      const hue = calculateHue(batteryValue);
+      const batteryColor = `hsl(${hue}, 100%, 50%)`;
+
       if (batteryValue === 0) {
-        batteryIcon = <Battery width={40} height={40} fill="darkred" />;
-      } else if (batteryValue > 66) {
-        batteryIcon = <BatteryFull width={40} height={40} fill="green" />;
-      } else if (batteryValue > 33) {
-        batteryIcon = <BatteryMedium width={40} height={40} fill="gold" />;
-      } else {
         batteryIcon = (
-          <BatteryLow width={40} height={40} fill="darkgoldenrod" />
+          <BatteryWarning width={40} height={40} fill={batteryColor} />
         );
+      } else if (batteryValue === 100) {
+        batteryIcon = (
+          <BatteryFull width={40} height={40} fill={batteryColor} />
+        );
+      } else if (batteryValue > 66) {
+        batteryIcon = (
+          <BatteryMedium width={40} height={40} fill={batteryColor} />
+        );
+      } else if (batteryValue > 33) {
+        batteryIcon = <BatteryLow width={40} height={40} fill={batteryColor} />;
       }
 
       basicBubbles.push({
@@ -203,6 +209,7 @@ const Bubbles = (props: BubblesProps) => {
     setPvValue(
       basicBubbles.find((b) => b.name === "Production PV")?.value || 0
     );
+    setBatteryPuis(findTagValue("BAT1_P") || 0);
     setConsoValue(
       basicBubbles.find((b) => b.name === "Consommation totale")?.value || 0
     );
@@ -220,7 +227,7 @@ const Bubbles = (props: BubblesProps) => {
   };
 
   return (
-    <div className="grid grid-cols-3 grid-rows-3 gap-x-[50px] gap-y-[75px] py-20 items-center justify-center">
+    <div className="grid grid-cols-3 grid-rows-3 items-center justify-start">
       {/* 1 */}
       <div></div>
       <Bubble
@@ -295,13 +302,13 @@ const Bubbles = (props: BubblesProps) => {
             startRef={pvRef}
             endRef={batteryRef}
             dashed
-            animated={pvValue > 0 && batteryValue < 100}
+            animated={pvValue > 0 && batteryValue < 100 && batteryPuis > 0}
           />
           <CustomArrow
             startRef={batteryRef}
             endRef={consoRef}
             dashed
-            animated={batteryValue > 0}
+            animated={batteryValue > 0 && batteryPuis < 0}
           />
           <CustomArrow
             startRef={networkRef}

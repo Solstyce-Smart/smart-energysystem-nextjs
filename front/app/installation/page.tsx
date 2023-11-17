@@ -13,7 +13,8 @@ const Installation = () => {
   const [graph, setGraph] = useState("area");
   const [installation, setInstallation] = useState<any>();
   const [dataProd, setDataProd] = useState([]);
-  const [dataProd2, setDataProd2] = useState([]);
+  const [PVPBAT, setPVPBAT] = useState([]);
+  const [BATPCONSO, setBATPCONSO] = useState([]);
   const [dataIrve, setDataIrve] = useState([]);
   const [dataConso, setDataConso] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,8 +61,12 @@ const Installation = () => {
       setDataProd
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV2_P",
-      setDataProd2
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_BAT",
+      setPVPBAT
+    );
+    await fetchData(
+      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/BAT_P_CONSO",
+      setBATPCONSO
     );
 
     try {
@@ -98,8 +103,6 @@ const Installation = () => {
     }
   };
 
-  console.log(installation);
-
   useEffect(() => {
     fetchDataAndUpdateState(); // Appeler initialement les données
 
@@ -125,14 +128,15 @@ const Installation = () => {
           </span>
         </label>
         <div className="flex flex-wrap bg-primary p-2 lg:p-10 gap-y-10 ">
-          <div className="flex flex-col items-center justify-center relative w-full lg:w-1/2 pt-10 lg:pt-0 lg:max-h-full ">
+          <div className="flex flex-col items-center justify-start relative w-full lg:w-1/2 pt-10 lg:pt-0 lg:max-h-full ">
             {graph === "area" && (
               <>
                 <AreaChart
                   dataProd={dataProd}
                   dataConso={dataConso}
                   dataIrve={dataIrve}
-                  dataProd2={dataProd2}
+                  PVPBAT={PVPBAT}
+                  BATPCONSO={BATPCONSO}
                 />
                 <div className="flex gap-4 my-4 max-w-full items-center justify-center lg:pt-0">
                   <Button
@@ -211,12 +215,12 @@ const Installation = () => {
               </>
             )}
           </div>
-          <div
+          {/* <div
             id="activityContainer"
             className="flex w-full lg:w-1/2 flex-col items-center justify-center"
           >
             <ActivityChart dataProd={dataProd} dataConso={dataConso} />
-          </div>
+          </div> */}
           <div className="flex w-full lg:w-1/2 items-center justify-center">
             <Bubbles installation={installation} />
           </div>

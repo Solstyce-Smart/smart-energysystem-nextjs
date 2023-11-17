@@ -29,9 +29,37 @@ interface AreaChartProps {
     value: number;
     quality: string;
   }[];
+  PVPBAT: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
+  BATPCONSO: {
+    ewonId: string;
+    dateReq: string;
+    tagName: string;
+    value: number;
+    quality: string;
+  }[];
 }
 
-const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
+type DataItem = {
+  ewonId: string;
+  dateReq: string;
+  tagName: string;
+  value: number;
+  quality: string;
+}[];
+
+const AreaChart = ({
+  dataProd,
+  dataConso,
+  dataIrve,
+  PVPBAT,
+  BATPCONSO,
+}: AreaChartProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newDate, setNewDate] = useState(0);
   const currentYear = currentDate.getFullYear();
@@ -51,45 +79,36 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
     setCurrentDate(updatedDate);
   };
 
-  const sortedDataProd = dataProd.sort((a, b) => {
-    return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
-  });
-  const sortedDataIrve = dataIrve.sort((a, b) => {
-    return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
-  });
+  function sortByDate(data: DataItem) {
+    return data.sort(
+      (a: any, b: any) =>
+        new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime()
+    );
+  }
 
-  const sortedDataConso = dataConso.sort((a, b) => {
-    return new Date(a.dateReq).getTime() - new Date(b.dateReq).getTime();
-  });
+  const sortedDataProd = sortByDate(dataProd);
+  const sortedDataIrve = sortByDate(dataIrve);
+  const sortedDataConso = sortByDate(dataConso);
+  const sortedDataPVPBAT = sortByDate(PVPBAT);
+  const sortedDataBATPCONSO = sortByDate(BATPCONSO);
 
-  const chartDataProd = sortedDataProd.map((item) => {
-    const timestamp = new Date(item.dateReq);
-    timestamp.setSeconds(0, 0); // Arrondir au début de la minute
+  function convertToChartData(data: DataItem) {
+    return data.map((item) => {
+      const timestamp = new Date(item.dateReq);
+      timestamp.setSeconds(0, 0); // Arrondir au début de la minute
 
-    return {
-      x: timestamp.getTime(),
-      y: item.value ? Number(item.value.toFixed(2)) : 0,
-    };
-  });
-  const chartDataIrve = sortedDataIrve.map((item) => {
-    const timestamp = new Date(item.dateReq);
-    timestamp.setSeconds(0, 0); // Arrondir au début de la minute
+      return {
+        x: timestamp.getTime(),
+        y: item.value ? Number(item.value.toFixed(2)) : 0,
+      };
+    });
+  }
 
-    return {
-      x: timestamp.getTime(),
-      y: item.value ? Number(item.value.toFixed(2)) : 0,
-    };
-  });
-
-  const chartDataConso = sortedDataConso.map((item) => {
-    const timestamp = new Date(item.dateReq);
-    timestamp.setSeconds(0, 0); // Arrondir au début de la minute
-
-    return {
-      x: timestamp.getTime(),
-      y: item.value ? Number(item.value.toFixed(2)) : 0,
-    };
-  });
+  const chartDataProd = convertToChartData(sortedDataProd);
+  const chartDataPVPBAT = convertToChartData(sortedDataPVPBAT);
+  const chartDataBATPCONSO = convertToChartData(sortedDataBATPCONSO);
+  const chartDataIrve = convertToChartData(sortedDataIrve);
+  const chartDataConso = convertToChartData(sortedDataConso);
 
   const startOfDay = new Date(
     currentYear,
@@ -108,40 +127,36 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
     59
   );
 
+  function doesDataExistForDate(data: DataItem, dateCible: Date) {
+    return data.some((item) => {
+      const itemDate = new Date(item.dateReq);
+      return (
+        itemDate.getFullYear() === dateCible.getFullYear() &&
+        itemDate.getMonth() === dateCible.getMonth() &&
+        itemDate.getDate() === dateCible.getDate()
+      );
+    });
+  }
+
   const dataExistePourDate = (delta: number) => {
     const dateCible = new Date(currentDate);
     dateCible.setDate(dateCible.getDate() + delta);
 
-    // Vérifier si des données existent dans dataProd pour la date cible
-    const dataProdExiste = dataProd.some((item) => {
-      const itemDate = new Date(item.dateReq);
-      return (
-        itemDate.getFullYear() === dateCible.getFullYear() &&
-        itemDate.getMonth() === dateCible.getMonth() &&
-        itemDate.getDate() === dateCible.getDate()
-      );
-    });
-
-    // Vérifier si des données existent dans dataConso pour la date cible
-    const dataConsoExiste = dataConso.some((item) => {
-      const itemDate = new Date(item.dateReq);
-      return (
-        itemDate.getFullYear() === dateCible.getFullYear() &&
-        itemDate.getMonth() === dateCible.getMonth() &&
-        itemDate.getDate() === dateCible.getDate()
-      );
-    });
-    const dataIrveExiste = dataIrve.some((item) => {
-      const itemDate = new Date(item.dateReq);
-      return (
-        itemDate.getFullYear() === dateCible.getFullYear() &&
-        itemDate.getMonth() === dateCible.getMonth() &&
-        itemDate.getDate() === dateCible.getDate()
-      );
-    });
+    // Vérifier si des données existent pour la date cible dans chaque tableau
+    const dataProdExiste = doesDataExistForDate(dataProd, dateCible);
+    const dataConsoExiste = doesDataExistForDate(dataConso, dateCible);
+    const dataIrveExiste = doesDataExistForDate(dataIrve, dateCible);
+    const dataPVPBATExiste = doesDataExistForDate(PVPBAT, dateCible);
+    const dataBATPCONSOExiste = doesDataExistForDate(BATPCONSO, dateCible);
 
     // Retourner true si des données existent pour au moins l'un des tableaux
-    return dataProdExiste || dataConsoExiste || dataIrveExiste;
+    return (
+      dataProdExiste ||
+      dataConsoExiste ||
+      dataIrveExiste ||
+      dataPVPBATExiste ||
+      dataBATPCONSOExiste
+    );
   };
 
   const options = {
@@ -214,11 +229,25 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
         stack: "Consommation",
       },
       {
-        name: "Production",
+        name: "Production PV",
         data: chartDataProd,
         color: "#009DE0",
         turboThreshold: 0,
         stack: "Production",
+      },
+      {
+        name: "Réinjection batterie",
+        data: chartDataBATPCONSO,
+        color: "yellow",
+        turboThreshold: 0,
+        stack: "Production",
+      },
+      {
+        name: "Charge de la batterie",
+        data: chartDataPVPBAT,
+        color: "red",
+        turboThreshold: 0,
+        stack: "Consommation",
       },
     ],
     tooltip: {
@@ -289,7 +318,7 @@ const AreaChart = ({ dataProd, dataConso, dataIrve }: AreaChartProps) => {
 
   return (
     typeof document !== "undefined" && (
-      <div className="flex flex-col w-[100%] h-[100%] mb-1 md:px-8">
+      <div className="flex flex-col w-full h-full mb-1 md:px-8">
         <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
           <h2 className="text-xl font-bold text-primary">Installation</h2>
           <div className="flex gap-3 justify-center items-center text-center">

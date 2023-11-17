@@ -5,6 +5,13 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 interface BubbleProps {
   name: string;
   value: number | undefined;
@@ -80,58 +87,58 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
           const transition = 300 * i;
 
           return (
-            <HoverCard>
-              <HoverCardTrigger
-                style={
-                  childrensDisplayed
-                    ? {
-                        transform: `rotate(${rotateText})`,
-                        transitionDelay: `${transition}ms`,
-                      }
-                    : {}
-                }
-                className={`absolute cursor-pointer rotate-0 -ml-[120px] left-0 list-none origin-[170px] bg-white flex items-center justify-center w-[100px] h-[100px] rounded-full transition-all duration-1000 ${
-                  childrensDisplayed ? `opacity-1` : "opacity-0 z-0"
-                } ${
-                  data.value && data.value > 0.5 && name === "IRVE"
-                    ? "animate-animateShadow"
-                    : ""
-                } `}
-              >
-                <li key={data.name}>
-                  <span
-                    className="flex flex-col  text-primary items-center justify-center text-center"
-                    style={{
-                      transform: `rotate(${inverseRotateText})`,
-                    }}
-                  >
-                    <p className="relative text-primary">
-                      {data.icon}
-                      {name === "IRVE" && (
-                        <span className="absolute w-[30px] h-[30px] text-center top-[22%] left-[18%] font-bold rounded-full text-secondary border-primary">
-                          {i + 1}
-                        </span>
-                      )}
-                    </p>
-                    {data.value?.toFixed(1)}kW
-                  </span>
-                </li>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                {name === "IRVE" && intensites !== undefined && (
-                  <div className="flex flex-col space-y-1">
-                    <p className="mb-4">{intensites[i].name}</p>
-                    {/* TODO */}
-                    <p>Consigne :</p>
-                    {/* TODO */}
-                    <p>Intensité phase 1: {intensites[i].phase1} A</p>
-                    <p>Intensité phase 2: {intensites[i].phase2} A</p>
-                    <p>Intensité phase 3: {intensites[i].phase3} A</p>
-                  </div>
-                )}
-                {name === "Production PV" && intensites !== undefined && (
-                  <div className="flex flex-col space-y-1">
-                    <div className="flex flex-col space-y-1">
+            <TooltipProvider key={i}>
+              <Tooltip>
+                <TooltipTrigger
+                  style={
+                    childrensDisplayed
+                      ? {
+                          transform: `rotate(${rotateText})`,
+                          transitionDelay: `${transition}ms`,
+                        }
+                      : {}
+                  }
+                  className={`absolute z-10 cursor-pointer rotate-0 -ml-[120px] left-0 list-none origin-[170px] bg-white flex items-center justify-center w-[100px] h-[100px] rounded-full transition-all duration-1000 ${
+                    childrensDisplayed ? `opacity-1` : "opacity-0"
+                  } ${
+                    data.value && data.value > 0.5 && name === "IRVE"
+                      ? "animate-animateShadow"
+                      : ""
+                  } `}
+                >
+                  <li key={data.name}>
+                    <span
+                      className="flex flex-col  text-primary items-center justify-center text-center"
+                      style={{
+                        transform: `rotate(${inverseRotateText})`,
+                      }}
+                    >
+                      <p className="relative text-primary">
+                        {data.icon}
+                        {name === "IRVE" && (
+                          <span className="absolute w-[30px] h-[30px] text-center top-[22%] left-[18%] font-bold rounded-full text-secondary border-primary">
+                            {i + 1}
+                          </span>
+                        )}
+                      </p>
+                      {data.value?.toFixed(1)}kW
+                    </span>
+                  </li>
+                </TooltipTrigger>
+                <TooltipContent className="z-20">
+                  {name === "IRVE" && intensites !== undefined && (
+                    <div className="flex flex-col space-y-1 z-30">
+                      <p className="mb-4">{intensites[i].name}</p>
+                      {/* TODO */}
+                      <p>Consigne :</p>
+                      {/* TODO */}
+                      <p>Intensité phase 1: {intensites[i].phase1} A</p>
+                      <p>Intensité phase 2: {intensites[i].phase2} A</p>
+                      <p>Intensité phase 3: {intensites[i].phase3} A</p>
+                    </div>
+                  )}
+                  {name === "Production PV" && intensites !== undefined && (
+                    <div className="flex flex-col space-y-1 z-30">
                       <p className="mb-4">{intensites[i].name}</p>
                       {/* TODO */}
                       <p>Energie du jour :</p>
@@ -140,14 +147,14 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                       <p>Intensité phase 2: {intensites[i].phase2} A</p>
                       <p>Intensité phase 3: {intensites[i].phase3} A</p>
                     </div>
-                  </div>
-                )}
-                {/*TODO*/}
-                {name === "Réseau" && (
-                  <div className="flex flex-col space-y-1">Compteurs</div>
-                )}
-              </HoverCardContent>
-            </HoverCard>
+                  )}
+                  {/*TODO*/}
+                  {name === "Réseau" && (
+                    <div className="flex flex-col space-y-1">Compteurs</div>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           );
         })}
       </>
@@ -155,76 +162,78 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
   };
 
   return (
-    <div className="menu relative m-6 bg-primary items-center justify-center flex">
-      <HoverCard>
-        <HoverCardTrigger style={{ zIndex: "2" }}>
-          <div
-            onClick={() => {
-              name === "IRVE" || name === "Production PV"
-                ? showChildrens()
-                : null;
-            }}
-            ref={ref}
-            className={`toggle z-2 flex-col shadow-[0_0_10px_rgba(0,0,0,0.3)] shadow-secondary text-primary transition-all duration-1000 bg-white flex items-center w-[100px] h-[100px] justify-center z-20 rounded-full cursor-pointer text-xl ${
-              childrensDisplayed
-                ? "rotate-[360deg]"
-                : name === "IRVE" && value !== 0
-                ? "animate-animateShadow"
-                : ""
-            }`}
-          >
-            {icon}
-            {name === "Batterie" ? (
-              <span className="text-sm">{value} %</span>
-            ) : (
-              <span className="text-sm">{value} kW</span>
+    <TooltipProvider>
+      <Tooltip>
+        <div className="menu relative z-10 m-6 bg-primary items-center justify-center flex">
+          <TooltipTrigger>
+            <div
+              onClick={() => {
+                name === "IRVE" || name === "Production PV"
+                  ? showChildrens()
+                  : null;
+              }}
+              ref={ref}
+              className={`toggle flex-col shadow-[0_0_10px_rgba(0,0,0,0.3)] shadow-secondary text-primary transition-all duration-1000 bg-white flex items-center w-[100px] h-[100px] justify-center rounded-full cursor-pointer text-xl ${
+                childrensDisplayed
+                  ? "rotate-[360deg]"
+                  : name === "IRVE" && value !== 0
+                  ? "animate-animateShadow"
+                  : ""
+              }`}
+            >
+              {icon}
+              {name === "Batterie" ? (
+                <span className="text-sm">{value} %</span>
+              ) : (
+                <span className="text-sm">{value} kW</span>
+              )}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            {name === "Production PV" && group && (
+              <div className="flex flex-col space-y-1">
+                Nombres d'onduleurs : {group.length} <br />
+                <br />
+                Puissance totale : {totalProd.toFixed(2)} kW
+                <br />
+                Production du jour : {eday} kWh <br />
+                <br />
+                {group.map((onduleur, i) => (
+                  <div key={i}>
+                    {onduleur.name} : {onduleur.value?.toFixed(1) || 0} kW
+                  </div>
+                ))}
+              </div>
             )}
-          </div>
-        </HoverCardTrigger>
-        <HoverCardContent className="">
-          {name === "Production PV" && group && (
-            <div>
-              Nombres d'onduleurs : {group.length} <br />
-              <br />
-              Puissance totale : {totalProd.toFixed(2)} kW
-              <br />
-              Production du jour : {eday} kWh <br />
-              <br />
-              {group.map((onduleur, i) => (
-                <div key={i}>
-                  {onduleur.name} : {onduleur.value?.toFixed(1) || 0} kW
-                </div>
-              ))}
-            </div>
-          )}
-          {name === "Batterie" && (
-            <div>Taux de charge de la batterie: {value} %</div>
-          )}
-          {name === "Réseau" && (
-            <div>
-              Énergie réinjectée dans le réseau: {value} kW Calcul |||| Positif
-              envoyé au réseau / Negatif revendue
-            </div>
-          )}
-          {name === "Consommation totale" && (
-            <div className="flex flex-col space-y-1">
-              <p>Consommation totale: {value} kW</p>
-            </div>
-          )}
-          {name === "Consommation du bâtiment" && (
-            <div className="flex flex-col space-y-1">
-              <p>Consommation du bâtiment: {value} kW</p>
-            </div>
-          )}
-          {name === "IRVE" && (
-            <div className="flex flex-col space-y-1">
-              Consommation totale instantanée: {value} kW
-            </div>
-          )}
-        </HoverCardContent>
-      </HoverCard>
-      {generateLiElements(group, placing, childrensDisplayed)}
-    </div>
+            {name === "Batterie" && (
+              <div>Taux de charge de la batterie: {value} %</div>
+            )}
+            {name === "Réseau" && (
+              <div>
+                Énergie réinjectée dans le réseau: {value} kW <br />
+                Calcul |||| Positif envoyé au réseau / Negatif revendue
+              </div>
+            )}
+            {name === "Consommation totale" && (
+              <div className="flex flex-col space-y-1">
+                <p>Consommation totale: {value} kW</p>
+              </div>
+            )}
+            {name === "Consommation du bâtiment" && (
+              <div className="flex flex-col space-y-1">
+                <p>Consommation du bâtiment: {value} kW</p>
+              </div>
+            )}
+            {name === "IRVE" && (
+              <div className="flex flex-col space-y-1">
+                Consommation totale instantanée: {value} kW
+              </div>
+            )}
+          </TooltipContent>
+          {generateLiElements(group, placing, childrensDisplayed)}
+        </div>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
