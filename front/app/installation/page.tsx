@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import ActivityChart from "./_components/ActivityChart";
 import Bubbles from "./_components/Bubbles";
 import Loader from "@/components/Loader";
+import { format, addMinutes, setSeconds, startOfMinute } from "date-fns";
 
 const Installation = () => {
   const [graph, setGraph] = useState("area");
@@ -41,7 +42,6 @@ const Installation = () => {
 
       const data = await res.json();
       setDataCallback(data);
-      console.log("Mis à jour");
     } catch (error) {
       console.log(error);
     }
@@ -98,16 +98,47 @@ const Installation = () => {
 
       setInstallation(installation);
       setIsLoading(false);
+      console.log("Fetch data at", new Date());
     } catch (error) {
       console.log("Erreur lors du fetch des datas" + error);
     }
   };
+  const scheduleNextFetch = (firstInstance = false) => {
+    if (firstInstance) {
+      const now = new Date();
+
+      // Détermine le prochain bloc de 5 minutes à partir de l'heure actuelle
+      const nextFiveMinuteBlock = Math.ceil(now.getMinutes() / 5) * 5;
+      const nextScheduledTime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        now.getHours(),
+        nextFiveMinuteBlock,
+        30
+      );
+
+      // Calcule le temps jusqu'au prochain bloc de 5 minutes
+      const timeUntilNextScheduledTime =
+        nextScheduledTime.getTime() - now.getTime();
+
+      // Planifie le premier fetch au lancement de la page
+      fetchDataAndUpdateState();
+
+      // Planifie le prochain fetch en fonction du prochain bloc de 5 minutes
+      setTimeout(() => {
+        scheduleNextFetch(); // Planifie le prochain fetch
+      }, timeUntilNextScheduledTime);
+    } else {
+      const interval = setInterval(() => {
+        fetchDataAndUpdateState();
+      }, 60000 * 5);
+      return () => clearInterval(interval);
+    }
+  };
 
   useEffect(() => {
-    fetchDataAndUpdateState(); // Appeler initialement les données
-
-    const interval = setInterval(fetchDataAndUpdateState, 60000 * 5);
-    return () => clearInterval(interval);
+    scheduleNextFetch(true);
   }, []);
 
   if (!isLoading) {

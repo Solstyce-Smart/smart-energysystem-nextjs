@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,

@@ -35,6 +35,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { ArrowLeft, Battery, Loader } from "lucide-react";
 import { SearchBox } from "./_components/SearchBox";
@@ -80,6 +81,12 @@ const installationSchema = z.object({
   longitude: z.number({
     required_error: "Merci de renseigner une longitude valide.",
   }),
+  tarifAchat: z.number({
+    required_error: "Merci de renseigner un tarif d'achat valide.",
+  }),
+  tarifRevente: z.number({
+    required_error: "Merci de renseigner un tarif de revente valide.",
+  }),
 });
 
 // Form
@@ -91,6 +98,7 @@ const Create = () => {
   const [nameChecked, setNameChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [revente, setRevente] = useState(false);
 
   const { setValue, watch } = useForm({
     defaultValues: {
@@ -99,6 +107,8 @@ const Create = () => {
       address: undefined || "",
       latitude: 0,
       longitude: 0,
+      tarifAchat: 0,
+      tarifRevente: 0,
     },
   });
 
@@ -716,7 +726,7 @@ const Create = () => {
         {step === 4 && (
           <>
             <h3 className="mb-8 w-full text-primary underline text-md font-semibold">
-              Étape 4 - Vérifiez les informations :
+              Étape 4 - Informations complémentaires :
             </h3>
             <Form {...form}>
               <form
@@ -728,6 +738,115 @@ const Create = () => {
                       latitude: number;
                       longitude: number;
                       ewonId: string;
+                      tarifAchat: number;
+                      tarifRevente: number;
+                    }
+                  )
+                )}
+                className=""
+              >
+                <div className="items-center flex space-x-2 mb-2">
+                  <Checkbox
+                    id="terms1"
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setRevente(true);
+                      } else {
+                        setRevente(false);
+                      }
+                    }}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor="terms1"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Centrale en revente totale
+                    </label>
+                  </div>
+                </div>
+                {!revente && (
+                  <FormField
+                    control={form.control}
+                    name="tarifAchat"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-bold text-primary text-lg">
+                          Tarif de l'électricité à l'achat
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value);
+                              field.onChange(value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                <FormField
+                  control={form.control}
+                  name="tarifRevente"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-bold text-primary text-lg">
+                        Tarif de l'électricité à la revente
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+                            field.onChange(value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="space-y-2 flex flex-col gap-2">
+                  <Button
+                    type="submit"
+                    className={cn(
+                      "w-[200px] self-center shadow-sm shadow-slate-800"
+                    )}
+                    onClick={() => {
+                      setLoading(true);
+                      setStep((prev) => prev + 1);
+                      console.log(form.getValues());
+                    }}
+                  >
+                    Étape suivante
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </>
+        )}
+        {step === 5 && (
+          <>
+            <h3 className="mb-8 w-full text-primary underline text-md font-semibold">
+              Étape 5 - Vérifiez les informations :
+            </h3>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit((data) =>
+                  handleSubmitForm1(
+                    data as {
+                      name: string;
+                      address: string;
+                      latitude: number;
+                      longitude: number;
+                      ewonId: string;
+                      tarifAchat: number;
+                      tarifRevente: number;
                     }
                   )
                 )}
@@ -752,6 +871,15 @@ const Create = () => {
                   Latitude : {form.getValues("latitude")} <br />
                   Longitude : {form.getValues("longitude")}
                 </p>
+                <p className="capitalize mb-4">
+                  {!revente
+                    ? `
+                  Tarif d'achat : ${form.getValues("tarifAchat")} € 
+                  `
+                    : ""}
+                  <br />
+                  Tarif de revente : {form.getValues("tarifRevente")} €
+                </p>
                 <div className="space-y-2 flex flex-col gap-2">
                   <Button
                     type="submit"
@@ -760,6 +888,9 @@ const Create = () => {
                     )}
                     onClick={() => {
                       setLoading(true);
+                      if (!revente) {
+                        form.setValue("tarifAchat", 0);
+                      }
                       handleSubmitForm1(
                         form.getValues() as {
                           name: string;
@@ -767,6 +898,8 @@ const Create = () => {
                           latitude: number;
                           longitude: number;
                           ewonId: string;
+                          tarifAchat: number;
+                          tarifRevente: number;
                         }
                       );
                     }}

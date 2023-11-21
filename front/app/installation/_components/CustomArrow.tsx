@@ -1,10 +1,18 @@
-import React, { useEffect, useRef, RefObject } from "react";
+import React, { useEffect, useRef, useState, RefObject } from "react";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CustomArrowProps {
   startRef: RefObject<HTMLDivElement>;
   endRef: RefObject<HTMLDivElement>;
   dashed?: boolean;
   animated?: boolean;
+  dataHover?: any;
 }
 
 const CustomArrow: React.FC<CustomArrowProps> = ({
@@ -12,10 +20,12 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
   endRef,
   dashed,
   animated,
+  dataHover,
 }) => {
   const arrowRef = useRef<SVGSVGElement>(null);
   const arrowHead1Ref = useRef<SVGForeignObjectElement | null>(null);
   const arrowHeight = 2;
+  const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const startElement = startRef.current;
@@ -111,31 +121,49 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
         animateElement1.setAttribute("repeatCount", "indefinite");
         arrowHead1Element.appendChild(animateElement1);
       }
+      setSvgDimensions({
+        width: arrowLength + 20,
+        height: arrowHeight,
+      });
     }
-  }, [startRef, endRef]);
+  }, [startRef, endRef, dataHover]);
 
   return (
-    <svg ref={arrowRef} xmlns="http://www.w3.org/2000/svg" width="0" height="0">
-      {dashed && (
-        <foreignObject
-          ref={arrowHead1Ref}
-          width={arrowHeight * 2}
-          height={arrowHeight * 2}
-          x="0"
-          y="-5"
-        ></foreignObject>
-      )}
-      {!dashed && (
-        <foreignObject
-          ref={arrowHead1Ref}
-          width={arrowHeight * 2}
-          height={arrowHeight * 2}
-          x="0"
-          y="-5"
-        ></foreignObject>
-      )}
-      <path d="M0,0 L0,0 L0,0 L0,0" fill="#009DE0" />
-    </svg>
+    <>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <svg
+              ref={arrowRef}
+              xmlns="http://www.w3.org/2000/svg"
+              width="0"
+              height="0"
+            >
+              {dashed && (
+                <foreignObject
+                  ref={arrowHead1Ref}
+                  width={arrowHeight * 2}
+                  height={arrowHeight * 2}
+                  x="0"
+                  y="-5"
+                ></foreignObject>
+              )}
+              {!dashed && (
+                <foreignObject
+                  ref={arrowHead1Ref}
+                  width={arrowHeight * 2}
+                  height={arrowHeight * 2}
+                  x="0"
+                  y="-5"
+                ></foreignObject>
+              )}
+              <path d="M0,0 L0,0 L0,0 L0,0" fill="#009DE0" />
+            </svg>
+          </TooltipTrigger>
+          <TooltipContent className="absolute">Hello</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </>
   );
 };
 

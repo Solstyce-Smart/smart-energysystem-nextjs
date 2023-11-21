@@ -215,6 +215,13 @@ const AreaChart = ({
     },
     series: [
       {
+        name: "Charge de la batterie",
+        data: chartDataPVPBAT,
+        color: "red",
+        turboThreshold: 0,
+        stack: "Consommation",
+      },
+      {
         name: "Consommation IRVE",
         data: chartDataIrve,
         color: "darkmagenta",
@@ -229,13 +236,6 @@ const AreaChart = ({
         stack: "Consommation",
       },
       {
-        name: "Production PV",
-        data: chartDataProd,
-        color: "#009DE0",
-        turboThreshold: 0,
-        stack: "Production",
-      },
-      {
         name: "Réinjection batterie",
         data: chartDataBATPCONSO,
         color: "yellow",
@@ -243,11 +243,11 @@ const AreaChart = ({
         stack: "Production",
       },
       {
-        name: "Charge de la batterie",
-        data: chartDataPVPBAT,
-        color: "red",
+        name: "Production PV",
+        data: chartDataProd,
+        color: "#009DE0",
         turboThreshold: 0,
-        stack: "Consommation",
+        stack: "Production",
       },
     ],
     tooltip: {

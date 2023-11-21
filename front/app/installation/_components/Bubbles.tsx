@@ -170,7 +170,6 @@ const Bubbles = (props: BubblesProps) => {
           phase3: findTagValue(`IRVE${i + 1}_I_PH3`) || 0,
         });
       }
-      console.log(intArray);
 
       setIntensiteIrve(intArray);
     }
