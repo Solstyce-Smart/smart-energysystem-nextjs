@@ -13,6 +13,7 @@ interface BubbleProps {
     name: string;
     value: number | undefined;
     icon: any;
+    status?: number;
   }>;
   icon: any;
   placing?: string;
@@ -31,7 +32,6 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
 ) => {
   const [childrensDisplayed, setChildrensDisplayed] = useState(false);
   const [totalProd, setTotalProd] = useState(0);
-
   useEffect(() => {
     if (group) {
       let totalProd = 0;
@@ -52,6 +52,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
           name: string;
           value: number | undefined;
           icon: any;
+          status?: number;
         }>
       | undefined,
     placing: string | undefined,
@@ -89,10 +90,25 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                       ? {
                           transform: `rotate(${rotateText})`,
                           transitionDelay: `${transition}ms`,
+                          transitionDuration: "0.5s",
                         }
                       : {}
                   }
-                  className={`absolute z-10 cursor-pointer rotate-0 -ml-[120px] left-0 list-none origin-[170px] bg-white flex items-center justify-center w-[100px] h-[100px] rounded-full transition-all duration-1000 ${
+                  className={`absolute text-white border-4 border-white shadow-[0_0_10px_rgba(0,0,0,1)] ${
+                    data.status === 0
+                      ? "shadow-primary"
+                      : data.status === 1
+                      ? "shadow-red-500"
+                      : data.status === 2
+                      ? "shadow-secondary"
+                      : data.status === 3
+                      ? "shadow-secondary"
+                      : data.status === 4
+                      ? "shadow-green-500"
+                      : name === "Production PV"
+                      ? "shadow-secondary"
+                      : ""
+                  } bg-gradient-to-t from-secondary via-secondary via-35% to-primary z-10 cursor-pointer rotate-0 -ml-[110px] left-0 list-none origin-[160px] flex items-center justify-center w-[100px] h-[100px] rounded-full transition-all ${
                     childrensDisplayed ? `opacity-1` : "opacity-0"
                   } ${
                     data.value && data.value > 0.5 && name === "IRVE"
@@ -102,15 +118,15 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                 >
                   <li key={data.name}>
                     <span
-                      className="flex flex-col  text-primary items-center justify-center text-center"
+                      className="flex flex-col items-center justify-center text-center"
                       style={{
                         transform: `rotate(${inverseRotateText})`,
                       }}
                     >
-                      <p className="relative text-primary">
+                      <p className="relative">
                         {data.icon}
                         {name === "IRVE" && (
-                          <span className="absolute w-[30px] h-[30px] text-center top-[22%] left-[18%] font-bold rounded-full text-secondary border-primary">
+                          <span className="absolute w-[30px] h-[30px] text-center top-[22%] left-[18%] font-bold rounded-full text-white border-primary">
                             {i + 1}
                           </span>
                         )}
@@ -158,7 +174,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
   return (
     <TooltipProvider>
       <Tooltip>
-        <div className="menu relative z-10 m-6 bg-primary items-center justify-center flex">
+        <div className="menu relative z-10 m-6 items-center justify-center flex">
           <TooltipTrigger>
             <div
               onClick={() => {
@@ -167,9 +183,9 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                   : null;
               }}
               ref={ref}
-              className={`toggle flex-col shadow-[0_0_10px_rgba(0,0,0,0.3)] shadow-secondary text-primary transition-all duration-1000 bg-white flex items-center w-[100px] h-[100px] justify-center rounded-full cursor-pointer text-xl ${
+              className={`toggle flex-col text-white border-4 border-white shadow-[0_0_10px_rgba(0,0,0,1)] shadow-secondary transition-all bg-gradient-to-t from-primary via-primary to-secondary flex items-center w-[100px] h-[100px] justify-center rounded-full cursor-pointer text-xl ${
                 childrensDisplayed
-                  ? "rotate-[360deg]"
+                  ? "rotate-[360deg] duration-1000"
                   : name === "IRVE" && value !== 0
                   ? "animate-animateShadow"
                   : ""
@@ -177,7 +193,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
             >
               {icon}
               {name === "Batterie" ? (
-                <span className="text-sm">{value} %</span>
+                <span className="text-xs">{value} %</span>
               ) : (
                 <span className="text-sm">{value} kW</span>
               )}

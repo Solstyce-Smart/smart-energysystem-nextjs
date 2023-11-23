@@ -6,6 +6,8 @@ export type CreateInstallationParams = {
   battery: boolean;
   abo: number;
   lastSynchroDate: string;
+  tarifAchat: number;
+  tarifRevente: number;
   address?: {
     address: string;
     postalCode: number;
@@ -22,6 +24,8 @@ export type UpdateInstallationParams = {
   name: string;
   nbIRVE: number;
   battery: boolean;
+  tarifAchat: number;
+  tarifRevente: number;
   abo: number;
   lastSynchroDate: string;
   address?: {

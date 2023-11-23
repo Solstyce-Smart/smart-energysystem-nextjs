@@ -31,6 +31,12 @@ export class Installation {
   @Column()
   abo: number;
 
+  @Column()
+  tarifAchat: number;
+
+  @Column()
+  tarifRevente: number;
+
   @Column({ nullable: true, default: null })
   lastSynchroDate: string;
 

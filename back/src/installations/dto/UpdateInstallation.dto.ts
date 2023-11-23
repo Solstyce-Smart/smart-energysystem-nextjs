@@ -14,6 +14,10 @@ export class UpdateInstallationDto {
   battery: boolean;
   @ApiProperty({ default: 0 })
   abo: number;
+  @ApiProperty({ default: 0 })
+  tarifAchat: number;
+  @ApiProperty({ default: 0 })
+  tarifRevente: number;
   @ApiProperty({ default: '2021-01-01' })
   lastSynchroDate: string;
   @ApiProperty({

@@ -8,9 +8,9 @@ const MobileNavbar = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Menu fill="bg-primary" />
+        <Menu className="text-white" />
       </SheetTrigger>
-      <SheetContent className="flex flex-col">
+      <SheetContent className="flex flex-col bg-primary">
         <NavbarRoutes />
         <Button
           variant="primary"

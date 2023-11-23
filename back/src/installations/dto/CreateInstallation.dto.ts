@@ -10,6 +10,10 @@ export class CreateInstallationsDto {
   name: string;
   @ApiProperty({ default: 4 })
   nbIRVE: number;
+  @ApiProperty({ default: 0 })
+  tarifAchat: number;
+  @ApiProperty({ default: 0 })
+  tarifRevente: number;
   @ApiProperty({ default: true })
   battery: boolean;
   @ApiProperty({ default: 0 })

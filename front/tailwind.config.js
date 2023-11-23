@@ -69,14 +69,14 @@ module.exports = {
           "0%, 100%": { boxShadow: "0 0 0px hsl(var(--secondary))" },
           "50%": {
             boxShadow:
-              "0 0 20px hsl(var(--secondary)), 0 0 0 3px hsl(var(--secondary))",
+              "0 0 15px hsl(var(--secondary)), 0 0 0 3px hsl(var(--secondary))",
           },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        animateShadow: "animateShadow 4s ease-in-out infinite",
+        animateShadow: "animateShadow 2s ease-in-out infinite",
       },
     },
   },

@@ -17,8 +17,8 @@ const NavbarItem = ({ name, href }: NavbarItemProps) => {
   return (
     <li
       className={cn(
-        "text-primary/70 font-semibold hover:text-primary transition",
-        isActive && "text-primary font-bold underline underline-offset-2"
+        "text-white/70 font-semibold hover:text-white transition",
+        isActive && "text-white font-bold underline underline-offset-2"
       )}
     >
       <Link href={href}>{name}</Link>

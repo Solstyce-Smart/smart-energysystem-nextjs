@@ -16,11 +16,14 @@ import {
 } from "lucide-react";
 import CustomArrow from "./CustomArrow";
 import Onduleur from "@/public/Onduleur";
+// @ts-ignore
+import ReactFlow from "react-flow";
 
 interface BubbleData {
   name: string;
   value: number | undefined;
   icon: React.ReactNode;
+  status?: number;
 }
 
 interface BubblesProps {
@@ -76,6 +79,10 @@ const Bubbles = (props: BubblesProps) => {
   const [batteryPuis, setBatteryPuis] = useState(0);
   const [networkValue, setNetworkValue] = useState(0);
   const [totalIrveValues, setTotalIrveValues] = useState(0);
+  const [PVPBATvalue, setPVPBATvalue] = useState(0);
+  const [BATPCONSOvalue, setBATPCONSOvalue] = useState(0);
+  const [PVPRESEAUvalue, setPVPRESEAUvalue] = useState(0);
+  const [RESEAUPCONSOvalue, setRESEAUPCONSOvalue] = useState(0);
   const [dataReady, setDataReady] = useState(false);
   const pvRef = useRef<HTMLDivElement | null>(null);
   const irveRef = useRef<HTMLDivElement | null>(null);
@@ -84,11 +91,48 @@ const Bubbles = (props: BubblesProps) => {
   const networkRef = useRef<HTMLDivElement | null>(null);
   const consoRef = useRef<HTMLDivElement | null>(null);
 
+  const scheduleNextFetch = (firstInstance = false) => {
+    if (firstInstance) {
+      const now = new Date();
+
+      // Détermine le prochain bloc de 5 minutes à partir de l'heure actuelle
+      const nextFiveMinuteBlock = Math.ceil(now.getMinutes() / 5) * 5;
+      const nextScheduledTime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        now.getHours(),
+        nextFiveMinuteBlock,
+        30
+      );
+
+      // Calcule le temps jusqu'au prochain bloc de 5 minutes
+      const timeUntilNextScheduledTime =
+        nextScheduledTime.getTime() - now.getTime();
+
+      // Planifie le premier fetch au lancement de la page
+      createBubbles();
+
+      // Planifie le prochain fetch en fonction du prochain bloc de 5 minutes
+      setTimeout(() => {
+        createBubbles();
+        scheduleNextFetch(); // Planifie le prochain fetch
+      }, timeUntilNextScheduledTime);
+    } else {
+      const interval = setInterval(() => {
+        createBubbles();
+      }, 60000 * 5);
+      return () => clearInterval(interval);
+    }
+  };
   useEffect(() => {
-    createBubbles();
+    scheduleNextFetch(true);
   }, [battery, nbIRVE, tagsLive]);
 
+  const CN = "w-[30px] h-[30px] xl:w-[40px] xl:h-[40px]";
+
   const createBubbles = async () => {
+    setDataReady(false);
     const basicBubbles: BubbleData[] = [];
     const IRVEBubbles: BubbleData[] = [];
     const onduleursBubbles: BubbleData[] = [];
@@ -106,12 +150,12 @@ const Bubbles = (props: BubblesProps) => {
       {
         name: "Production PV",
         value: findTagValue("PV_P_SUM"),
-        icon: <Sun width={40} height={40} />,
+        icon: <Sun className={CN} />,
       },
       {
         name: "Consommation du bâtiment",
         value: findTagValue("BTM_P"),
-        icon: <Building2 width={40} height={40} />,
+        icon: <Building2 className={CN} />,
       }
     );
 
@@ -128,19 +172,13 @@ const Bubbles = (props: BubblesProps) => {
       const batteryColor = `hsl(${hue}, 100%, 50%)`;
 
       if (batteryValue === 0) {
-        batteryIcon = (
-          <BatteryWarning width={40} height={40} fill={batteryColor} />
-        );
+        batteryIcon = <Battery className={CN} stroke={batteryColor} />;
       } else if (batteryValue === 100) {
-        batteryIcon = (
-          <BatteryFull width={40} height={40} fill={batteryColor} />
-        );
+        batteryIcon = <BatteryFull className={CN} stroke={batteryColor} />;
       } else if (batteryValue > 66) {
-        batteryIcon = (
-          <BatteryMedium width={40} height={40} fill={batteryColor} />
-        );
+        batteryIcon = <BatteryMedium className={CN} stroke={batteryColor} />;
       } else if (batteryValue > 33) {
-        batteryIcon = <BatteryLow width={40} height={40} fill={batteryColor} />;
+        batteryIcon = <BatteryLow className={CN} stroke={batteryColor} />;
       }
 
       basicBubbles.push({
@@ -154,7 +192,7 @@ const Bubbles = (props: BubblesProps) => {
       basicBubbles.push({
         name: "IRVE",
         value: findTagValue("IRVE_P_SUM"),
-        icon: <Fuel width={40} height={40} />,
+        icon: <Fuel className={CN} />,
       });
       let intArray = [];
       for (let i = 0; i < nbIRVE; i++) {
@@ -162,6 +200,7 @@ const Bubbles = (props: BubblesProps) => {
           name: `Borne de recharge ${i + 1}`,
           value: findTagValue(`IRVE${i + 1}_P`),
           icon: <Car width={50} height={40} />,
+          status: findTagValue(`IRVE${i + 1}_S`),
         });
         intArray.push({
           name: `Borne de recharge ${i + 1}`,
@@ -172,6 +211,7 @@ const Bubbles = (props: BubblesProps) => {
       }
 
       setIntensiteIrve(intArray);
+      setDataReady(true);
     }
 
     if (nbOnduleurs !== 0) {
@@ -180,7 +220,7 @@ const Bubbles = (props: BubblesProps) => {
         onduleursBubbles.push({
           name: `Onduleur ${i + 1}`,
           value: findTagValue(`PV${i + 1}_P`),
-          icon: <Onduleur width={40} height={40} />,
+          icon: <Onduleur className={CN} stroke={"white"} />,
         });
         intArray.push({
           name: `Onduleur ${i + 1}`,
@@ -196,12 +236,12 @@ const Bubbles = (props: BubblesProps) => {
       {
         name: "Consommation totale",
         value: findTagValue("CONSO_P"),
-        icon: <PlugZap width={40} height={40} />,
+        icon: <PlugZap className={CN} />,
       },
       {
         name: "Réseau",
         value: findTagValue("METER1_P"),
-        icon: <UtilityPole width={40} height={40} />,
+        icon: <UtilityPole className={CN} />,
       }
     );
 
@@ -222,11 +262,15 @@ const Bubbles = (props: BubblesProps) => {
       IRVEs: IRVEBubbles,
       onduleurs: onduleursBubbles,
     });
+    setPVPBATvalue(findTagValue("PV_P_BAT") || 0);
+    setBATPCONSOvalue(findTagValue("BAT_P_CONSO") || 0);
+    setPVPRESEAUvalue(findTagValue("PV_P_RESEAU") || 0);
+    setRESEAUPCONSOvalue(findTagValue("RESEAU_P_CONSO") || 0);
     setDataReady(true);
   };
 
   return (
-    <div className="grid grid-cols-3 grid-rows-3 items-center justify-start">
+    <div className="grid grid-cols-3 grid-rows-3 items-center justify-center">
       {/* 1 */}
       <div></div>
       <Bubble
@@ -288,26 +332,26 @@ const Bubbles = (props: BubblesProps) => {
             startRef={pvRef}
             endRef={networkRef}
             dashed
-            animated={pvValue > 0}
+            animated={PVPRESEAUvalue > 0}
           />
           <CustomArrow
             startRef={pvRef}
             endRef={consoRef}
             dashed
-            animated={pvValue > 0}
+            animated={RESEAUPCONSOvalue > 0}
           />
 
           <CustomArrow
             startRef={pvRef}
             endRef={batteryRef}
             dashed
-            animated={pvValue > 0 && batteryValue < 100 && batteryPuis > 0}
+            animated={PVPBATvalue > 0}
           />
           <CustomArrow
             startRef={batteryRef}
             endRef={consoRef}
             dashed
-            animated={batteryValue > 0 && batteryPuis < 0}
+            animated={BATPCONSOvalue > 0}
           />
           <CustomArrow
             startRef={networkRef}

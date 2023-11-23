@@ -91,6 +91,31 @@ body,
   }
 }
 
-.menu > div {
-  z-index: 1000;
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--secondary));
+}
+
+.xarrow-with-dashoffset path {
+  stroke-dasharray: 20; /* Ajustez cette valeur selon votre besoin */
+  stroke-dashoffset: 20; /* Ajustez cette valeur selon votre besoin */
+  animation: dashoffsetAnimation 2s infinite linear; /* Ajustez la durée de l'animation selon votre besoin */
+}
+
+@keyframes dashoffsetAnimation {
+  to {
+    stroke-dashoffset: 0;
+  }
 }

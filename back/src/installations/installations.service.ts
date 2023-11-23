@@ -40,6 +40,8 @@ export class InstallationsService {
     newInstallation.abo = installationDetails.abo;
     newInstallation.address = installationDetails.address;
     newInstallation.lastSynchroDate = installationDetails.lastSynchroDate;
+    newInstallation.tarifAchat = installationDetails.tarifAchat;
+    newInstallation.tarifRevente = installationDetails.tarifRevente;
 
     newInstallation.user = user;
 
