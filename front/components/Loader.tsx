@@ -1,12 +1,16 @@
-import { Loader2Icon } from "lucide-react";
+import Lottie from "lottie-react";
 import React from "react";
+import loader from "@/public/loader.json";
 
 const Loader = () => {
   return (
     <div className="w-full h-full flex items-center justify-center bg-white min-h-[90vh]">
-      <Loader2Icon
-        size="100"
-        className="animate-spin text-secondary bg-transparent rounded-full border-4 shadow-secondary shadow-[0_0_20px_rgba(0,0,0,1)]"
+      <Lottie
+        animationData={loader}
+        style={{
+          width: "200px",
+          height: "200px",
+        }}
       />
     </div>
   );

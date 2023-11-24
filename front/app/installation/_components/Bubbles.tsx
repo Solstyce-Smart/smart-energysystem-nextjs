@@ -16,8 +16,7 @@ import {
 } from "lucide-react";
 import CustomArrow from "./CustomArrow";
 import Onduleur from "@/public/Onduleur";
-// @ts-ignore
-import ReactFlow from "react-flow";
+import "reactflow/dist/style.css";
 
 interface BubbleData {
   name: string;
@@ -82,6 +81,7 @@ const Bubbles = (props: BubblesProps) => {
   const [PVPBATvalue, setPVPBATvalue] = useState(0);
   const [BATPCONSOvalue, setBATPCONSOvalue] = useState(0);
   const [PVPRESEAUvalue, setPVPRESEAUvalue] = useState(0);
+  const [PVPCONSOvalue, setPVPCONSOvalue] = useState(0);
   const [RESEAUPCONSOvalue, setRESEAUPCONSOvalue] = useState(0);
   const [dataReady, setDataReady] = useState(false);
   const pvRef = useRef<HTMLDivElement | null>(null);
@@ -240,7 +240,7 @@ const Bubbles = (props: BubblesProps) => {
       },
       {
         name: "Réseau",
-        value: findTagValue("METER1_P"),
+        value: findTagValue("RESEAU_P"),
         icon: <UtilityPole className={CN} />,
       }
     );
@@ -266,6 +266,7 @@ const Bubbles = (props: BubblesProps) => {
     setBATPCONSOvalue(findTagValue("BAT_P_CONSO") || 0);
     setPVPRESEAUvalue(findTagValue("PV_P_RESEAU") || 0);
     setRESEAUPCONSOvalue(findTagValue("RESEAU_P_CONSO") || 0);
+    setPVPCONSOvalue(findTagValue("PV_P_CONSO") || 0);
     setDataReady(true);
   };
 
@@ -333,12 +334,14 @@ const Bubbles = (props: BubblesProps) => {
             endRef={networkRef}
             dashed
             animated={PVPRESEAUvalue > 0}
+            dataHover={PVPRESEAUvalue}
           />
           <CustomArrow
             startRef={pvRef}
             endRef={consoRef}
             dashed
-            animated={RESEAUPCONSOvalue > 0}
+            animated={PVPCONSOvalue > 0}
+            dataHover={PVPCONSOvalue}
           />
 
           <CustomArrow
@@ -346,30 +349,35 @@ const Bubbles = (props: BubblesProps) => {
             endRef={batteryRef}
             dashed
             animated={PVPBATvalue > 0}
+            dataHover={PVPBATvalue}
           />
           <CustomArrow
             startRef={batteryRef}
             endRef={consoRef}
             dashed
             animated={BATPCONSOvalue > 0}
+            dataHover={BATPCONSOvalue}
           />
           <CustomArrow
             startRef={networkRef}
             endRef={consoRef}
             dashed
-            animated={networkValue > 0}
+            animated={RESEAUPCONSOvalue > 0}
+            dataHover={RESEAUPCONSOvalue}
           />
           <CustomArrow
             startRef={consoRef}
             endRef={irveRef}
             dashed
             animated={totalIrveValues > 0}
+            dataHover={totalIrveValues}
           />
           <CustomArrow
             startRef={consoRef}
             endRef={buildingRef}
             dashed
             animated={consoValue > 0}
+            dataHover={consoValue}
           />
         </>
       )}

@@ -9,6 +9,7 @@ import {
 interface BubbleProps {
   name: string;
   value: number | undefined;
+  id?: string;
   group?: Array<{
     name: string;
     value: number | undefined;
@@ -27,7 +28,7 @@ interface BubbleProps {
 }
 
 const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
-  { name, value, group, icon, placing, eday, intensites },
+  { name, value, group, icon, placing, eday, intensites, id },
   ref
 ) => {
   const [childrensDisplayed, setChildrensDisplayed] = useState(false);
@@ -85,6 +86,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
             <TooltipProvider key={i}>
               <Tooltip>
                 <TooltipTrigger
+                  id={id}
                   style={
                     childrensDisplayed
                       ? {
@@ -108,7 +110,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                       : name === "Production PV"
                       ? "shadow-secondary"
                       : ""
-                  } bg-gradient-to-t from-secondary via-secondary via-35% to-primary z-10 cursor-pointer rotate-0 -ml-[110px] left-0 list-none origin-[160px] flex items-center justify-center w-[100px] h-[100px] rounded-full transition-all ${
+                  } bg-gradient-to-t from-secondary via-secondary via-35% to-primary z-10 cursor-pointer rotate-0 -ml-[80px] md:-ml-[110px] left-0 list-none origin-[117px] md:origin-[160px] flex items-center justify-center w-[75px] h-[75px] md:w-[100px] md:h-[100px] rounded-full transition-all ${
                     childrensDisplayed ? `opacity-1` : "opacity-0"
                   } ${
                     data.value && data.value > 0.5 && name === "IRVE"
@@ -174,7 +176,7 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
   return (
     <TooltipProvider>
       <Tooltip>
-        <div className="menu relative z-10 m-6 items-center justify-center flex">
+        <div className="menu relative z-10 m-1 md:m-6 items-center justify-center flex pb-10 mb:pb-0">
           <TooltipTrigger>
             <div
               onClick={() => {
@@ -183,12 +185,14 @@ const Bubble: React.ForwardRefRenderFunction<HTMLDivElement, BubbleProps> = (
                   : null;
               }}
               ref={ref}
-              className={`toggle flex-col text-white border-4 border-white shadow-[0_0_10px_rgba(0,0,0,1)] shadow-secondary transition-all bg-gradient-to-t from-primary via-primary to-secondary flex items-center w-[100px] h-[100px] justify-center rounded-full cursor-pointer text-xl ${
+              className={`toggle flex-col text-white border-4 border-white shadow-[0_0_10px_rgba(0,0,0,1)] transition-all bg-gradient-to-t from-primary via-primary to-secondary flex items-center w-[75px] h-[75px] md:w-[100px] md:h-[100px] justify-center rounded-full cursor-pointer text-xl ${
                 childrensDisplayed
-                  ? "rotate-[360deg] duration-1000"
+                  ? "rotate-[360deg] duration-1000 shadow-secondary"
                   : name === "IRVE" && value !== 0
                   ? "animate-animateShadow"
-                  : ""
+                  : name === "Batterie" && value === 100
+                  ? "shadow-green-500"
+                  : "shadow-secondary"
               }`}
             >
               {icon}

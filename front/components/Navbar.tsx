@@ -47,8 +47,8 @@ const Navbar = () => {
               {user.user.publicMetadata.role === 4 && (
                 <Link href="/create">
                   <Button
-                    variant="primary"
-                    className="transition font-bold tracking-normal"
+                    variant="ghost"
+                    className="transition font-bold tracking-normal text-white"
                   >
                     Création
                   </Button>
@@ -66,8 +66,8 @@ const Navbar = () => {
             </div>
           ) : (
             <Button
-              variant="primary"
-              className="transition font-bold tracking-normal"
+              variant="ghost"
+              className="transition font-bold tracking-normal text-white"
             >
               <Link href="/sign-in">Se connecter</Link>
             </Button>

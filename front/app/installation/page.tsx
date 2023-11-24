@@ -182,7 +182,7 @@ const Installation = () => {
             {isSmarted ? "SMART ON" : "SMART OFF"}
           </Label>
         </div>
-        <div className="flex flex-wrap bg-gradient-to-br justify-center items-center lg:items-start from-white via-white via-85% to-secondary px-2 py-10 lg:p-10 gap-y-10 min-h-[90vh] h-full w-full ">
+        <div className="flex flex-wrap flex-col-reverse md:flex-row bg-gradient-to-br justify-center items-center lg:items-start from-white via-white via-85% to-secondary px-2 py-10 lg:p-10 gap-y-10 min-h-[90vh] h-full w-full ">
           <div className="flex flex-col min-h-[35vh] bg-slate-100/50 gap-4 h-full w-full items-center justify-center relative pt-10 lg:pt-0 lg:w-1/2">
             {plage === "journalier" && (
               <AreaChart
@@ -261,7 +261,7 @@ const Installation = () => {
           >
             <ActivityChart PVPSUM={PVPSUM} BTMP={BTMP} />
           </div> */}
-          <div className="flex w-full lg:w-[50%] h-full min-h-[80vh] items-center justify-center">
+          <div className="flex w-full lg:w-[50%] pb-8 md:pb-0 h-full min-h-[40vh] md:min-h-[80vh] items-center justify-center">
             {dataReady ? <Bubbles installation={installation} /> : <Loader />}
           </div>
         </div>

@@ -100,6 +100,7 @@ const Financial = ({
   const surplusInKwH = calculateTotalInKwH(PVPRESEAUData);
   const consoBatiment = calculateTotalInKwH(BTMPData);
   const consoIRVE = calculateTotalInKwH(IRVEPSUMData);
+  const consobat = calculateTotalInKwH(BATPCONSOData);
 
   const achatsEvites = () => {
     let batpconso = calculateTotalWithFilter(BATPCONSOData, tarifAchat);
@@ -131,12 +132,7 @@ const Financial = ({
               <span>- {economies} €</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
-              <span>Facture théorique sans SMART</span>
-              <span>{theorique} €</span>
-            </div>
-          </AccordionContent>
+
           <AccordionContent>
             <Accordion type="multiple" className="w-full">
               <AccordionItem value="item-1">
@@ -147,25 +143,31 @@ const Financial = ({
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="flex w-full justify-between pr-2">
+                  <div className="flex w-full justify-between pr-2  pl-4">
                     <span>Revente de surplus</span>
                     <span>- {surplus} €</span>
                   </div>
                 </AccordionContent>
                 <AccordionContent>
-                  <div className="flex w-full justify-between pr-2">
+                  <div className="flex w-full justify-between pr-2  pl-4">
                     <span>Achats évités</span>
                     <span>- {achatsEvites()} €</span>
                   </div>
                 </AccordionContent>
                 <AccordionContent>
-                  <div className="flex w-full justify-between pr-2">
+                  <div className="flex w-full justify-between pr-2  pl-4">
                     <span>Achats sur le réseau</span>
                     <span>{achatsReseau} €</span>
                   </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+          </AccordionContent>
+          <AccordionContent>
+            <div className="flex w-full justify-between pr-2 font-[500]">
+              <span>Facture théorique sans SMART</span>
+              <span>{theorique} €</span>
+            </div>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
@@ -178,47 +180,67 @@ const Financial = ({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
+            <div className="flex w-full justify-between pr-2 font-[500]">
               <span>Bâtiment</span>
               <span>{consoBatiment} kwH</span>
             </div>
           </AccordionContent>
           <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
+            <div className="flex w-full justify-between pr-2 font-[500]">
               <span>Véhicules électriques</span>
               <span>{consoIRVE} kwH</span>
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-3">
+        <AccordionItem value="item-4">
           <AccordionTrigger>
             <div className="flex w-full justify-between pr-2">
               <span className="text-primary underline font-semibold">
-                Production en kwH
+                Source d'alimentation totale en kwH
               </span>
-              <span>{totalProd} kwH</span>
+              <span>
+                {(totalProd + consobat + achatsReseauInKwH).toFixed(2)} kwH
+              </span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
-              <span>Production solaire revendue</span>
-              <span>{surplusInKwH} kwH</span>
+            <Accordion type="multiple" className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>
+                  <div className="flex w-full justify-between pr-2">
+                    <span>Photovoltaïque</span>
+                    <span>{totalProd} kwH</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex w-full justify-between pr-2  pl-4">
+                    <span>Production solaire revendue</span>
+                    <span>{surplusInKwH} kwH</span>
+                  </div>
+                </AccordionContent>
+                <AccordionContent>
+                  <div className="flex w-full justify-between pr-2  pl-4">
+                    <span>Production solaire autoconsommée en direct</span>
+                    <span>{productionAutoconsommee} kwH</span>
+                  </div>
+                </AccordionContent>
+                <AccordionContent>
+                  <div className="flex w-full justify-between pr-2  pl-4">
+                    <span>Production solaire autoconsommée via batterie</span>
+                    <span>{batterieAutoconsommee} kwH</span>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </AccordionContent>
+          <AccordionContent>
+            <div className="flex w-full justify-between pr-2 font-[500]">
+              <span>Batterie</span>
+              <span>{consobat} kwH</span>
             </div>
           </AccordionContent>
           <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
-              <span>Production solaire autoconsommée en direct</span>
-              <span>{productionAutoconsommee} kwH</span>
-            </div>
-          </AccordionContent>
-          <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
-              <span>Production solaire autoconsommée via batterie</span>
-              <span>{batterieAutoconsommee} kwH</span>
-            </div>
-          </AccordionContent>
-          <AccordionContent>
-            <div className="flex w-full justify-between pr-2">
+            <div className="flex w-full justify-between pr-2 font-[500]">
               <span>Achat sur les réseaux</span>
               <span>{achatsReseauInKwH} kwH</span>
             </div>

@@ -1,8 +1,11 @@
+"use client";
 import Image from "next/image";
+import Lottie from "lottie-react";
+import animation from "@/public/acceuil.json";
 
 export default function Home() {
   return (
-    <main className="flex flex-col md:flex-row w-full h-[100vh] justify-center items-center md:p-20 sm:p-0">
+    <main className="flex flex-col md:flex-row w-full h-[90vh] justify-center items-center md:p-20 sm:p-0">
       <div className="flex flex-col flex-1 text-center items-center justify-center p-10">
         <h1 className="text-primary font-bold md:text-8xl sm:text-6xl">
           Oups !
@@ -16,13 +19,9 @@ export default function Home() {
         </p>
       </div>
       <div className="flex flex-1 items-center justify-center relative">
-        <Image
-          src="/maintenance.svg"
-          alt="Site en maintenance ! "
-          width={500}
-          height={500}
-          className="object-cover"
-          unoptimized
+        <Lottie
+          animationData={animation}
+          style={{ width: "25vw", minWidth: "400px" }}
         />
       </div>
     </main>

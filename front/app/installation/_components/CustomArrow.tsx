@@ -23,17 +23,17 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
   dataHover,
 }) => {
   const arrowRef = useRef<SVGSVGElement>(null);
-  const arrowHead1Ref = useRef<SVGForeignObjectElement | null>(null);
-  const arrowHeight = 2;
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const arrowHeight = 1;
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const startElement = startRef.current;
     const endElement = endRef.current;
     const arrowElement = arrowRef.current;
-    const arrowHead1Element = arrowHead1Ref.current;
+    const tooltipElement = tooltipRef.current;
 
-    if (startElement && endElement && arrowElement && arrowHead1Element) {
+    if (startElement && endElement && arrowElement && tooltipElement) {
       const startRect = startElement.getBoundingClientRect();
       const endRect = endElement.getBoundingClientRect();
 
@@ -106,24 +106,20 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
           );
         }
       }
-
-      if (animated && !dashed) {
-        arrowHead1Element.setAttribute("x", "0");
-
-        const animateElement1 = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "animate"
-        );
-        animateElement1.setAttribute("attributeName", "x");
-        animateElement1.setAttribute("from", "0");
-        animateElement1.setAttribute("to", `${arrowLength}`);
-        animateElement1.setAttribute("dur", "4s");
-        animateElement1.setAttribute("repeatCount", "indefinite");
-        arrowHead1Element.appendChild(animateElement1);
+      if (dataHover) {
+        tooltipElement.style.position = "absolute";
+        tooltipElement.style.width = `${arrowLength}px`;
+        tooltipElement.style.height = `${arrowHeight + 20}px`;
+        tooltipElement.style.left = `${startCenterX + 10}px`;
+        tooltipElement.style.top = `${startCenterY}px`;
+        tooltipElement.style.transformOrigin = `${arrowHeight}px 0`;
+        tooltipElement.style.transform = `rotate(${angle}rad)`;
+        tooltipElement.style.backgroundColor = "transparent";
       }
+
       setSvgDimensions({
         width: arrowLength + 20,
-        height: arrowHeight,
+        height: arrowHeight + 20,
       });
     }
   }, [startRef, endRef, dataHover]);
@@ -132,35 +128,24 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
     <>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
-            <svg
-              ref={arrowRef}
-              xmlns="http://www.w3.org/2000/svg"
-              width="0"
-              height="0"
-            >
-              {dashed && (
-                <foreignObject
-                  ref={arrowHead1Ref}
-                  width={arrowHeight * 2}
-                  height={arrowHeight * 2}
-                  x="0"
-                  y="-5"
-                ></foreignObject>
-              )}
-              {!dashed && (
-                <foreignObject
-                  ref={arrowHead1Ref}
-                  width={arrowHeight * 2}
-                  height={arrowHeight * 2}
-                  x="0"
-                  y="-5"
-                ></foreignObject>
-              )}
-              <path d="M0,0 L0,0 L0,0 L0,0" fill="#009DE0" />
-            </svg>
-          </TooltipTrigger>
-          <TooltipContent className="absolute">Hello</TooltipContent>
+          <svg
+            ref={arrowRef}
+            xmlns="http://www.w3.org/2000/svg"
+            width={svgDimensions.width}
+            height={svgDimensions.height}
+          >
+            <path d="M0,0 L0,0 L0,0 L0,0" fill="#009DE0" />
+          </svg>
+          <TooltipTrigger
+            // @ts-ignore
+            ref={tooltipRef}
+            className="rounded-full"
+          ></TooltipTrigger>
+          <TooltipContent className="z-20 absolute top-1/2 left-1/2">
+            <div className="flex w-full h-full min-w-[80px] min-h-[40px] text-center items-center justify-center">
+              {dataHover} kW
+            </div>
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </>
