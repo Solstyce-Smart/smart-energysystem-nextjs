@@ -131,7 +131,6 @@ const LineChart = ({ datas, series }: LineChartProps) => {
         marker: {
           enabled: false,
         },
-        stacking: "normal",
         connectNulls: true,
         dataGrouping: {
           enabled: false,

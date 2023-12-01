@@ -9,41 +9,7 @@ const HighchartsReact = dynamic(() => import("highcharts-react-official"), {
 });
 interface AreaChartProps {
   title: string;
-  PVPSUM: {
-    ewonId: string;
-    dateReq: string;
-    tagName: string;
-    value: number;
-    quality: string;
-  }[];
-  BTMP: {
-    ewonId: string;
-    dateReq: string;
-    tagName: string;
-    value: number;
-    quality: string;
-  }[];
-  IRVEPSUM: {
-    ewonId: string;
-    dateReq: string;
-    tagName: string;
-    value: number;
-    quality: string;
-  }[];
-  PVPBAT: {
-    ewonId: string;
-    dateReq: string;
-    tagName: string;
-    value: number;
-    quality: string;
-  }[];
-  BATPCONSO: {
-    ewonId: string;
-    dateReq: string;
-    tagName: string;
-    value: number;
-    quality: string;
-  }[];
+  centrale: any;
 }
 
 type DataItem = {
@@ -54,16 +20,15 @@ type DataItem = {
   quality: string;
 }[];
 
-const AreaChart = ({
-  PVPSUM,
-  BTMP,
-  IRVEPSUM,
-  PVPBAT,
-  BATPCONSO,
-  title,
-}: AreaChartProps) => {
+const AreaChart = ({ title, centrale }: AreaChartProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newDate, setNewDate] = useState(0);
+  const [PVPSUM, setPVPSUM] = useState<DataItem>([]);
+  const [BTMP, setBTMP] = useState<DataItem>([]);
+  const [IRVEPSUM, setIRVEPSUM] = useState<DataItem>([]);
+  const [PVPBAT, setPVPBAT] = useState<DataItem>([]);
+  const [BATPCONSO, setBATPCONSO] = useState<DataItem>([]);
+  const [dataReady, setDataReady] = useState<Boolean>(false);
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1; // Les mois sont indexés à partir de 0
   const currentDay = currentDate.getDate() + newDate;
@@ -73,6 +38,95 @@ const AreaChart = ({
   const month = ("0" + (dateToShow.getMonth() + 1)).slice(-2);
   const year = dateToShow.getFullYear();
   const formattedDate = `${day} / ${month} / ${year}`;
+  type SetStateCallback<T> = React.Dispatch<React.SetStateAction<T>>;
+  const fetchData = async (
+    url: string,
+    setDataCallback: SetStateCallback<DataItem>
+  ) => {
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          Origin: "https://smart-energysystem.fr",
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        console.log("Erreur");
+        throw new Error("HTTP error " + res.status);
+      }
+
+      const data = await res.json();
+      setDataCallback(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchDataAndUpdateState = async () => {
+    setDataReady(false);
+
+    await fetchData(
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BTM_P`,
+      setBTMP
+    );
+    await fetchData(
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/IRVE_P_SUM`,
+      setIRVEPSUM
+    );
+    await fetchData(
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_SUM`,
+      setPVPSUM
+    );
+    await fetchData(
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_BAT`,
+      setPVPBAT
+    );
+    await fetchData(
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BAT_P_CONSO`,
+      setBATPCONSO
+    );
+  };
+  const scheduleNextFetch = (firstInstance = false) => {
+    if (firstInstance) {
+      const now = new Date();
+
+      // Détermine le prochain bloc de 5 minutes à partir de l'heure actuelle
+      const nextFiveMinuteBlock = Math.ceil(now.getMinutes() / 5) * 5;
+      const nextScheduledTime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        now.getHours(),
+        nextFiveMinuteBlock,
+        30
+      );
+
+      // Calcule le temps jusqu'au prochain bloc de 5 minutes
+      const timeUntilNextScheduledTime =
+        nextScheduledTime.getTime() - now.getTime();
+
+      // Planifie le premier fetch au lancement de la page
+      fetchDataAndUpdateState();
+
+      // Planifie le prochain fetch en fonction du prochain bloc de 5 minutes
+      setTimeout(() => {
+        fetchDataAndUpdateState();
+        scheduleNextFetch(); // Planifie le prochain fetch
+      }, timeUntilNextScheduledTime);
+    } else {
+      const interval = setInterval(() => {
+        fetchDataAndUpdateState();
+      }, 60000 * 5);
+      return () => clearInterval(interval);
+    }
+  };
+
+  useEffect(() => {
+    scheduleNextFetch(true);
+  }, []);
 
   const updateDate = (delta: number) => {
     const updatedDate = new Date(currentDate);

@@ -43,7 +43,7 @@ export class UsersService {
   }
   getOneUser(userId: number) {
     return this.userRepository.findOne({
-      select: ['userId', 'email', 'role', 'ewonIds', 'password'],
+      select: ['userId', 'clerkId', 'email', 'role', 'ewonIds', 'password'],
       where: { userId },
       relations: ['ewonIds'],
     });

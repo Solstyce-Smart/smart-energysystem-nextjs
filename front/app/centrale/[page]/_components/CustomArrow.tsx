@@ -45,14 +45,14 @@ const CustomArrow: React.FC<CustomArrowProps> = ({
       // Calculez le centre de l'élément de départ en tenant compte des marges
       const startCenterX = startRect.left + startRect.width / 2;
       const startCenterY =
-        user.user && pathname === "/mes-centrales"
+        user.user && pathname.startsWith("/centrale/")
           ? startRect.top + startRect.height / 2 - windowHeight * 0.15
           : startRect.top + startRect.height / 2 - windowHeight * 0.1;
 
       // Calculez le centre de l'élément d'arrivée en tenant compte des marges
       const endCenterX = endRect.left + endRect.width / 2 + window.scrollX;
       const endCenterY =
-        user.user && pathname === "/mes-centrales"
+        user.user && pathname.startsWith("/centrale/")
           ? endRect.top +
             endRect.height / 2 +
             window.scrollY -

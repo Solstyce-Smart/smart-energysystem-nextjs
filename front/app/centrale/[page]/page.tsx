@@ -11,6 +11,8 @@ import Bubbles from "./_components/Bubbles";
 import Loader from "@/components/Loader";
 import { Label } from "@/components/ui/label";
 import Financial from "./_components/Financial";
+import { useUser } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 
 type DataItem = {
   ewonId: string;
@@ -33,7 +35,7 @@ type Installation = {
   tarifRevente: number;
   tagsLive: DataItem;
 };
-const Installation = () => {
+const Centrale = () => {
   const [plage, setPlage] = useState<string>("journalier");
   const [installation, setInstallation] = useState<Installation | undefined>();
   const [PVPSUM, setPVPSUM] = useState<DataItem>([]);
@@ -48,6 +50,14 @@ const Installation = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [isSmarted, setIsSmarted] = useState<Boolean>(false);
   const [dataReady, setDataReady] = useState<Boolean>(false);
+  const { user } = useUser();
+  const [userId, setUserId] = useState<number>();
+  const [centrale, setCentrale] = useState<any>([]);
+  const [userReady, setUserReady] = useState<Boolean>(false);
+  const [centraleReady, setCentraleReady] = useState<Boolean>(false);
+  const pathname = usePathname();
+  const centraleId = pathname.match(/\/centrale\/(.+)/)?.[1] || "";
+
   type SetStateCallback<T> = React.Dispatch<React.SetStateAction<T>>;
 
   const fetchData = async (
@@ -78,46 +88,52 @@ const Installation = () => {
 
   const fetchDataAndUpdateState = async () => {
     setDataReady(false);
+
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/BTM_P",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BTM_P`,
       setBTMP
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/IRVE_P_SUM",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/IRVE_P_SUM`,
       setIRVEPSUM
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_SUM",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_SUM`,
       setPVPSUM
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_BAT",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_BAT`,
       setPVPBAT
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/BAT_P_CONSO",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BAT_P_CONSO`,
       setBATPCONSO
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/CONSO_P",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/CONSO_P`,
       setCONSOP
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_CONSO",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_CONSO`,
       setPVPCONSO
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/PV_P_RESEAU",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_RESEAU`,
       setPVPRESEAU
     );
     await fetchData(
-      "https://vps.smart-energysystem.fr:3001/elastic/dataindex/1425275/RESEAU_P_CONSO",
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/RESEAU_P_CONSO`,
       setRESEAUPCONSO
     );
 
+    if (!userId || !centraleId) {
+      console.log("Attente des données utilisateur et centraleId...");
+      return;
+    }
+
     try {
       const res = await fetch(
-        "https://vps.smart-energysystem.fr:3001/1/installations/1",
+        `https://vps.smart-energysystem.fr:3001/${userId}/installations/${centraleId}`,
         {
           method: "GET",
           headers: {
@@ -135,7 +151,7 @@ const Installation = () => {
 
       const installation = await res.json();
       const smartActiveTag = installation.tagsLive.find(
-        (tag: { tagName: string }) => tag.tagName === "SMART_ACTIVE"
+        (tag: any) => tag.tagName === "SMART_ACTIVE"
       );
 
       if (smartActiveTag) {
@@ -148,6 +164,7 @@ const Installation = () => {
     } catch (error) {
       console.log("Erreur lors du fetch des datas" + error);
     }
+
     setDataReady(true);
   };
   const scheduleNextFetch = (firstInstance = false) => {
@@ -186,14 +203,85 @@ const Installation = () => {
   };
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        if (!user) {
+          console.log("Attente des données de l'utilisateur...");
+          return;
+        }
+
+        const userRes = await fetch(
+          "https://vps.smart-energysystem.fr:3001/users",
+          {
+            method: "GET",
+            headers: {
+              Origin: "https://smart-energysystem.fr",
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!userRes.ok) {
+          console.log(
+            "Erreur lors de la récupération des données de l'utilisateur"
+          );
+          return;
+        }
+
+        const utilisateurs = await userRes.json();
+
+        const activeUser = await utilisateurs.find(
+          (bddUser: any) => bddUser.clerkId === user.id
+        );
+
+        console.log(centraleId);
+        console.log(activeUser.userId);
+
+        if (activeUser && centraleId) {
+          const installationsRes = await fetch(
+            `https://vps.smart-energysystem.fr:3001/${activeUser.userId}/installations/${centraleId}`,
+            {
+              method: "GET",
+              headers: {
+                Origin: "https://smart-energysystem.fr",
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          setUserId(activeUser.userId);
+          setUserReady(true);
+
+          if (!installationsRes.ok) {
+            console.log(
+              "Erreur lors de la récupération des données des installations"
+            );
+            return;
+          }
+
+          const centrale = await installationsRes.json();
+
+          setCentrale(centrale);
+          setCentraleReady(true);
+        }
+      } catch (error) {
+        console.error("Erreur générale :", error);
+      }
+    };
+    fetchUser();
+    if (!userReady || !centraleReady) {
+      console.log("Attente des données utilisateur...");
+      return;
+    }
     scheduleNextFetch(true);
-  }, []);
+  }, [user, userReady, centraleReady]);
 
   if (!isLoading) {
     return (
       <main className="relative w-full h-full min-h-[90vh] gap-6">
         <div className="absolute top-0 right-0 flex items-center cursor-pointer mt-2 mr-2">
-          {/* @ts-ignore*/}
+          {/* @ts-ignore */}
           <Switch id="smarted" checked={isSmarted} className="mr-2" />
           <Label htmlFor="smarted" className="text-primary text-xl">
             {isSmarted ? "SMART ON" : "SMART OFF"}
@@ -202,14 +290,7 @@ const Installation = () => {
         <div className="flex flex-wrap flex-col-reverse md:flex-row bg-gradient-to-br justify-center items-center lg:items-start from-white via-white via-85% to-secondary px-2 py-10 lg:p-10 gap-y-10 min-h-[90vh] h-full w-full ">
           <div className="flex flex-col min-h-[35vh] bg-slate-100/50 gap-4 h-full w-full items-center justify-center relative pt-10 lg:pt-0 lg:w-1/2">
             {plage === "journalier" && (
-              <AreaChart
-                PVPSUM={PVPSUM}
-                BTMP={BTMP}
-                IRVEPSUM={IRVEPSUM}
-                PVPBAT={PVPBAT}
-                BATPCONSO={BATPCONSO}
-                title={plage}
-              />
+              <AreaChart title={plage} centrale={centrale} />
             )}
             {plage === "mensuel" && (
               <BarChart
@@ -279,7 +360,7 @@ const Installation = () => {
             <ActivityChart PVPSUM={PVPSUM} BTMP={BTMP} />
           </div> */}
           <div className="flex w-full lg:w-[50%] pb-8 md:pb-0 h-full min-h-[40vh] md:min-h-[80vh] items-center justify-center">
-            {/* @ts-ignore*/}
+            {/* @ts-ignore */}
             {dataReady ? <Bubbles installation={installation} /> : <Loader />}
           </div>
         </div>
@@ -290,4 +371,4 @@ const Installation = () => {
   }
 };
 
-export default Installation;
+export default Centrale;

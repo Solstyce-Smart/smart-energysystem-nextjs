@@ -279,7 +279,7 @@ const Create = () => {
     });
   }
   return createUser ? (
-    <div className="flex flex-col w-full h-[90vh] bg-primary items-center justify-center">
+    <div className="flex flex-col w-full h-[90vh] bg-white items-center justify-center">
       <div className="flex flex-col shadow-slate-500 shadow-md min-w-[80%] lg:min-w-[30%] lg:max-w-[50%] lg:min-h-[80%] bg-white p-10 rounded-md">
         <Button
           variant="ghost"
@@ -506,7 +506,7 @@ const Create = () => {
       </div>
     </div>
   ) : createInstallation ? (
-    <div className="flex flex-col w-full h-[90vh] bg-primary items-center justify-center">
+    <div className="flex flex-col w-full h-[90vh] bg-white items-center justify-center">
       <div className="flex flex-col shadow-slate-500 shadow-md min-w-[80%] lg:min-w-[30%] lg:max-w-[50%] bg-white p-10 rounded-md">
         <Button
           variant="ghost"
@@ -914,7 +914,7 @@ const Create = () => {
       </div>
     </div>
   ) : (
-    <div className="flex flex-col w-full h-[90vh] bg-primary items-center justify-center">
+    <div className="flex flex-col w-full h-[90vh] bg-white items-center justify-center">
       <div className="flex flex-col shadow-slate-500 shadow-md min-w-[80%] lg:min-w-[30%] lg:max-w-[50%] bg-white p-10 rounded-md">
         <h2 className="text-center mb-8 justify-self-center w-full text-2xl self-center font-semibold text-primary underline">
           Que souhaitez-vous créer ?

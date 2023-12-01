@@ -1,5 +1,3 @@
-"use-client";
-
 import React from "react";
 import NavbarItem from "./NavbarItem";
 import { useUser } from "@clerk/nextjs";
@@ -14,29 +12,31 @@ const navbarRoutes = [
     href: "/installation",
   },
   {
-    name: "Qui sommmes-nous ?",
+    name: "Qui sommes-nous ?",
     href: "/qui-sommes-nous",
   },
+];
+
+const connectedRoutes = [
   {
-    name: "Graphiques",
-    href: "/graphiques",
+    name: "Mes centrales",
+    href: "/mes-centrales",
   },
+  // {
+  //   name: "Mes abonnements",
+  //   href: "/mes-abonnements",
+  // },
 ];
 
 const NavbarRoutes = () => {
   const user = useUser();
+  const routesToUse = user.user ? connectedRoutes : navbarRoutes;
 
   return (
     <ul className="flex flex-col lg:flex-row text-center align-center justify-center list-none gap-4 lg:gap-6 h-full ">
-      {navbarRoutes.map((route) => {
-        if (route.name === "Graphiques" && !user.isSignedIn) {
-          return;
-        } else {
-          return (
-            <NavbarItem key={route.href} href={route.href} name={route.name} />
-          );
-        }
-      })}
+      {routesToUse.map((route) => (
+        <NavbarItem key={route.href} href={route.href} name={route.name} />
+      ))}
     </ul>
   );
 };

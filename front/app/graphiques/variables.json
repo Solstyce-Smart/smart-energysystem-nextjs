@@ -1,0 +1,59 @@
+[
+  { "name": "Statut smart", "unit": "/", "var": "SMART_ACTIVE" },
+  { "name": "Nombre d'onduleur", "unit": "/", "var": "PV_NB" },
+  { "name": "Nombre de bornes", "unit": "/", "var": "IRVE_NB" },
+  { "name": "Nombre de compteur", "unit": "/", "var": "METER_NB" },
+  { "name": "Nombre de batterie", "unit": "/", "var": "BAT_NB" },
+  { "name": "Production photovoltaique DC", "unit": "kW", "var": "PV_P_SUM" },
+  {
+    "name": "Production photovoltaique stockée dans batteries",
+    "unit": "kW",
+    "var": "PV_P_BAT"
+  },
+  {
+    "name": "Production photovoltaique consommée",
+    "unit": "kW",
+    "var": "PV_P_CONSO"
+  },
+  {
+    "name": "Production photovoltaique réinjectée",
+    "unit": "kW",
+    "var": "PV_P_RESEAU"
+  },
+  { "name": "Consommation totale des IRVE", "unit": "kW", "var": "IRVE_P_SUM" },
+  {
+    "name": "Puissance batterie consommée",
+    "unit": "kW",
+    "var": "BAT_P_CONSO"
+  },
+  { "name": "Import export énergie réseau", "unit": "kW", "var": "RESEAU_P" },
+  {
+    "name": "Puissance soutirée depuis le réseau",
+    "unit": "kW",
+    "var": "RESEAU_P_CONSO"
+  },
+  { "name": "Consommation totale", "unit": "", "var": "CONSO_P" },
+  { "name": "Puissance consommée bâtiment", "unit": "", "var": "BTM_P" },
+  { "name": "Puissance active", "unit": "kVA", "var": "PVi_P" },
+  { "name": "Courant phase 1", "unit": "A", "var": "PVi_I_PH1" },
+  { "name": "Courant phase 2", "unit": "A", "var": "PVi_I_PH2" },
+  { "name": "Courant phase 3", "unit": "A", "var": "PVi_I_PH3" },
+  { "name": "Energie journalière", "unit": "kWh", "var": "PVi_EDAY" },
+  { "name": "Energie totale", "unit": "kWh", "var": "PVi_ETOT" },
+  { "name": "Puissance active borne", "unit": "kVA", "var": "IRVEi_P" },
+  { "name": "Courant phase 1", "unit": "A", "var": "IRVEi_I_PH1" },
+  { "name": "Courant phase 2", "unit": "A", "var": "IRVEi_I_PH2" },
+  { "name": "Courant phase 3", "unit": "A", "var": "IRVEi_I_PH3" },
+  { "name": "Energie charge en cours", "unit": "A", "var": "IRVEi_E" },
+  { "name": "Consignes de charge effective", "unit": "A", "var": "IRVEi_C_E" },
+  { "name": "Consignes du mode forcé", "unit": "A", "var": "IRVEi_C_F" },
+  { "name": "Statut de la borne", "unit": "/", "var": "IRVEi_S" },
+  { "name": "Alarme borne", "unit": "/", "var": "IRVEi_A" },
+  { "name": "Puissance active", "unit": "kVA", "var": "METERi_P" },
+  { "name": "Courant phase 1", "unit": "A", "var": "METERi_I_PH1" },
+  { "name": "Courant phase 2", "unit": "A", "var": "METERi_I_PH2" },
+  { "name": "Courant phase 3", "unit": "A", "var": "METERi_I_PH3" },
+  { "name": "Puissance active batterie", "unit": "kW", "var": "BATi_P" },
+  { "name": "Taux de batterie", "unit": "%", "var": "BATi_SOC" },
+  { "name": "Taux moyen des batterie", "unit": "%", "var": "BAT_SOC_AV" }
+]

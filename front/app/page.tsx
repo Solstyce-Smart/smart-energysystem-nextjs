@@ -2,10 +2,18 @@
 import Image from "next/image";
 import Lottie from "lottie-react";
 import animation from "@/public/acceuil.json";
+import { useUser } from "@clerk/nextjs";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
+  const user = useUser();
   return (
-    <main className="flex flex-col md:flex-row w-full h-[90vh] justify-center items-center md:p-20 sm:p-0">
+    <main
+      className={cn(
+        "flex flex-col md:flex-row w-full justify-center items-center md:p-20 sm:p-0",
+        user.user ? "h-[85vh]" : "h-[90vh]"
+      )}
+    >
       <div className="flex flex-col flex-1 text-center items-center justify-center p-10">
         <h1 className="text-primary font-bold md:text-8xl sm:text-6xl">
           Oups !

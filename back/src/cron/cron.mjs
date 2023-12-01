@@ -68,6 +68,11 @@ const getDatas = async () => {
     dataFiltered,
     { httpsAgent: agent, ...config },
   );
+  await axios.post(
+    `https://164.132.50.131:3001/${process.env.USERIDDEUX}/installations/${process.env.CENTRALEIDDEUX}/tags-live`,
+    dataFiltered,
+    { httpsAgent: agent, ...config },
+  );
 
   try {
     await axios.post(
