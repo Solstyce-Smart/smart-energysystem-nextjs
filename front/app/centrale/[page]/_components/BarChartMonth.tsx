@@ -237,7 +237,7 @@ const BarChartMonth = ({
             "<div>" +
             `Total :` +
             this.point.total +
-            " kWh" +
+            " mWh" +
             '</div><br/><div class="tooltip-series" style="display: flex; flex-direction: row">' +
             this.series.name +
             " : </div> " +

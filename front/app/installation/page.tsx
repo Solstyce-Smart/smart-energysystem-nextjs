@@ -11,6 +11,8 @@ import Bubbles from "./_components/Bubbles";
 import Loader from "@/components/Loader";
 import { Label } from "@/components/ui/label";
 import Financial from "./_components/Financial";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Maximize2 } from "lucide-react";
 
 type DataItem = {
   ewonId: string;
@@ -202,40 +204,106 @@ const Installation = () => {
         <div className="flex flex-wrap flex-col-reverse md:flex-row bg-gradient-to-br justify-center items-center lg:items-start from-white via-white via-85% to-secondary px-2 py-10 lg:p-10 gap-y-10 min-h-[90vh] h-full w-full ">
           <div className="flex flex-col min-h-[35vh] bg-slate-100/50 gap-4 h-full w-full items-center justify-center relative pt-10 lg:pt-0 lg:w-1/2">
             {plage === "journalier" && (
-              <AreaChart
-                PVPSUM={PVPSUM}
-                BTMP={BTMP}
-                IRVEPSUM={IRVEPSUM}
-                PVPBAT={PVPBAT}
-                BATPCONSO={BATPCONSO}
-                title={plage}
-              />
+              <>
+                <Dialog>
+                  <DialogTrigger
+                    asChild
+                    className="flex absolute top-6 right-9 text-primary"
+                  >
+                    <Maximize2 />
+                  </DialogTrigger>
+                  <DialogContent className="w-full min-w-[99vw] h-auto items-center justify-center flex">
+                    <AreaChart
+                      PVPSUM={PVPSUM}
+                      BTMP={BTMP}
+                      IRVEPSUM={IRVEPSUM}
+                      PVPBAT={PVPBAT}
+                      BATPCONSO={BATPCONSO}
+                      title={plage}
+                    />
+                  </DialogContent>
+                </Dialog>
+                <AreaChart
+                  PVPSUM={PVPSUM}
+                  BTMP={BTMP}
+                  IRVEPSUM={IRVEPSUM}
+                  PVPBAT={PVPBAT}
+                  BATPCONSO={BATPCONSO}
+                  title={plage}
+                />
+              </>
             )}
             {plage === "mensuel" && (
-              <BarChart
-                PVPSUM={PVPSUM}
-                BTMP={BTMP}
-                IRVEPSUM={IRVEPSUM}
-                PVPBAT={PVPBAT}
-                RESEAUPCONSO={RESEAUPCONSO}
-                BATPCONSO={BATPCONSO}
-                PVPCONSO={PVPCONSO}
-                PVPRESEAU={PVPRESEAU}
-                title={plage}
-              />
+              <>
+                <Dialog>
+                  <DialogTrigger
+                    asChild
+                    className="flex absolute top-6 right-9 text-primary"
+                  >
+                    <Maximize2 />
+                  </DialogTrigger>
+                  <DialogContent className="w-full min-w-[99vw] h-auto items-center justify-center flex">
+                    <BarChart
+                      PVPSUM={PVPSUM}
+                      BTMP={BTMP}
+                      IRVEPSUM={IRVEPSUM}
+                      PVPBAT={PVPBAT}
+                      RESEAUPCONSO={RESEAUPCONSO}
+                      BATPCONSO={BATPCONSO}
+                      PVPCONSO={PVPCONSO}
+                      PVPRESEAU={PVPRESEAU}
+                      title={plage}
+                    />
+                  </DialogContent>
+                </Dialog>
+                <BarChart
+                  PVPSUM={PVPSUM}
+                  BTMP={BTMP}
+                  IRVEPSUM={IRVEPSUM}
+                  PVPBAT={PVPBAT}
+                  RESEAUPCONSO={RESEAUPCONSO}
+                  BATPCONSO={BATPCONSO}
+                  PVPCONSO={PVPCONSO}
+                  PVPRESEAU={PVPRESEAU}
+                  title={plage}
+                />
+              </>
             )}
             {plage === "annuel" && (
-              <BarChartMonth
-                PVPSUM={PVPSUM}
-                BTMP={BTMP}
-                IRVEPSUM={IRVEPSUM}
-                PVPBAT={PVPBAT}
-                RESEAUPCONSO={RESEAUPCONSO}
-                BATPCONSO={BATPCONSO}
-                PVPCONSO={PVPCONSO}
-                PVPRESEAU={PVPRESEAU}
-                title={plage}
-              />
+              <>
+                <Dialog>
+                  <DialogTrigger
+                    asChild
+                    className="flex absolute top-6 right-9 text-primary"
+                  >
+                    <Maximize2 />
+                  </DialogTrigger>
+                  <DialogContent className="w-full min-w-[99vw] h-auto items-center justify-center flex">
+                    <BarChartMonth
+                      PVPSUM={PVPSUM}
+                      BTMP={BTMP}
+                      IRVEPSUM={IRVEPSUM}
+                      PVPBAT={PVPBAT}
+                      RESEAUPCONSO={RESEAUPCONSO}
+                      BATPCONSO={BATPCONSO}
+                      PVPCONSO={PVPCONSO}
+                      PVPRESEAU={PVPRESEAU}
+                      title={plage}
+                    />
+                  </DialogContent>
+                </Dialog>
+                <BarChartMonth
+                  PVPSUM={PVPSUM}
+                  BTMP={BTMP}
+                  IRVEPSUM={IRVEPSUM}
+                  PVPBAT={PVPBAT}
+                  RESEAUPCONSO={RESEAUPCONSO}
+                  BATPCONSO={BATPCONSO}
+                  PVPCONSO={PVPCONSO}
+                  PVPRESEAU={PVPRESEAU}
+                  title={plage}
+                />
+              </>
             )}
             <div className="flex w-full justify-center items-center gap-4">
               <Button

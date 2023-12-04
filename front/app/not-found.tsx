@@ -29,7 +29,7 @@ const NotFound = () => {
         loop={false}
       />
       <Button className="mt-4">
-        <Link href="/">Come back</Link>
+        <Link href="/">Retour à l'accueil</Link>
       </Button>
     </div>
   );

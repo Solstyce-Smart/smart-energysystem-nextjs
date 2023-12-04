@@ -28,14 +28,22 @@ const connectedRoutes = [
   // },
 ];
 
-const NavbarRoutes = () => {
+type NavbarRoutesProps = {
+  color: string;
+};
+const NavbarRoutes = ({ color }: NavbarRoutesProps) => {
   const user = useUser();
   const routesToUse = user.user ? connectedRoutes : navbarRoutes;
 
   return (
     <ul className="flex flex-col lg:flex-row text-center align-center justify-center list-none gap-4 lg:gap-6 h-full ">
       {routesToUse.map((route) => (
-        <NavbarItem key={route.href} href={route.href} name={route.name} />
+        <NavbarItem
+          key={route.href}
+          href={route.href}
+          name={route.name}
+          color={color}
+        />
       ))}
     </ul>
   );

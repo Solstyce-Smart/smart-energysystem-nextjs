@@ -269,10 +269,9 @@ const Bubbles = (props: BubblesProps) => {
     setPVPCONSOvalue(findTagValue("PV_P_CONSO") || 0);
     setDataReady(true);
   };
-  console.log(intensiteOnduleurs);
 
   return (
-    <div className="grid grid-cols-3 grid-rows-3 items-center justify-center">
+    <div className="grid grid-cols-3 grid-rows-3 mt-12 xl:mt-0">
       {/* 1 */}
       <div></div>
       <Bubble

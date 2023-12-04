@@ -10,6 +10,7 @@ const HighchartsReact = dynamic(() => import("highcharts-react-official"), {
 interface AreaChartProps {
   title: string;
   centrale: any;
+  height: string;
 }
 
 type DataItem = {
@@ -20,7 +21,7 @@ type DataItem = {
   quality: string;
 }[];
 
-const AreaChart = ({ title, centrale }: AreaChartProps) => {
+const AreaChart = ({ title, centrale, height }: AreaChartProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newDate, setNewDate] = useState(0);
   const [PVPSUM, setPVPSUM] = useState<DataItem>([]);
@@ -365,7 +366,9 @@ const AreaChart = ({ title, centrale }: AreaChartProps) => {
 
   return (
     typeof document !== "undefined" && (
-      <div className="flex flex-col w-full h-[40vh] min-h-[300px] mb-1 md:px-8 md:py-4 bg-slate-200/30 rounded-md">
+      <div
+        className={`flex flex-col w-full ${height} min-h-[300px] mb-1 md:px-8 md:py-4 bg-slate-200/30 rounded-md`}
+      >
         <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
           <h2 className="text-xl font-bold text-primary capitalize hidden lg:flex">
             {title}

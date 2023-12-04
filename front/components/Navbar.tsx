@@ -15,6 +15,7 @@ const Navbar = () => {
 
   return (
     <>
+      {" "}
       <header
         className="flex before:bg-gradient-to-bl  relative  before:absolute
       z-20
@@ -41,7 +42,7 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="hidden lg:flex">
-            <NavbarRoutes />
+            <NavbarRoutes color="white" />
           </div>
           <div className="hidden lg:flex gap-2">
             {user.user ? (
@@ -80,7 +81,7 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
-      {user.user && <BottomBar />}
+      {user.user && <BottomBar color="white" />}
     </>
   );
 };

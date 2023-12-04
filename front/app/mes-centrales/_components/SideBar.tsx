@@ -10,77 +10,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ArrowBigRight } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
-const SideBar = () => {
-  const { user } = useUser();
-  const [centrales, setCentrales] = useState<any>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!user) {
-          console.log("Attente des données de l'utilisateur...");
-          return;
-        }
-
-        const userRes = await fetch(
-          "https://vps.smart-energysystem.fr:3001/users",
-          {
-            method: "GET",
-            headers: {
-              Origin: "https://smart-energysystem.fr",
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!userRes.ok) {
-          console.log(
-            "Erreur lors de la récupération des données de l'utilisateur"
-          );
-          return;
-        }
-
-        const utilisateurs = await userRes.json();
-
-        const activeUser = utilisateurs.find(
-          (bddUser: any) => bddUser.clerkId === user.id
-        );
-
-        if (activeUser) {
-          const installationsRes = await fetch(
-            `https://vps.smart-energysystem.fr:3001/${activeUser.userId}/installations`,
-            {
-              method: "GET",
-              headers: {
-                Origin: "https://smart-energysystem.fr",
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!installationsRes.ok) {
-            console.log(
-              "Erreur lors de la récupération des données des installations"
-            );
-            return;
-          }
-
-          const centrales = await installationsRes.json();
-
-          setCentrales(centrales);
-        }
-      } catch (error) {
-        console.error("Erreur générale :", error);
-      }
-    };
-
-    fetchData();
-  }, [user]);
-
+const SideBar = ({ centrales }: any) => {
   return (
     <Sheet>
       <SheetTrigger>
@@ -90,10 +22,14 @@ const SideBar = () => {
       </SheetTrigger>
       <SheetContent side="left" className="w-[200px]">
         <SheetHeader>
-          <SheetTitle>Liste des centrales</SheetTitle>
+          <SheetTitle className="mb-8">Liste des centrales</SheetTitle>
           <SheetDescription>
             {centrales.map((centrale: any) => (
-              <Link href={`/centrale/${centrale.id}`} key={centrale.name}>
+              <Link
+                href={`/centrale/${centrale.id}`}
+                key={centrale.name}
+                className="font-medium"
+              >
                 {centrale.name}
               </Link>
             ))}

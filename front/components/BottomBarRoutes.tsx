@@ -3,7 +3,10 @@ import NavbarItem from "./NavbarItem";
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 
-const BottomBarRoutes = () => {
+type BottomBarRoutesProps = {
+  color: string;
+};
+const BottomBarRoutes = ({ color }: BottomBarRoutesProps) => {
   const user = useUser();
   const pathname = usePathname();
 
@@ -39,7 +42,12 @@ const BottomBarRoutes = () => {
     <ul className="flex flex-col lg:flex-row text-center items-center justify-center list-none gap-4 lg:gap-6 w-full h-full">
       {bottomBarRoutes.map((route) => {
         return (
-          <NavbarItem key={route.href} href={route.href} name={route.name} />
+          <NavbarItem
+            key={route.href}
+            href={route.href}
+            name={route.name}
+            color={color}
+          />
         );
       })}
     </ul>
