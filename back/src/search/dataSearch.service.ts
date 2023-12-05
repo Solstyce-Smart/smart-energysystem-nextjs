@@ -62,4 +62,36 @@ export class dataSearchService {
     });
     return body.hits.hits.map((hit) => hit._source);
   }
+
+  async searchByDate(ewonId: string, tagsName: string, dateReq: string) {
+    const body = await this.elasticService.search<GetDatasResult>({
+      index,
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                ewonId,
+              },
+            },
+            {
+              match: {
+                tagName: tagsName,
+              },
+            },
+            {
+              range: {
+                dateReq: {
+                  gte: `${dateReq}T00:00:00`, // Date de début de la journée
+                  lte: `${dateReq}T23:59:59`, // Date de fin de la journée
+                },
+              },
+            },
+          ],
+        },
+      },
+      size: 10000,
+    });
+    return body.hits.hits.map((hit) => hit._source);
+  }
 }

@@ -49,7 +49,7 @@ interface BubblesState {
 }
 
 const Bubbles = (props: BubblesProps) => {
-  const { battery, nbIRVE, tagsLive } = props?.installation;
+  const { tagsLive } = props?.installation;
   const [bubbles, setBubbles] = useState<BubblesState>({
     basic: [],
     IRVEs: [],
@@ -83,6 +83,7 @@ const Bubbles = (props: BubblesProps) => {
   const [PVPRESEAUvalue, setPVPRESEAUvalue] = useState(0);
   const [PVPCONSOvalue, setPVPCONSOvalue] = useState(0);
   const [RESEAUPCONSOvalue, setRESEAUPCONSOvalue] = useState(0);
+  const [IRVENB, setIRVENB] = useState(0);
   const [dataReady, setDataReady] = useState(false);
   const pvRef = useRef<HTMLDivElement | null>(null);
   const irveRef = useRef<HTMLDivElement | null>(null);
@@ -127,7 +128,7 @@ const Bubbles = (props: BubblesProps) => {
   };
   useEffect(() => {
     scheduleNextFetch(true);
-  }, [battery, nbIRVE, tagsLive]);
+  }, [tagsLive]);
 
   const CN = "w-[30px] h-[30px] xl:w-[40px] xl:h-[40px]";
 
@@ -159,7 +160,9 @@ const Bubbles = (props: BubblesProps) => {
       }
     );
 
-    if (battery) {
+    const nbBatteries = findTagValue("BAT_NB") || 0;
+
+    if (nbBatteries !== 0) {
       const batteryValue = findTagValue("BAT_SOC_AV") || 0;
 
       let batteryIcon;
@@ -187,6 +190,10 @@ const Bubbles = (props: BubblesProps) => {
         icon: batteryIcon,
       });
     }
+
+    const nbIRVE = findTagValue("IRVE_NB") || 0;
+
+    setIRVENB(nbIRVE);
 
     if (nbIRVE !== 0) {
       basicBubbles.push({

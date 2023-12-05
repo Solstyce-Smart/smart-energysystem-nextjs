@@ -43,9 +43,9 @@ export class UsersService {
   }
   getOneUser(userId: number) {
     return this.userRepository.findOne({
-      select: ['userId', 'clerkId', 'email', 'role', 'ewonIds', 'password'],
+      select: ['userId', 'clerkId', 'email', 'role', 'installations'],
       where: { userId },
-      relations: ['ewonIds'],
+      relations: ['installations'],
     });
   }
   async updateUser(userId: number, updateUserDetails: UpdateUserParams | any) {
@@ -67,7 +67,14 @@ export class UsersService {
     }
 
     const updatedUser = await this.userRepository.findOne({
-      select: ['userId', 'email', 'clerkId', 'role', 'ewonIds', 'password'],
+      select: [
+        'userId',
+        'email',
+        'clerkId',
+        'role',
+        'installations',
+        'password',
+      ],
       where: { userId },
     });
 

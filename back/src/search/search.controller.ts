@@ -92,4 +92,48 @@ export class searchController {
     const result = await this.searchService.getDatasByTagsName(ewonId, tagName);
     return result;
   }
+
+  @Get(`${index}/:ewonId/:tagName/:dateReq`)
+  @ApiOperation({
+    summary: "Récupération de l'historique d'un tag de l'automate par date",
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'Aucun utilisateur trouvé / Aucune installation trouvée / Aucun automate trouvé',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erreur serveur',
+  })
+  @ApiParam({
+    name: 'ewonId',
+    type: String,
+    required: true,
+    description: 'Id de la centrale',
+  })
+  @ApiParam({
+    name: 'tagName',
+    type: String,
+    required: true,
+    description: 'Nom du tag',
+  })
+  @ApiParam({
+    name: 'dateReq',
+    type: String,
+    required: true,
+    description: 'Date',
+  })
+  async getDatasByDate(
+    @Param('ewonId') ewonId: string,
+    @Param('tagName') tagName: string,
+    @Param('dateReq') dateReq: string,
+  ) {
+    const result = await this.searchService.getDatasByDate(
+      ewonId,
+      tagName,
+      dateReq,
+    );
+    return result;
+  }
 }

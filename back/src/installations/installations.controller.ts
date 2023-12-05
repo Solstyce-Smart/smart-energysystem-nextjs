@@ -20,7 +20,7 @@ import { CreateInstallationsDto } from './dto/CreateInstallation.dto';
 import { UpdateInstallationDto } from './dto/UpdateInstallation.dto';
 
 @ApiTags('Installations')
-@Controller(':userId/installations')
+@Controller('/installations')
 export class InstallationsController {
   constructor(private installationsService: InstallationsService) {}
 
@@ -31,37 +31,23 @@ export class InstallationsController {
     description: 'Erreur serveur',
   })
   @ApiBody({ type: () => CreateInstallationsDto })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
-  })
   createInstallation(
-    @Param('userId', ParseIntPipe) userId: number,
     @Body() createInstallationsDto: CreateInstallationsDto,
   ) {
     return this.installationsService.createInstallation(
-      userId,
       createInstallationsDto,
     );
   }
 
   @Get(':id')
-  @ApiOperation({ summary: "Récupération d'une installation d'un utilisateur" })
+  @ApiOperation({ summary: "Récupération d'une installation" })
   @ApiResponse({
     status: 404,
-    description: 'Aucun utilisateur trouvé / Aucune installation trouvée',
+    description: 'Aucune installation trouvée',
   })
   @ApiResponse({
     status: 500,
     description: 'Erreur serveur',
-  })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
   })
   @ApiParam({
     name: 'id',
@@ -70,42 +56,34 @@ export class InstallationsController {
     description: "Id de l'installation",
   })
   getInstallationById(
-    @Param('userId', ParseIntPipe) userId: number,
     @Param('id', ParseIntPipe) installationId: number,
   ) {
     return this.installationsService.getInstallationById(
-      userId,
       installationId,
     );
   }
 
   @Get()
   @ApiOperation({
-    summary: "Récupération de toutes les installations d'un utilisateur",
+    summary: "Récupération de toutes les installations",
   })
   @ApiResponse({
     status: 404,
-    description: 'Aucun utilisateur trouvé / Aucune installation trouvée',
+    description: 'Aucune installation trouvée',
   })
   @ApiResponse({
     status: 500,
     description: 'Erreur serveur',
   })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
-  })
-  getAllInstallations(@Param('userId', ParseIntPipe) userId: number) {
-    return this.installationsService.getAllInstallations(userId);
+  getAllInstallations() {
+    return this.installationsService.getAllInstallations();
   }
 
   @Put(':id')
   @ApiOperation({ summary: "Modification d'une installation" })
   @ApiResponse({
     status: 404,
-    description: 'Aucun utilisateur trouvé / Aucune installation trouvée',
+    description: 'Aucune installation trouvée',
   })
   @ApiResponse({
     status: 500,
@@ -113,24 +91,16 @@ export class InstallationsController {
   })
   @ApiBody({ type: () => UpdateInstallationDto })
   @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
-  })
-  @ApiParam({
     name: 'id',
     type: Number,
     required: true,
     description: "Id de l'installation",
   })
   updateInstallationById(
-    @Param('userId', ParseIntPipe) userId: number,
     @Param('id', ParseIntPipe) installationId: number,
     @Body() updateInstallationDto: UpdateInstallationDto,
   ) {
     return this.installationsService.updateInstallationById(
-      userId,
       installationId,
       updateInstallationDto,
     );
@@ -140,17 +110,11 @@ export class InstallationsController {
   @ApiOperation({ summary: "Suppression d'une installation" })
   @ApiResponse({
     status: 404,
-    description: 'Aucun utilisateur trouvé / Aucune installation trouvée',
+    description: 'Aucune installation trouvée',
   })
   @ApiResponse({
     status: 500,
     description: 'Erreur serveur',
-  })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
   })
   @ApiParam({
     name: 'id',
@@ -159,11 +123,9 @@ export class InstallationsController {
     description: "Id de l'installation",
   })
   deleteInstallationById(
-    @Param('userId', ParseIntPipe) userId: number,
     @Param('id', ParseIntPipe) installationId: number,
   ) {
     return this.installationsService.deleteInstallationById(
-      userId,
       installationId,
     );
   }

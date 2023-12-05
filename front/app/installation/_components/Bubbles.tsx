@@ -27,14 +27,11 @@ interface BubbleData {
 
 interface BubblesProps {
   installation: {
-    abo: string;
-    address: string;
-    battery: boolean;
-    ewonId: string;
+    abo: number;
+    address: string | null;
     id: number;
     lastSynchroDate: string;
     name: string;
-    nbIRVE: number;
     tagsLive: Array<{
       tagName: string;
       value: number | undefined;
@@ -48,8 +45,8 @@ interface BubblesState {
   onduleurs: BubbleData[];
 }
 
-const Bubbles = (props: BubblesProps) => {
-  const { battery, nbIRVE, tagsLive } = props?.installation;
+const Bubbles = ({ installation }: BubblesProps) => {
+  const { tagsLive } = installation;
   const [bubbles, setBubbles] = useState<BubblesState>({
     basic: [],
     IRVEs: [],
@@ -127,7 +124,7 @@ const Bubbles = (props: BubblesProps) => {
   };
   useEffect(() => {
     scheduleNextFetch(true);
-  }, [battery, nbIRVE, tagsLive]);
+  }, [tagsLive]);
 
   const CN = "w-[30px] h-[30px] xl:w-[40px] xl:h-[40px]";
 
@@ -146,6 +143,9 @@ const Bubbles = (props: BubblesProps) => {
       sumEday += findTagValue(`PV${i + 1}_EDAY`) || 0;
       setPvEday(sumEday);
     }
+    const nbIrve = findTagValue("IRVE_NB") || 0;
+    const nbBatteries = findTagValue("BAT_NB") || 0;
+
     basicBubbles.push(
       {
         name: "Production PV",
@@ -159,7 +159,7 @@ const Bubbles = (props: BubblesProps) => {
       }
     );
 
-    if (battery) {
+    if (nbBatteries !== 0) {
       const batteryValue = findTagValue("BAT_SOC_AV") || 0;
 
       let batteryIcon;
@@ -188,14 +188,14 @@ const Bubbles = (props: BubblesProps) => {
       });
     }
 
-    if (nbIRVE !== 0) {
+    if (nbIrve !== 0) {
       basicBubbles.push({
         name: "IRVE",
         value: findTagValue("IRVE_P_SUM"),
         icon: <Fuel className={CN} />,
       });
       let intArray = [];
-      for (let i = 0; i < nbIRVE; i++) {
+      for (let i = 0; i < nbIrve; i++) {
         IRVEBubbles.push({
           name: `Borne de recharge ${i + 1}`,
           value: findTagValue(`IRVE${i + 1}_P`),

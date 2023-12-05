@@ -8,16 +8,40 @@ export class UpdateInstallationDto {
   ewonId: string;
   @ApiProperty({ default: 'Centrale' })
   name: string;
-  @ApiProperty({ default: 4 })
-  nbIRVE: number;
-  @ApiProperty({ default: true })
-  battery: boolean;
   @ApiProperty({ default: 0 })
   abo: number;
-  @ApiProperty({ default: 0 })
-  tarifAchat: number;
-  @ApiProperty({ default: 0 })
-  tarifRevente: number;
+  @ApiProperty({
+    default: [
+      {
+        tarifAchat: [
+          { value: 0.2, dates: { dateDebut: new Date(), dateFin: null } },
+        ],
+      },
+      {
+        tarifRevente: [
+          { value: 0.135, dates: { dateDebut: new Date(), dateFin: null } },
+        ],
+      },
+    ],
+    enum: () => [Object],
+    nullable: true,
+  })
+  tarifs?: {
+    tarifAchat: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+    tarifRevente: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+  }[];
   @ApiProperty({ default: '2021-01-01' })
   lastSynchroDate: string;
   @ApiProperty({
@@ -38,7 +62,7 @@ export class UpdateInstallationDto {
     longitude: string;
   }[];
   @ApiProperty({ type: () => [TagsLive] })
-  tagsLive: any;
+  tagsLive: TagsLive[];
   @ApiProperty({ type: () => [User], readOnly: true })
-  user: any;
+  user: User[];
 }

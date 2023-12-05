@@ -3,6 +3,7 @@ import { NotFoundException } from '@nestjs/common/exceptions';
 import { Installation } from '../entity/Installations.entity';
 import { Repository, EntityManager } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { classToPlain, plainToClass } from 'class-transformer';
 import {
   CreateInstallationParams,
   UpdateInstallationParams,
@@ -19,62 +20,40 @@ export class InstallationsService {
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {}
 
-  async createInstallation(
-    userId: number,
-    installationDetails: CreateInstallationParams,
-  ) {
+  async createInstallation(installationDetails: CreateInstallationParams) {
     const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-      relations: ['ewonIds'],
+      where: { userId: 1 },
+      relations: ['installations'],
     });
-
-    if (!user) {
-      return null;
-    }
 
     const newInstallation = new Installation();
     newInstallation.ewonId = installationDetails.ewonId;
     newInstallation.name = installationDetails.name;
-    newInstallation.nbIRVE = installationDetails.nbIRVE;
-    newInstallation.battery = installationDetails.battery;
     newInstallation.abo = installationDetails.abo;
     newInstallation.address = installationDetails.address;
     newInstallation.lastSynchroDate = installationDetails.lastSynchroDate;
-    newInstallation.tarifAchat = installationDetails.tarifAchat;
-    newInstallation.tarifRevente = installationDetails.tarifRevente;
+    newInstallation.tarifs = installationDetails.tarifs;
+    newInstallation.user = [user];
 
-    newInstallation.user = user;
-
-    const savedData = await this.entityManager.transaction(
-      async (transactionalEntityManager) => {
-        const savedUser = await transactionalEntityManager.save(User, user);
-        const savedInstallation = await transactionalEntityManager.save(
-          Installation,
-          newInstallation,
-        );
-        return { savedUser, savedInstallation };
-      },
+    const installationToReturn = await this.entityManager.save(
+      Installation,
+      newInstallation,
     );
+    user.installations.push(installationToReturn);
 
-    return {
-      newInstallation: savedData.savedInstallation,
-      user: savedData.savedUser,
-    };
+    // Exclure les relations qui pourraient causer une boucle infinie
+    const plainInstallation = classToPlain(installationToReturn) as Record<
+      string,
+      any
+    >;
+    return plainToClass(Installation, plainInstallation);
   }
 
-  async getInstallationById(userId: number, installationId: number) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-      relations: ['ewonIds'],
+  async getInstallationById(installationId: number) {
+    const installation = await this.entityManager.findOne(Installation, {
+      where: { installationId },
+      relations: ['tagsLive', 'user'],
     });
-
-    if (!user) {
-      return null;
-    }
-
-    const installation = await user.ewonIds.find(
-      (ewonId) => ewonId.id === installationId,
-    );
 
     if (!installation) {
       return null;
@@ -83,44 +62,29 @@ export class InstallationsService {
     const installationWithTagsLive = await this.entityManager.findOne(
       Installation,
       {
-        where: { id: installationId },
-        relations: ['tagsLive'],
+        where: { installationId },
+        relations: ['tagsLive', 'user'],
       },
     );
 
     return installationWithTagsLive;
   }
 
-  async getAllInstallations(userId: number) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-      relations: ['ewonIds'],
+  async getAllInstallations() {
+    const installations = await this.entityManager.find(Installation, {
+      relations: ['tagsLive', 'user'],
     });
 
-    if (!user) {
-      return null;
-    }
-
-    return user.ewonIds;
+    return installations;
   }
 
   async updateInstallationById(
-    userId: number,
     installationId: number,
     installationDetails: UpdateInstallationParams,
   ) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-      relations: ['ewonIds'],
+    const installation = await this.entityManager.findOne(Installation, {
+      where: { installationId },
     });
-
-    if (!user) {
-      return null;
-    }
-
-    const installation = user.ewonIds.find(
-      (ewonId) => ewonId.id === installationId,
-    );
 
     if (!installation) {
       return null;
@@ -134,18 +98,13 @@ export class InstallationsService {
     return updatedInstallation;
   }
 
-  async deleteInstallationById(userId: number, installationId: number) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-      relations: ['ewonIds'],
+  async deleteInstallationById(installationId: number) {
+    const installations = await this.entityManager.find(Installation, {
+      relations: ['tagsLive', 'user'],
     });
 
-    if (!user) {
-      return null;
-    }
-
-    const installation = user.ewonIds.find(
-      (ewonId) => ewonId.id === installationId,
+    const installation = installations.find(
+      (ewonId) => ewonId.installationId === installationId,
     );
 
     if (!installation) {

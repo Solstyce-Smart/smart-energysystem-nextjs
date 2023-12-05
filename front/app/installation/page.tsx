@@ -47,6 +47,7 @@ const Installation = () => {
   const [IRVEPSUM, setIRVEPSUM] = useState<DataItem>([]);
   const [BTMP, setBTMP] = useState<DataItem>([]);
   const [CONSOP, setCONSOP] = useState<DataItem>([]);
+  const [nbIRVE, setIRVENB] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [isSmarted, setIsSmarted] = useState<Boolean>(false);
   const [dataReady, setDataReady] = useState<Boolean>(false);
@@ -119,7 +120,7 @@ const Installation = () => {
 
     try {
       const res = await fetch(
-        "https://vps.smart-energysystem.fr:3001/1/installations/1",
+        "https://vps.smart-energysystem.fr:3001/installations/1",
         {
           method: "GET",
           headers: {
@@ -139,6 +140,11 @@ const Installation = () => {
       const smartActiveTag = installation.tagsLive.find(
         (tag: { tagName: string }) => tag.tagName === "SMART_ACTIVE"
       );
+      const nbIRVE = installation.tagsLive.find(
+        (tag: { tagName: string }) => tag.tagName === "IRVE_NB"
+      );
+
+      setIRVENB(nbIRVE?.value);
 
       if (smartActiveTag) {
         setIsSmarted(smartActiveTag.value === 1);
@@ -348,7 +354,11 @@ const Installation = () => {
           </div> */}
           <div className="flex w-full lg:w-[50%] pb-8 md:pb-0 h-full min-h-[40vh] md:min-h-[80vh] items-center justify-center">
             {/* @ts-ignore*/}
-            {dataReady ? <Bubbles installation={installation} /> : <Loader />}
+            {dataReady && installation ? (
+              <Bubbles installation={installation} />
+            ) : (
+              <Loader />
+            )}
           </div>
         </div>
       </main>

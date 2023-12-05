@@ -16,4 +16,7 @@ export class searchService {
   async getDatasByTagsName(ewonId: string, tagsName: string) {
     return this.elasticService.searchByTagsName(ewonId, tagsName);
   }
+  async getDatasByDate(ewonId: string, tagsName: string, dateReq: string) {
+    return this.elasticService.searchByDate(ewonId, tagsName, dateReq);
+  }
 }

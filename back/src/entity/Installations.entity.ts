@@ -2,19 +2,18 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToOne,
-  ManyToOne,
   JoinColumn,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 import { TagsLive } from './TagsLive.entity';
 import { User } from './Users.entity';
 
 @Entity('installation')
 export class Installation {
   @PrimaryGeneratedColumn()
-  id: number;
+  installationId: number;
 
   @Column()
   ewonId: string;
@@ -23,19 +22,27 @@ export class Installation {
   name: string;
 
   @Column()
-  nbIRVE: number;
-
-  @Column()
-  battery: boolean;
-
-  @Column()
   abo: number;
 
-  @Column()
-  tarifAchat: number;
-
-  @Column()
-  tarifRevente: number;
+  @Column('json', {
+    nullable: true,
+  })
+  tarifs?: {
+    tarifAchat: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+    tarifRevente: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+  }[];
 
   @Column({ nullable: true, default: null })
   lastSynchroDate: string;
@@ -54,8 +61,17 @@ export class Installation {
   @JoinColumn()
   tagsLive?: TagsLive[];
 
-  @ManyToOne(() => User, (user) => user.ewonIds, {
-    onDelete: 'CASCADE',
+  @ManyToMany(() => User, (user) => user.installations)
+  @JoinTable({
+    name: 'user_installation',
+    joinColumn: {
+      name: 'installationId',
+      referencedColumnName: 'installationId',
+    },
+    inverseJoinColumn: {
+      name: 'userId',
+      referencedColumnName: 'userId',
+    },
   })
-  user: User;
+  user: User[];
 }

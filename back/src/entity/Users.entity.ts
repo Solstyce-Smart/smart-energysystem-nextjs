@@ -1,6 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Installation } from './Installations.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -19,7 +24,17 @@ export class User {
   @Column({ default: 0 })
   role: number;
 
-  @OneToMany(() => Installation, (installation) => installation.user)
-  @ApiProperty({ enum: () => [Installation] })
-  ewonIds: Installation[];
+  @ManyToMany(() => Installation, (installation) => installation.user)
+  @JoinTable({
+    name: 'user_installation',
+    joinColumn: {
+      name: 'userId',
+      referencedColumnName: 'userId',
+    },
+    inverseJoinColumn: {
+      name: 'installationId',
+      referencedColumnName: 'installationId',
+    },
+  })
+  installations: Installation[];
 }

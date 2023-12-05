@@ -18,17 +18,9 @@ export class TagsLiveService {
     private userRepository: Repository<User>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {}
-  async getTagsLive(userId: number, installationId: number) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-    });
-
-    if (!user) {
-      return null;
-    }
-
+  async getTagsLive(installationId: number) {
     const installation = await this.entityManager.findOne(Installation, {
-      where: { id: installationId },
+      where: { installationId },
       relations: ['tagsLive'],
     });
 
@@ -40,20 +32,11 @@ export class TagsLiveService {
   }
 
   async createTagLive(
-    userId: number,
     installationId: number,
     createTagLiveParams: CreateTagLiveParams[],
   ) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-    });
-
-    if (!user) {
-      return null;
-    }
-
     const installation = await this.entityManager.findOne(Installation, {
-      where: { id: installationId },
+      where: { installationId },
       relations: ['tagsLive'],
     });
 
@@ -93,27 +76,17 @@ export class TagsLiveService {
     }
 
     await this.installationRepository.save(installation);
-    await this.userRepository.save(user);
 
     return;
   }
 
   async updateTagLive(
-    userId: number,
     installationId: number,
     tagLiveId: number,
     updateTagLiveParams: UpdateTagLiveParams,
   ) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-    });
-
-    if (!user) {
-      return null;
-    }
-
     const installation = await this.entityManager.findOne(Installation, {
-      where: { id: installationId },
+      where: { installationId },
       relations: ['tagsLive'],
     });
 
@@ -141,21 +114,9 @@ export class TagsLiveService {
     return tagLive;
   }
 
-  async deleteTagLive(
-    userId: number,
-    installationId: number,
-    tagLiveId: number,
-  ) {
-    const user = await this.entityManager.findOne(User, {
-      where: { userId: userId },
-    });
-
-    if (!user) {
-      return null;
-    }
-
+  async deleteTagLive(installationId: number, tagLiveId: number) {
     const installation = await this.entityManager.findOne(Installation, {
-      where: { id: installationId },
+      where: { installationId },
       relations: ['tagsLive'],
     });
 
@@ -173,7 +134,6 @@ export class TagsLiveService {
 
     installation.tagsLive = null;
 
-    await this.userRepository.save(user);
     await this.installationRepository.save(installation);
     await this.tagsLiveRepository.delete(tagLiveId);
 

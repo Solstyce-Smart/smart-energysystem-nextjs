@@ -1,39 +1,66 @@
+import { TagsLive } from '../../entity/TagsLive.entity';
+import { User } from '../../entity/Users.entity';
+
 export type CreateInstallationParams = {
   id: number;
   ewonId: string;
   name: string;
-  nbIRVE: number;
-  battery: boolean;
   abo: number;
   lastSynchroDate: string;
-  tarifAchat: number;
-  tarifRevente: number;
+  tarifs?: {
+    tarifAchat: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+    tarifRevente: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+  }[];
   address?: {
     address: string;
     postalCode: number;
     latitude: string;
     longitude: string;
   }[];
-  tagsLive: any;
-  user: any;
+  tagsLive: TagsLive[];
+  user: User[];
 };
 
 export type UpdateInstallationParams = {
   id: number;
   ewonId: string;
   name: string;
-  nbIRVE: number;
-  battery: boolean;
-  tarifAchat: number;
-  tarifRevente: number;
   abo: number;
   lastSynchroDate: string;
+  tarifs?: {
+    tarifAchat: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+    tarifRevente: {
+      value: number;
+      dates: {
+        dateDebut: Date;
+        dateFin: Date | null;
+      };
+    }[];
+  }[];
   address?: {
     address: string;
     postalCode: number;
     latitude: string;
     longitude: string;
   }[];
-  tagsLive: any;
-  user: any;
+  tagsLive: TagsLive[];
+  user: User[];
 };

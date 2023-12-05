@@ -135,7 +135,7 @@ const Centrale = () => {
 
     try {
       const res = await fetch(
-        `https://vps.smart-energysystem.fr:3001/${userId}/installations/${centraleId}`,
+        `https://vps.smart-energysystem.fr:3001/installations/${centraleId}`,
         {
           method: "GET",
           headers: {
@@ -239,7 +239,7 @@ const Centrale = () => {
 
         if (activeUser && centraleId) {
           const installationsRes = await fetch(
-            `https://vps.smart-energysystem.fr:3001/${activeUser.userId}/installations/${centraleId}`,
+            `https://vps.smart-energysystem.fr:3001/installations/${centraleId}`,
             {
               method: "GET",
               headers: {

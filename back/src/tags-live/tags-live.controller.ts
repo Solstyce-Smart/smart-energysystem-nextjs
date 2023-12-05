@@ -19,7 +19,7 @@ import { CreateTagLiveDto } from './dto/CreateTagLive.dto';
 import { UpdateTagLiveDto } from './dto/UpdateTagLive.dto';
 
 @ApiTags('Tags en temps réel')
-@Controller(':userId/installations/:id/tags-live')
+@Controller('installations/:id/tags-live')
 export class TagsLiveController {
   constructor(private tagsLiveService: TagsLiveService) {}
 
@@ -27,18 +27,11 @@ export class TagsLiveController {
   @ApiOperation({ summary: "Récupération des tags de l'automate" })
   @ApiResponse({
     status: 404,
-    description:
-      'Aucun utilisateur trouvé / Aucune installation trouvée / Aucun automate trouvé',
+    description: 'Aucune installation trouvée / Aucun automate trouvé',
   })
   @ApiResponse({
     status: 500,
     description: 'Erreur serveur',
-  })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
   })
   @ApiParam({
     name: 'id',
@@ -46,18 +39,15 @@ export class TagsLiveController {
     required: true,
     description: "Id de l'installation",
   })
-  getTagsLive(
-    @Param('userId') userId: number,
-    @Param('id') installationId: number,
-  ) {
-    return this.tagsLiveService.getTagsLive(userId, installationId);
+  getTagsLive(@Param('id') installationId: number) {
+    return this.tagsLiveService.getTagsLive(installationId);
   }
 
   @Post()
   @ApiOperation({ summary: "Ajout des tags de l'automate" })
   @ApiResponse({
     status: 404,
-    description: 'Aucun utilisateur trouvé / Aucune installation trouvée',
+    description: 'Aucune installation trouvée',
   })
   @ApiResponse({
     status: 500,
@@ -65,33 +55,21 @@ export class TagsLiveController {
   })
   @ApiBody({ type: () => CreateTagLiveDto })
   @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
-  })
-  @ApiParam({
     name: 'id',
     type: Number,
     required: true,
     description: "Id de l'installation",
   })
   createTagLive(
-    @Param('userId') userId: number,
     @Param('id') installationId: number,
     @Body() createTagLiveDto: CreateTagLiveDto[],
   ) {
-    return this.tagsLiveService.createTagLive(
-      userId,
-      installationId,
-      createTagLiveDto,
-    );
+    return this.tagsLiveService.createTagLive(installationId, createTagLiveDto);
   }
   @ApiOperation({ summary: "Modification des tags de l'automate" })
   @ApiResponse({
     status: 404,
-    description:
-      'Aucun utilisateur trouvé / Aucune installation trouvée / Aucun automate trouvé',
+    description: 'Aucune installation trouvée / Aucun automate trouvé',
   })
   @ApiResponse({
     status: 500,
@@ -99,12 +77,6 @@ export class TagsLiveController {
   })
   @Put(':tagId')
   @ApiBody({ type: () => UpdateTagLiveDto })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
-  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -118,13 +90,11 @@ export class TagsLiveController {
     description: 'Id du tag',
   })
   updateTagLive(
-    @Param('userId') userId: number,
     @Param('id') installationId: number,
     @Param('tagId') tagId: number,
     @Body() updateTagLiveDto: UpdateTagLiveDto,
   ) {
     return this.tagsLiveService.updateTagLive(
-      userId,
       installationId,
       tagId,
       updateTagLiveDto,
@@ -135,18 +105,11 @@ export class TagsLiveController {
   @ApiOperation({ summary: "Suppression des tags de l'automate" })
   @ApiResponse({
     status: 404,
-    description:
-      'Aucun utilisateur trouvé / Aucune installation trouvée / Aucun automate trouvé',
+    description: 'Aucune installation trouvée / Aucun automate trouvé',
   })
   @ApiResponse({
     status: 500,
     description: 'Erreur serveur',
-  })
-  @ApiParam({
-    name: 'userId',
-    type: Number,
-    required: true,
-    description: "Id de l'utilisateur",
   })
   @ApiParam({
     name: 'id',
@@ -161,10 +124,9 @@ export class TagsLiveController {
     description: 'Id du tag',
   })
   deleteTagLive(
-    @Param('userId') userId: number,
     @Param('id') installationId: number,
     @Param('tagId') tagId: number,
   ) {
-    return this.tagsLiveService.deleteTagLive(userId, installationId, tagId);
+    return this.tagsLiveService.deleteTagLive(installationId, tagId);
   }
 }
