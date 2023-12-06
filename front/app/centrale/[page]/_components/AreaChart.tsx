@@ -11,6 +11,11 @@ interface AreaChartProps {
   title: string;
   centrale: any;
   height: string;
+  PVPSUM: DataItem;
+  IRVEPSUM: DataItem;
+  BTMP: DataItem;
+  PVPBAT: DataItem;
+  BATPCONSO: DataItem;
 }
 
 type DataItem = {
@@ -21,15 +26,17 @@ type DataItem = {
   quality: string;
 }[];
 
-const AreaChart = ({ title, centrale, height }: AreaChartProps) => {
+const AreaChart = ({
+  title,
+  height,
+  PVPSUM,
+  IRVEPSUM,
+  BTMP,
+  PVPBAT,
+  BATPCONSO,
+}: AreaChartProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newDate, setNewDate] = useState(0);
-  const [PVPSUM, setPVPSUM] = useState<DataItem>([]);
-  const [BTMP, setBTMP] = useState<DataItem>([]);
-  const [IRVEPSUM, setIRVEPSUM] = useState<DataItem>([]);
-  const [PVPBAT, setPVPBAT] = useState<DataItem>([]);
-  const [BATPCONSO, setBATPCONSO] = useState<DataItem>([]);
-  const [dataReady, setDataReady] = useState<Boolean>(false);
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1; // Les mois sont indexés à partir de 0
   const currentDay = currentDate.getDate() + newDate;
@@ -39,95 +46,6 @@ const AreaChart = ({ title, centrale, height }: AreaChartProps) => {
   const month = ("0" + (dateToShow.getMonth() + 1)).slice(-2);
   const year = dateToShow.getFullYear();
   const formattedDate = `${day} / ${month} / ${year}`;
-  type SetStateCallback<T> = React.Dispatch<React.SetStateAction<T>>;
-  const fetchData = async (
-    url: string,
-    setDataCallback: SetStateCallback<DataItem>
-  ) => {
-    try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          Origin: "https://smart-energysystem.fr",
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        console.log("Erreur");
-        throw new Error("HTTP error " + res.status);
-      }
-
-      const data = await res.json();
-      setDataCallback(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchDataAndUpdateState = async () => {
-    setDataReady(false);
-
-    await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BTM_P`,
-      setBTMP
-    );
-    await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/IRVE_P_SUM`,
-      setIRVEPSUM
-    );
-    await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_SUM`,
-      setPVPSUM
-    );
-    await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_BAT`,
-      setPVPBAT
-    );
-    await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BAT_P_CONSO`,
-      setBATPCONSO
-    );
-  };
-  const scheduleNextFetch = (firstInstance = false) => {
-    if (firstInstance) {
-      const now = new Date();
-
-      // Détermine le prochain bloc de 5 minutes à partir de l'heure actuelle
-      const nextFiveMinuteBlock = Math.ceil(now.getMinutes() / 5) * 5;
-      const nextScheduledTime = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        now.getHours(),
-        nextFiveMinuteBlock,
-        30
-      );
-
-      // Calcule le temps jusqu'au prochain bloc de 5 minutes
-      const timeUntilNextScheduledTime =
-        nextScheduledTime.getTime() - now.getTime();
-
-      // Planifie le premier fetch au lancement de la page
-      fetchDataAndUpdateState();
-
-      // Planifie le prochain fetch en fonction du prochain bloc de 5 minutes
-      setTimeout(() => {
-        fetchDataAndUpdateState();
-        scheduleNextFetch(); // Planifie le prochain fetch
-      }, timeUntilNextScheduledTime);
-    } else {
-      const interval = setInterval(() => {
-        fetchDataAndUpdateState();
-      }, 60000 * 5);
-      return () => clearInterval(interval);
-    }
-  };
-
-  useEffect(() => {
-    scheduleNextFetch(true);
-  }, []);
 
   const updateDate = (delta: number) => {
     const updatedDate = new Date(currentDate);
@@ -369,30 +287,6 @@ const AreaChart = ({ title, centrale, height }: AreaChartProps) => {
       <div
         className={`flex flex-col w-full ${height} min-h-[300px] mb-1 md:px-8 md:py-4 bg-slate-200/30 rounded-md`}
       >
-        <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white ">
-          <h2 className="text-xl font-bold text-primary capitalize hidden lg:flex">
-            {title}
-          </h2>
-          <div className="flex gap-3 justify-center items-center text-center">
-            {dataExistePourDate(-1) && (
-              <button
-                className="text-primary text-md font-semibold"
-                onClick={() => updateDate(-1)}
-              >
-                &lt;
-              </button>
-            )}
-            <h3 className="text-md">{formattedDate}</h3>
-            {dataExistePourDate(1) && (
-              <button
-                className="text-primary text-md font-semibold"
-                onClick={() => updateDate(1)}
-              >
-                &gt;
-              </button>
-            )}
-          </div>
-        </div>
         <HighchartsReact
           containerProps={{ style: { height: "100%" } }}
           highcharts={Highcharts}

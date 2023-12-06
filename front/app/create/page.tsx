@@ -11,7 +11,6 @@ import { GoogleMap, Marker } from "@react-google-maps/api";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,6 +24,17 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import dotenv from "dotenv";
 import axios from "axios";
 import {
@@ -99,6 +109,7 @@ const Create = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [revente, setRevente] = useState(false);
+  const [confirm, setConfirm] = useState(false);
 
   const { setValue, watch } = useForm({
     defaultValues: {
@@ -111,10 +122,6 @@ const Create = () => {
       tarifRevente: 0,
     },
   });
-
-  const isEwonIdDuplicate = (installations: any[], ewonId: string): boolean => {
-    return installations.some((installation) => installation.ewonId === ewonId);
-  };
 
   const checkEwon = async (ewonId: string) => {
     try {
@@ -144,14 +151,6 @@ const Create = () => {
       );
 
       if (res.data.ewon.status === "online") {
-        const installations = await axios.get(
-          "https://vps.smart-energysystem.fr:3001/1/installations"
-        );
-
-        if (isEwonIdDuplicate(installations.data, ewonId)) {
-          throw new Error("L'identifiant Ewon est déjà renseigné.");
-        }
-
         setLoading(false);
         setEwonIdChecked(true);
       }
@@ -181,7 +180,7 @@ const Create = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        "https://vps.smart-energysystem.fr:3001/1/installations"
+        "https://vps.smart-energysystem.fr:3001/installations"
       );
 
       for (let i = 0; i < res.data.length; i++) {
@@ -257,26 +256,124 @@ const Create = () => {
     ? installationForm
     : defaultForm;
 
-  function onSubmit(data: z.infer<typeof userSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function handleSubmitUser(data: z.infer<typeof userSchema>) {
+    await fetch(`https://vps.smart-energysystem.fr:3001/users`, {
+      method: "POST",
+      headers: {
+        Origin: "https://smart-energysystem.fr",
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        role: data.role,
+      }),
+    })
+      .then((res) => res.json())
+      .catch((error) => {
+        toast({
+          description: (
+            <div className="mt-2 w-auto rounded-md bg-red-600 p-4">
+              <span className="text-white">
+                L'utilisateur {data.firstname} {data.lastname} n'a pas pu être
+                créé.
+              </span>
+              <div>
+                <pre className="mt-2 w-[340px] rounded-md bg-red-800 p-4">
+                  <code className="text-white">
+                    {/*@ts-ignore */}
+                    {JSON.stringify(error.message, null, 2)}
+                  </code>
+                </pre>
+              </div>
+            </div>
+          ),
+        });
+      })
+      .then(() => {
+        toast({
+          description: (
+            <div className="mt-2 w-auto rounded-md bg-green-600 p-4">
+              <span className="text-white">
+                L'utilisateur {data.firstname} {data.lastname} a été créé avec
+                succès !
+              </span>
+            </div>
+          ),
+        });
+      });
   }
 
-  function handleSubmitForm1(data: z.infer<typeof installationSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function handleSubmitInstallation(
+    data: z.infer<typeof installationSchema>
+  ) {
+    await fetch(`https://vps.smart-energysystem.fr:3001/installations`, {
+      method: "POST",
+      headers: {
+        Origin: "https://smart-energysystem.fr",
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ewonId: data.ewonId,
+        name: data.name,
+        abo: 0,
+        tarifs: [
+          {
+            tarifAchat: [
+              {
+                value: data.tarifAchat ? data.tarifAchat : 0,
+                dates: {
+                  dateDebut: Date.now(),
+                  dateFin: null,
+                },
+              },
+            ],
+            tarifRevente: [
+              {
+                value: data.tarifRevente ? data.tarifRevente : 0,
+                dates: {
+                  dateDebut: Date.now(),
+                  dateFin: null,
+                },
+              },
+            ],
+          },
+        ],
+        address: [
+          {
+            address: data.address,
+            latitude: data.latitude,
+            longitude: data.longitude,
+          },
+        ],
+
+        lastSynchroDate: Date.now(),
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        toast({
+          description: (
+            <div className="mt-2 w-auto rounded-md bg-green-600 p-4">
+              <span className="text-white">
+                L'installation {data.name} a été créée avec succès !
+              </span>
+            </div>
+          ),
+        });
+      })
+      .catch((error) => {
+        toast({
+          description: (
+            <div className="mt-2 w-auto rounded-md bg-red-600 p-4">
+              <span className="text-white">
+                L'installation {data.name} n'a pas pu être créée.
+              </span>
+            </div>
+          ),
+        });
+      });
   }
   return createUser ? (
     <div className="flex flex-col w-full h-[90vh] bg-white items-center justify-center">
@@ -296,7 +393,7 @@ const Create = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data) =>
-              onSubmit(
+              handleSubmitUser(
                 data as {
                   email: string;
                   lastname: string;
@@ -497,9 +594,49 @@ const Create = () => {
               />
             </div>
             <div className="flex w-full items-center justify-center">
-              <Button type="submit" className={"w-[200px]"}>
-                Créer
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <Button
+                    type="button"
+                    className={cn(
+                      "w-[200px] self-center shadow-sm shadow-slate-800"
+                    )}
+                  >
+                    Création de l'utilisateur
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Avez-vous vérifié les informations ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Il n'y aura pas de retour possible, merci de bien vérifier
+                      les informations avant de confirmer.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction
+                      type="submit"
+                      onClick={() => {
+                        setLoading(true);
+                        handleSubmitUser(
+                          form.getValues() as {
+                            email: string;
+                            lastname: string;
+                            firstname: string;
+                            organization: string;
+                            role: number;
+                          }
+                        );
+                      }}
+                    >
+                      Confirmer
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </form>
         </Form>
@@ -731,7 +868,7 @@ const Create = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit((data) =>
-                  handleSubmitForm1(
+                  handleSubmitInstallation(
                     data as {
                       name: string;
                       address: string;
@@ -838,7 +975,7 @@ const Create = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit((data) =>
-                  handleSubmitForm1(
+                  handleSubmitInstallation(
                     data as {
                       name: string;
                       address: string;
@@ -881,31 +1018,53 @@ const Create = () => {
                   Tarif de revente : {form.getValues("tarifRevente")} €
                 </p>
                 <div className="space-y-2 flex flex-col gap-2">
-                  <Button
-                    type="submit"
-                    className={cn(
-                      "w-[200px] self-center shadow-sm shadow-slate-800"
-                    )}
-                    onClick={() => {
-                      setLoading(true);
-                      if (!revente) {
-                        form.setValue("tarifAchat", 0);
-                      }
-                      handleSubmitForm1(
-                        form.getValues() as {
-                          name: string;
-                          address: string;
-                          latitude: number;
-                          longitude: number;
-                          ewonId: string;
-                          tarifAchat: number;
-                          tarifRevente: number;
-                        }
-                      );
-                    }}
-                  >
-                    Création de la centrale
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <Button
+                        className={cn(
+                          "w-[200px] self-center shadow-sm shadow-slate-800"
+                        )}
+                      >
+                        Création de la centrale
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Avez-vous vérifié les informations ?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Il n'y aura pas de retour possible, merci de bien
+                          vérifier les informations avant de confirmer.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                        <AlertDialogAction
+                          type="submit"
+                          onClick={() => {
+                            setLoading(true);
+                            if (!revente) {
+                              form.setValue("tarifAchat", 0);
+                            }
+                            handleSubmitInstallation(
+                              form.getValues() as {
+                                name: string;
+                                address: string;
+                                latitude: number;
+                                longitude: number;
+                                ewonId: string;
+                                tarifAchat: number;
+                                tarifRevente: number;
+                              }
+                            );
+                          }}
+                        >
+                          Confirmer
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </form>
             </Form>

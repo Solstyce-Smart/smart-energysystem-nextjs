@@ -145,7 +145,7 @@ const Graphiques = () => {
     };
 
     fetchDatas(
-      "https://vps.smart-energysystem.fr:3001/1/installations/1",
+      "https://vps.smart-energysystem.fr:3001/installations/1",
       setData
     );
   }, []);

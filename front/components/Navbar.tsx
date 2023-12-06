@@ -15,7 +15,6 @@ const Navbar = () => {
 
   return (
     <>
-      {" "}
       <header
         className="flex before:bg-gradient-to-bl  relative  before:absolute
       z-20
@@ -30,7 +29,7 @@ const Navbar = () => {
   before:blur-[2px]
   pb-[5px] bg-gradient-to-tr from-primary via-primary to-secondary h-[10vh] w-full"
       >
-        <nav className="flex justify-between items-center h-full w-full px-5 lg:px-20">
+        <nav className="flex justify-between items-center h-full w-full px-5 lg:px-20 text-slate-50/70">
           <div className="flex items-center justify-center ">
             <Link href="/" className="flex h-[4vh] w-auto p-2">
               <Image
@@ -42,7 +41,7 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="hidden lg:flex">
-            <NavbarRoutes color="white" />
+            <NavbarRoutes color="slate-50" />
           </div>
           <div className="hidden lg:flex gap-2">
             {user.user ? (
@@ -81,7 +80,7 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
-      {user.user && <BottomBar color="white" />}
+      {user.user && <BottomBar color="slate-50" />}
     </>
   );
 };

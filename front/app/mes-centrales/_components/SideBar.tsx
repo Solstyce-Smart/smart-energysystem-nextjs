@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Sheet,
   SheetContent,
@@ -22,12 +22,14 @@ const SideBar = ({ centrales }: any) => {
       </SheetTrigger>
       <SheetContent side="left" className="w-[200px]">
         <SheetHeader>
-          <SheetTitle className="mb-8">Liste des centrales</SheetTitle>
-          <SheetDescription>
+          <SheetTitle className="mb-8 text-primary">
+            Liste des centrales
+          </SheetTitle>
+          <SheetDescription className="flex flex-col gap-4">
             {centrales.map((centrale: any) => (
               <Link
-                href={`/centrale/${centrale.id}`}
-                key={centrale.name}
+                href={`/centrale/${centrale.installationId}`}
+                key={centrale.installationId}
                 className="font-medium"
               >
                 {centrale.name}

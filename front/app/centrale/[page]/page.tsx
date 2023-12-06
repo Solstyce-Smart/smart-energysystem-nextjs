@@ -57,6 +57,7 @@ const Centrale = () => {
   const [centrale, setCentrale] = useState<any>([]);
   const [userReady, setUserReady] = useState<Boolean>(false);
   const [centraleReady, setCentraleReady] = useState<Boolean>(false);
+  const [currentDate, setCurrentDate] = useState<string>(getDate(0));
   const pathname = usePathname();
   const centraleId = pathname.match(/\/centrale\/(.+)/)?.[1] || "";
 
@@ -88,43 +89,66 @@ const Centrale = () => {
     }
   };
 
+  function getDate(delta: number) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Les mois sont 0-indexés, donc ajoutez 1
+    const day = String(today.getDate() + delta).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  const updateDate = async (delta: number) => {
+    const currentDateObj = new Date(currentDate);
+    currentDateObj.setDate(currentDateObj.getDate() + delta);
+
+    const year = currentDateObj.getFullYear();
+    const month = String(currentDateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDateObj.getDate()).padStart(2, "0");
+
+    const updatedDate = `${year}-${month}-${day}`;
+
+    setCurrentDate(updatedDate);
+  };
   const fetchDataAndUpdateState = async () => {
     setDataReady(false);
 
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BTM_P`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BTM_P/${currentDate}`,
       setBTMP
     );
+
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/IRVE_P_SUM`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/IRVE_P_SUM/${currentDate}`,
       setIRVEPSUM
     );
+
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_SUM`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_SUM/${currentDate}`,
       setPVPSUM
     );
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_BAT`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_BAT/${currentDate}`,
       setPVPBAT
     );
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BAT_P_CONSO`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/BAT_P_CONSO/${currentDate}`,
       setBATPCONSO
     );
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/CONSO_P`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/CONSO_P/${currentDate}`,
       setCONSOP
     );
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_CONSO`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_CONSO/${currentDate}`,
       setPVPCONSO
     );
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_RESEAU`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/PV_P_RESEAU/${currentDate}`,
       setPVPRESEAU
     );
     await fetchData(
-      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/RESEAU_P_CONSO`,
+      `https://vps.smart-energysystem.fr:3001/elastic/dataindex/${centrale.ewonId}/RESEAU_P_CONSO/${currentDate}`,
       setRESEAUPCONSO
     );
 
@@ -269,12 +293,12 @@ const Centrale = () => {
       }
     };
     fetchUser();
-    if (!userReady || !centraleReady) {
+    if (!userReady || !centraleReady || !currentDate) {
       console.log("Attente des données utilisateur...");
       return;
     }
     scheduleNextFetch(true);
-  }, [user, userReady, centraleReady]);
+  }, [user, currentDate, userReady, centraleReady]);
 
   if (!isLoading) {
     return (
@@ -302,13 +326,45 @@ const Centrale = () => {
                       title={plage}
                       centrale={centrale}
                       height="h-[80vh]"
+                      IRVEPSUM={IRVEPSUM}
+                      BTMP={BTMP}
+                      PVPBAT={PVPBAT}
+                      BATPCONSO={BATPCONSO}
+                      PVPSUM={PVPSUM}
                     />
                   </DialogContent>
                 </Dialog>
+                <div className="subtitle-container flex pt-2  flex-col items-center justify-center bg-white w-[95%] my-2">
+                  <h2 className="text-xl font-bold text-primary capitalize hidden lg:flex">
+                    {plage}
+                  </h2>
+                  <div className="flex gap-3 justify-center items-center text-center">
+                    <button
+                      className="text-primary text-md font-semibold"
+                      onClick={() => updateDate(-1)}
+                    >
+                      &lt;
+                    </button>
+
+                    <h3 className="text-md">{currentDate}</h3>
+
+                    <button
+                      className="text-primary text-md font-semibold"
+                      onClick={() => updateDate(+1)}
+                    >
+                      &gt;
+                    </button>
+                  </div>
+                </div>
                 <AreaChart
                   title={plage}
                   centrale={centrale}
                   height="h-[40vh]"
+                  IRVEPSUM={IRVEPSUM}
+                  BTMP={BTMP}
+                  PVPBAT={PVPBAT}
+                  BATPCONSO={BATPCONSO}
+                  PVPSUM={PVPSUM}
                 />
               </>
             )}
