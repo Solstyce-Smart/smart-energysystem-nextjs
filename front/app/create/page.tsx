@@ -1021,6 +1021,7 @@ const Create = () => {
                   <AlertDialog>
                     <AlertDialogTrigger>
                       <Button
+                        type="button"
                         className={cn(
                           "w-[200px] self-center shadow-sm shadow-slate-800"
                         )}

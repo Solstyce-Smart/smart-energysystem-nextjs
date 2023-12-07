@@ -68,6 +68,8 @@ const MesCentrales: React.FC = () => {
           (bddUser: any) => bddUser.clerkId === user.id
         );
 
+        console.log("Utilisateur actif :", activeUser);
+
         if (activeUser) {
           const currentUser = await fetch(
             `https://vps.smart-energysystem.fr:3001/users/${activeUser.userId}`,
@@ -91,7 +93,11 @@ const MesCentrales: React.FC = () => {
           const userData = await currentUser.json();
           const newCentrales: Centrale[] = [];
 
+          console.log("Données de l'utilisateur :", userData.installations);
+
           for (const installation of userData.installations) {
+            console.log("Installation :", installation);
+
             const existingCentrale = centrales.find(
               (centrale) =>
                 centrale.installationId === installation.installationId
@@ -116,6 +122,8 @@ const MesCentrales: React.FC = () => {
                   (centrale) => centrale.name === centraleData.name
                 );
                 if (!existingCentrale) {
+                  console.log("Centrale :", centraleData, newCentrales);
+
                   newCentrales.push(centraleData);
                 } else {
                   console.log("Doublon");
@@ -133,12 +141,12 @@ const MesCentrales: React.FC = () => {
 
           if (newCentrales.length > 0) {
             setCenter({
-              lat: parseFloat(newCentrales[0].address[0].latitude),
-              lng: parseFloat(newCentrales[0].address[0].longitude),
+              lat: parseFloat(newCentrales[0].address[0].latitude || "0"),
+              lng: parseFloat(newCentrales[0].address[0].longitude || "0"),
             });
+          } else {
+            console.log("Aucune centrale trouvée");
           }
-
-          setDataReady(true);
         }
       } catch (error) {
         console.error("Erreur générale :", error);
@@ -151,8 +159,11 @@ const MesCentrales: React.FC = () => {
   // Nouvel effet pour mettre à jour l'état principal
   useEffect(() => {
     // Mettre à jour l'état principal avec les nouvelles centrales
-    setCentrales([]);
     setCentrales((prevCentrales) => [...prevCentrales, ...tempCentrales]);
+    if (tempCentrales.length > 0) {
+      setDataReady(true);
+    }
+    console.log("Centrales :", centrales);
   }, [tempCentrales]);
 
   return (
@@ -195,7 +206,7 @@ const MesCentrales: React.FC = () => {
             </Table>
           </div>
           <div className="flex w-full h-1/2 p-8 ">
-            {isLoaded && (
+            {isLoaded && centrales.length > 0 && (
               <GoogleMap
                 zoom={18}
                 center={center}
@@ -205,8 +216,16 @@ const MesCentrales: React.FC = () => {
                   <Marker
                     key={i}
                     position={{
-                      lat: parseFloat(centrale.address[0].latitude),
-                      lng: parseFloat(centrale.address[0].longitude),
+                      lat: parseFloat(
+                        centrale.address && centrale.address[0]
+                          ? centrale.address[0].latitude || "0"
+                          : "0"
+                      ),
+                      lng: parseFloat(
+                        centrale.address && centrale.address[0]
+                          ? centrale.address[0].longitude || "0"
+                          : "0"
+                      ),
                     }}
                   />
                 ))}

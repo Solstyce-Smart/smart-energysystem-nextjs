@@ -137,7 +137,7 @@ const BarChart = ({
 
   const filteredIRVEPSUM = calculateTotalWithFilter(IRVEPSUM);
   const filteredBTMP = calculateTotalWithFilter(BTMP);
-  const filteredPVPBAT = calculateTotalWithFilterNeg(PVPBAT);
+  const filteredPVPBAT = calculateTotalWithFilter(PVPBAT);
   const filteredRESEAUPCONSO = calculateTotalWithFilter(RESEAUPCONSO);
   const filteredPVPCONSO = calculateTotalWithFilter(PVPCONSO);
   const filteredBATPCONSO = calculateTotalWithFilter(BATPCONSO);
@@ -201,7 +201,7 @@ const BarChart = ({
       {
         name: "Consommation IRVE",
         data: filteredIRVEPSUM,
-        color: "darkmagenta",
+        color: "#009DE0",
         stack: "Consommation",
       },
       {
@@ -213,31 +213,31 @@ const BarChart = ({
       {
         name: "Consommation batterie",
         data: filteredPVPBAT,
-        color: "red",
+        color: "#04276E",
         stack: "Consommation",
       },
       {
         name: "Appros réseau",
         data: filteredRESEAUPCONSO,
-        color: "darkred",
+        color: "crimson",
         stack: "Production",
       },
       {
         name: "Production PV autoconsommée",
         data: filteredPVPCONSO,
-        color: "#009DE0",
+        color: "#00a040",
         stack: "Production",
       },
       {
         name: "Réinjection batterie",
         data: filteredBATPCONSO,
-        color: "yellow",
+        color: "lightgreen",
         stack: "Production",
       },
       {
         name: "Production PV revendue",
         data: filteredPVPRESEAU,
-        color: "green",
+        color: "#008937",
         stack: "Production",
       },
     ],

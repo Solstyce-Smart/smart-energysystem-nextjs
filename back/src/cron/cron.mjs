@@ -63,20 +63,50 @@ const getDatas = async () => {
       console.error('Erreur:', error);
     });
 
-  await axios.post(
-    `https://164.132.50.131:3001/${process.env.USERID}/installations/${process.env.CENTRALEID}/tags-live`,
-    dataFiltered,
-    { httpsAgent: agent, ...config },
-  );
-  await axios.post(
-    `https://164.132.50.131:3001/${process.env.USERIDDEUX}/installations/${process.env.CENTRALEIDDEUX}/tags-live`,
-    dataFiltered,
-    { httpsAgent: agent, ...config },
-  );
+  const axiosConfig = {
+    method: 'GET',
+    headers: {
+      Origin: `${process.env.BACKEND_URL}`,
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    httpsAgent: agent,
+  };
+
+  let installations = [];
+
+  try {
+    const installationsRes = await axios.get(
+      `${process.env.BACKEND_URL}:3001/users`,
+      axiosConfig,
+    );
+
+    if (!installationsRes.status === 200) {
+      console.log(
+        "Erreur lors de la récupération des données de l'installation",
+      );
+      return;
+    }
+
+    installations = installationsRes.data;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des données de l'installation:",
+      error,
+    );
+  }
+
+  installations.forEach(async (installation) => {
+    await axios.post(
+      `${process.env.BACKEND_URL}:3001/installations/${installation.installationId}/tags-live`,
+      dataFiltered,
+      { httpsAgent: agent, ...config },
+    );
+  });
 
   try {
     await axios.post(
-      `https://164.132.50.131:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
+      `${process.env.BACKEND_URL}:3001/elastic/${process.env.ELASTICSEARCH_INDEX}`,
       elasticFiltered,
       { httpsAgent: agent, ...config },
     );

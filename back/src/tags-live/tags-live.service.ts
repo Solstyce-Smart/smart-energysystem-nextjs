@@ -75,7 +75,9 @@ export class TagsLiveService {
       }
     }
 
-    await this.installationRepository.save(installation);
+    const { tarifs, address, ...updatedInstallation } = installation;
+
+    await this.installationRepository.save(updatedInstallation);
 
     return;
   }
